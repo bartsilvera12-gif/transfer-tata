@@ -1,0 +1,1024 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Transfer Tatá — Traslados premium</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0E0E0E;
+    --bg-2:#141414;
+    --bg-3:#181818;
+    --card:#161616;
+    --line:#242424;
+    --line-2:#2A2A2A;
+    --text:#F5F5F5;
+    --muted:#9A9A9A;
+    --silver:#C9C9C9;
+    --yellow:#FFC400;
+    --yellow-2:#FFD21A;
+    --yellow-soft:rgba(255,196,0,.12);
+    --shadow:0 24px 48px -24px rgba(0,0,0,.8);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{background:var(--bg);color:var(--text);font-family:'Inter',system-ui,sans-serif;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+  body{overflow-x:hidden}
+  a{color:inherit;text-decoration:none}
+  button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+  img{max-width:100%;display:block}
+  ::selection{background:var(--yellow);color:#000}
+
+  .display{font-family:'Rajdhani',sans-serif;font-weight:700;letter-spacing:.01em;line-height:1}
+  .mono{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted)}
+  .container{max-width:1320px;margin:0 auto;padding:0 32px}
+  @media (max-width:720px){.container{padding:0 20px}}
+
+  /* ===== Nav ===== */
+  .nav{position:fixed;top:0;left:0;right:0;z-index:80;backdrop-filter:saturate(160%) blur(14px);background:rgba(14,14,14,.72);border-bottom:1px solid transparent;transition:border-color .3s,background .3s}
+  .nav.scrolled{background:rgba(14,14,14,.88);border-bottom-color:var(--line)}
+  .nav-inner{display:flex;align-items:center;justify-content:space-between;height:74px}
+  .logo{display:flex;align-items:center;gap:12px}
+  .logo-mark{width:42px;height:42px;display:grid;place-items:center;border:1px solid var(--line-2);border-radius:10px;background:linear-gradient(160deg,#1a1a1a,#0c0c0c)}
+  .logo-wm{display:flex;flex-direction:column;line-height:1}
+  .logo-wm .t1{font-family:'Rajdhani',sans-serif;font-weight:700;font-size:18px;letter-spacing:.04em}
+  .logo-wm .t1 em{font-style:normal;color:var(--yellow)}
+  .logo-wm .t2{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.32em;color:var(--muted);margin-top:4px}
+  .nav-links{display:flex;align-items:center;gap:30px}
+  .nav-links a{font-size:13.5px;color:var(--silver);font-weight:500;transition:color .2s;position:relative}
+  .nav-links a:hover{color:var(--yellow)}
+  .nav-cta{display:flex;align-items:center;gap:10px;background:var(--yellow);color:#0E0E0E;padding:11px 18px;border-radius:8px;font-weight:600;font-size:13px;letter-spacing:.02em;transition:transform .2s,box-shadow .2s}
+  .nav-cta:hover{transform:translateY(-1px);box-shadow:0 8px 24px -8px rgba(255,196,0,.5)}
+  .hamburger{display:none;width:42px;height:42px;border:1px solid var(--line-2);border-radius:10px;align-items:center;justify-content:center}
+  .hamburger span{display:block;width:18px;height:1.5px;background:var(--text);position:relative;transition:transform .25s,opacity .25s}
+  .hamburger span::before,.hamburger span::after{content:'';position:absolute;left:0;width:18px;height:1.5px;background:var(--text);transition:transform .25s}
+  .hamburger span::before{top:-6px}.hamburger span::after{top:6px}
+  .hamburger.open span{background:transparent}
+  .hamburger.open span::before{transform:translateY(6px) rotate(45deg)}
+  .hamburger.open span::after{transform:translateY(-6px) rotate(-45deg)}
+  @media (max-width:980px){.nav-links,.nav-cta-desktop{display:none}.hamburger{display:flex}}
+
+  .mobile-menu{position:fixed;inset:74px 0 0 0;background:rgba(10,10,10,.97);backdrop-filter:blur(20px);z-index:70;padding:32px 24px;display:none;flex-direction:column;gap:4px;transform:translateY(-8px);opacity:0;transition:opacity .25s,transform .25s}
+  .mobile-menu.open{display:flex;opacity:1;transform:none}
+  .mobile-menu a{padding:18px 12px;border-bottom:1px solid var(--line);font-size:18px;font-family:'Rajdhani',sans-serif;font-weight:600;letter-spacing:.02em;display:flex;align-items:center;justify-content:space-between}
+  .mobile-menu a .num{color:var(--muted);font-size:11px;font-family:'JetBrains Mono',monospace}
+  .mobile-menu .mobile-cta{margin-top:20px;background:var(--yellow);color:#0E0E0E;text-align:center;padding:18px;border-radius:10px;font-weight:700;font-family:'Inter',sans-serif;font-size:15px;border:none;justify-content:center}
+
+  /* ===== Hero ===== */
+  .hero{position:relative;padding:140px 0 80px;overflow:hidden;min-height:min(960px,100vh)}
+  .hero-bg{position:absolute;inset:0;z-index:0;pointer-events:none}
+  .hero-bg .road{position:absolute;left:-10%;right:-10%;bottom:0;height:100%;opacity:.55}
+  .hero-bg .glow{position:absolute;width:520px;height:520px;border-radius:50%;filter:blur(120px);opacity:.35}
+  .hero-bg .g1{background:#FFC400;top:-100px;right:-80px;opacity:.18}
+  .hero-bg .g2{background:#3a2a00;bottom:-100px;left:-80px;opacity:.6}
+  .hero-bg::before{content:'';position:absolute;inset:0;background:linear-gradient(180deg,transparent 0,transparent 60%,var(--bg) 100%)}
+  .grid-overlay{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.03) 1px,transparent 1px);background-size:64px 64px;mask-image:radial-gradient(ellipse at 50% 30%,black 30%,transparent 75%)}
+  .hero-inner{position:relative;z-index:2;display:grid;grid-template-columns:1.05fr .95fr;gap:60px;align-items:center}
+  @media (max-width:1080px){.hero-inner{grid-template-columns:1fr;gap:48px}}
+
+  .eyebrow{display:inline-flex;align-items:center;gap:10px;padding:8px 14px;border:1px solid var(--line-2);border-radius:999px;background:rgba(255,255,255,.02);margin-bottom:24px}
+  .eyebrow .dot{width:6px;height:6px;border-radius:50%;background:var(--yellow);box-shadow:0 0 0 4px rgba(255,196,0,.18);animation:pulse 2.4s infinite}
+  @keyframes pulse{0%,100%{box-shadow:0 0 0 4px rgba(255,196,0,.18)}50%{box-shadow:0 0 0 8px rgba(255,196,0,0)}}
+  .eyebrow .mono{font-size:10.5px}
+
+  h1.hero-title{font-family:'Rajdhani',sans-serif;font-weight:700;font-size:clamp(44px,6.4vw,86px);line-height:.96;letter-spacing:-.005em;margin-bottom:24px}
+  h1.hero-title em{font-style:normal;color:var(--yellow);position:relative;display:inline-block}
+  h1.hero-title em::after{content:'';position:absolute;left:0;right:0;bottom:6px;height:6px;background:repeating-linear-gradient(90deg,var(--yellow) 0 22px,transparent 22px 34px);opacity:.6}
+  .hero-sub{color:var(--silver);font-size:17px;line-height:1.55;max-width:540px;margin-bottom:32px}
+  .chips{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:36px}
+  .chip{display:inline-flex;align-items:center;gap:8px;padding:9px 14px;border:1px solid var(--line-2);border-radius:999px;font-size:12.5px;color:var(--silver);background:rgba(255,255,255,.015)}
+  .chip svg{width:13px;height:13px;color:var(--yellow)}
+  .cta-row{display:flex;gap:14px;flex-wrap:wrap}
+  .btn{display:inline-flex;align-items:center;gap:10px;padding:16px 22px;border-radius:10px;font-weight:600;font-size:14.5px;letter-spacing:.01em;transition:transform .2s,box-shadow .2s,background .2s,color .2s;cursor:pointer;border:1px solid transparent}
+  .btn-primary{background:var(--yellow);color:#0E0E0E}
+  .btn-primary:hover{transform:translateY(-2px);box-shadow:0 16px 32px -12px rgba(255,196,0,.45);background:var(--yellow-2)}
+  .btn-ghost{border-color:var(--line-2);color:var(--text)}
+  .btn-ghost:hover{border-color:var(--yellow);color:var(--yellow)}
+  .btn svg{width:16px;height:16px}
+
+  /* Hero quote form */
+  .quote-card{position:relative;z-index:2;background:linear-gradient(160deg,#1a1a1a 0%,#101010 100%);border:1px solid var(--line-2);border-radius:18px;padding:28px;box-shadow:var(--shadow)}
+  .quote-card::before{content:'';position:absolute;inset:0;border-radius:18px;padding:1px;background:linear-gradient(160deg,rgba(255,196,0,.3),transparent 40%,transparent 60%,rgba(255,196,0,.1));-webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);-webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none}
+  .quote-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:22px}
+  .quote-head .mono{color:var(--yellow)}
+  .quote-head .live{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--muted)}
+  .quote-head .live .dot{width:6px;height:6px;border-radius:50%;background:#3fdb6a;box-shadow:0 0 8px #3fdb6a}
+  .field{display:flex;flex-direction:column;gap:6px;margin-bottom:14px}
+  .field label{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);font-family:'JetBrains Mono',monospace}
+  .field .inp{background:#0c0c0c;border:1px solid var(--line);border-radius:10px;padding:14px 14px 14px 42px;color:var(--text);font-size:14px;font-family:inherit;transition:border-color .2s,background .2s;width:100%}
+  .field .inp:focus{outline:none;border-color:var(--yellow);background:#0a0a0a}
+  .field-wrap{position:relative}
+  .field-wrap > svg{position:absolute;left:14px;top:50%;transform:translateY(-50%);width:16px;height:16px;color:var(--muted)}
+  .field-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .field-grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
+  @media (max-width:520px){.field-grid,.field-grid-3{grid-template-columns:1fr}}
+  .quote-card .btn-primary{width:100%;justify-content:center;margin-top:8px;padding:18px}
+
+  /* ===== Section base ===== */
+  section.block{padding:120px 0;position:relative}
+  @media (max-width:780px){section.block{padding:80px 0}}
+  .section-head{display:flex;align-items:end;justify-content:space-between;gap:32px;margin-bottom:56px;flex-wrap:wrap}
+  .section-head .lead{max-width:680px}
+  .section-head .mono{margin-bottom:14px;display:block}
+  .section-head h2{font-family:'Rajdhani',sans-serif;font-weight:700;font-size:clamp(34px,4.2vw,54px);line-height:1.02;letter-spacing:-.005em}
+  .section-head h2 em{font-style:normal;color:var(--yellow)}
+  .section-head .desc{color:var(--muted);max-width:520px;font-size:15px;line-height:1.55}
+
+  /* ===== Benefits ===== */
+  .benefits{background:var(--bg-2);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+  .benefits-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:0;border-left:1px solid var(--line)}
+  .benefit{padding:36px 32px;border-right:1px solid var(--line);border-top:1px solid var(--line);border-bottom:1px solid var(--line);background:var(--bg-2);transition:background .25s}
+  .benefit:hover{background:#1a1a1a}
+  .benefit .num{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);margin-bottom:24px;display:flex;align-items:center;gap:8px}
+  .benefit .num::before{content:'';width:24px;height:1px;background:var(--yellow)}
+  .benefit svg.icon{width:32px;height:32px;color:var(--yellow);margin-bottom:18px;stroke-width:1.5}
+  .benefit h3{font-family:'Rajdhani',sans-serif;font-weight:600;font-size:22px;letter-spacing:.005em;margin-bottom:8px}
+  .benefit p{font-size:13.5px;color:var(--muted);line-height:1.55}
+  @media (max-width:980px){.benefits-grid{grid-template-columns:1fr 1fr}}
+  @media (max-width:560px){.benefits-grid{grid-template-columns:1fr}}
+
+  /* ===== Services ===== */
+  .services-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+  @media (max-width:980px){.services-grid{grid-template-columns:1fr 1fr}}
+  @media (max-width:620px){.services-grid{grid-template-columns:1fr}}
+  .service{position:relative;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:30px;transition:border-color .25s,transform .25s,background .25s;overflow:hidden}
+  .service::after{content:'';position:absolute;left:0;right:0;top:0;height:1px;background:linear-gradient(90deg,transparent,var(--yellow),transparent);opacity:0;transition:opacity .3s}
+  .service:hover{border-color:var(--yellow);transform:translateY(-4px);background:#1a1a1a}
+  .service:hover::after{opacity:.7}
+  .service-icon{width:52px;height:52px;border-radius:12px;border:1px solid var(--line-2);display:grid;place-items:center;margin-bottom:22px;background:rgba(255,196,0,.04);transition:background .25s}
+  .service:hover .service-icon{background:rgba(255,196,0,.12)}
+  .service-icon svg{width:24px;height:24px;color:var(--yellow);stroke-width:1.5}
+  .service h3{font-family:'Rajdhani',sans-serif;font-weight:600;font-size:22px;margin-bottom:10px}
+  .service p{font-size:13.5px;color:var(--muted);line-height:1.55;margin-bottom:22px;min-height:60px}
+  .service .link{display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:500;color:var(--yellow);transition:gap .2s}
+  .service:hover .link{gap:12px}
+
+  /* ===== How it works ===== */
+  .how-bg{background:linear-gradient(180deg,var(--bg) 0,var(--bg-2) 100%)}
+  .steps{position:relative;display:grid;grid-template-columns:repeat(4,1fr);gap:24px;margin-top:60px}
+  @media (max-width:880px){.steps{grid-template-columns:1fr 1fr}}
+  @media (max-width:520px){.steps{grid-template-columns:1fr}}
+  .step{position:relative;padding:28px;background:var(--card);border:1px solid var(--line);border-radius:14px}
+  .step .num{font-family:'Rajdhani',sans-serif;font-weight:700;font-size:48px;color:var(--yellow);line-height:1;margin-bottom:14px;letter-spacing:-.02em}
+  .step h4{font-family:'Rajdhani',sans-serif;font-weight:600;font-size:20px;margin-bottom:8px}
+  .step p{font-size:13.5px;color:var(--muted);line-height:1.55}
+  .step .dot{position:absolute;top:34px;right:-12px;width:24px;height:24px;border-radius:50%;background:var(--bg);border:1px solid var(--yellow);display:grid;place-items:center;z-index:2}
+  .step .dot::after{content:'';width:8px;height:8px;border-radius:50%;background:var(--yellow);box-shadow:0 0 8px var(--yellow)}
+  @media (max-width:880px){.step .dot{display:none}}
+  .road-line{position:absolute;top:46px;left:5%;right:5%;height:2px;background:repeating-linear-gradient(90deg,var(--yellow) 0 16px,transparent 16px 28px);opacity:.35;z-index:0}
+  @media (max-width:880px){.road-line{display:none}}
+
+  /* ===== Fleet ===== */
+  .fleet-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+  @media (max-width:980px){.fleet-grid{grid-template-columns:1fr}}
+  .fleet-card{background:var(--card);border:1px solid var(--line);border-radius:16px;overflow:hidden;transition:border-color .25s,transform .25s}
+  .fleet-card:hover{border-color:var(--line-2);transform:translateY(-3px)}
+  .fleet-img{aspect-ratio:16/10;background:linear-gradient(160deg,#1f1f1f,#0a0a0a);position:relative;overflow:hidden;display:grid;place-items:center}
+  .fleet-img svg.veh{width:70%;height:auto;color:#2e2e2e}
+  .fleet-img::after{content:'';position:absolute;left:0;right:0;bottom:0;height:1px;background:repeating-linear-gradient(90deg,var(--yellow) 0 16px,transparent 16px 28px);opacity:.5}
+  .fleet-img .badge{position:absolute;top:14px;left:14px;background:rgba(0,0,0,.6);backdrop-filter:blur(6px);padding:6px 10px;border-radius:6px;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.18em;color:var(--yellow);text-transform:uppercase;border:1px solid var(--line-2)}
+  .fleet-body{padding:24px 26px 26px}
+  .fleet-body h3{font-family:'Rajdhani',sans-serif;font-weight:600;font-size:24px;margin-bottom:4px;display:flex;align-items:center;justify-content:space-between}
+  .fleet-body h3 .cap{font-size:12px;color:var(--muted);font-family:'JetBrains Mono',monospace;letter-spacing:.16em}
+  .fleet-body p.subt{color:var(--muted);font-size:13px;margin-bottom:18px}
+  .specs{display:grid;grid-template-columns:1fr 1fr;gap:10px 16px;margin-bottom:22px;padding:16px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+  .spec{display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--silver)}
+  .spec svg{width:14px;height:14px;color:var(--yellow);stroke-width:1.5;flex-shrink:0}
+  .fleet-body .btn-ghost{width:100%;justify-content:center;padding:13px}
+
+  /* ===== Destinations ===== */
+  .dest-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+  @media (max-width:980px){.dest-grid{grid-template-columns:repeat(3,1fr)}}
+  @media (max-width:620px){.dest-grid{grid-template-columns:1fr 1fr}}
+  .dest{display:flex;align-items:center;gap:14px;padding:22px 22px;border:1px solid var(--line);border-radius:14px;background:var(--card);transition:border-color .25s,background .25s,transform .25s}
+  .dest:hover{border-color:var(--yellow);background:#1a1a1a;transform:translateY(-2px)}
+  .dest svg{width:22px;height:22px;color:var(--yellow);stroke-width:1.5;flex-shrink:0}
+  .dest .lbl{display:flex;flex-direction:column;gap:2px}
+  .dest .lbl strong{font-family:'Rajdhani',sans-serif;font-weight:600;font-size:17px}
+  .dest .lbl span{font-size:11px;color:var(--muted);font-family:'JetBrains Mono',monospace;letter-spacing:.14em}
+
+  /* ===== Booking ===== */
+  .book-block{position:relative;background:linear-gradient(160deg,#161616 0%,#0E0E0E 100%);border:1px solid var(--line-2);border-radius:24px;padding:64px;overflow:hidden}
+  .book-block::before{content:'';position:absolute;width:420px;height:420px;border-radius:50%;background:var(--yellow);filter:blur(150px);opacity:.08;top:-100px;right:-100px}
+  .book-grid{display:grid;grid-template-columns:.85fr 1.15fr;gap:60px;position:relative;z-index:1}
+  @media (max-width:980px){.book-grid{grid-template-columns:1fr;gap:40px}.book-block{padding:40px 28px}}
+  .book-left h2{font-family:'Rajdhani',sans-serif;font-weight:700;font-size:clamp(32px,3.6vw,46px);line-height:1.04;margin-bottom:18px}
+  .book-left h2 em{font-style:normal;color:var(--yellow)}
+  .book-left p{color:var(--silver);font-size:15px;line-height:1.6;margin-bottom:28px}
+  .book-points{display:flex;flex-direction:column;gap:14px}
+  .book-points .pt{display:flex;gap:12px;align-items:flex-start;font-size:13.5px;color:var(--silver)}
+  .book-points .pt svg{width:18px;height:18px;color:var(--yellow);flex-shrink:0;margin-top:1px}
+  .book-form{background:#0a0a0a;border:1px solid var(--line);border-radius:18px;padding:28px}
+
+  /* ===== Testimonials ===== */
+  .test-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+  @media (max-width:980px){.test-grid{grid-template-columns:1fr 1fr}}
+  @media (max-width:620px){.test-grid{grid-template-columns:1fr}}
+  .test{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:28px;display:flex;flex-direction:column;gap:18px}
+  .stars{display:flex;gap:3px;color:var(--yellow)}
+  .stars svg{width:14px;height:14px;fill:currentColor}
+  .test .quote{font-size:14.5px;line-height:1.6;color:var(--silver)}
+  .test .who{display:flex;align-items:center;gap:12px;margin-top:auto;padding-top:18px;border-top:1px solid var(--line)}
+  .test .avatar{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,#2a2a2a,#0a0a0a);display:grid;place-items:center;font-family:'Rajdhani',sans-serif;font-weight:700;color:var(--yellow);font-size:14px;border:1px solid var(--line-2)}
+  .test .who strong{display:block;font-size:13.5px;font-weight:600}
+  .test .who span{font-size:11.5px;color:var(--muted);font-family:'JetBrains Mono',monospace;letter-spacing:.12em}
+
+  /* ===== Instagram ===== */
+  .insta-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:8px}
+  @media (max-width:980px){.insta-grid{grid-template-columns:repeat(3,1fr)}}
+  .insta-tile{aspect-ratio:1/1;background:linear-gradient(160deg,#1a1a1a,#0a0a0a);border:1px solid var(--line);border-radius:10px;position:relative;overflow:hidden;cursor:pointer;display:grid;place-items:center;color:#2c2c2c;transition:transform .3s,border-color .3s}
+  .insta-tile:hover{transform:scale(1.02);border-color:var(--yellow)}
+  .insta-tile svg{width:40%;height:40%;stroke-width:1.2}
+  .insta-tile::after{content:attr(data-tag);position:absolute;bottom:8px;left:10px;font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--muted);letter-spacing:.14em;text-transform:uppercase}
+  .insta-tile:hover::before{content:'';position:absolute;inset:0;background:rgba(0,0,0,.55);backdrop-filter:blur(2px)}
+  .insta-tile .play{position:absolute;inset:0;display:none;align-items:center;justify-content:center;color:var(--yellow);z-index:2}
+  .insta-tile:hover .play{display:flex}
+
+  /* ===== FAQ ===== */
+  .faq-list{max-width:880px;margin:0 auto}
+  .faq-item{border-bottom:1px solid var(--line);padding:22px 0;cursor:pointer}
+  .faq-item:first-child{border-top:1px solid var(--line)}
+  .faq-q{display:flex;align-items:center;justify-content:space-between;gap:20px;font-family:'Rajdhani',sans-serif;font-weight:600;font-size:19px;letter-spacing:.005em;transition:color .25s}
+  .faq-item.open .faq-q{color:var(--yellow)}
+  .faq-q .ic{width:32px;height:32px;border:1px solid var(--line-2);border-radius:50%;display:grid;place-items:center;flex-shrink:0;transition:transform .25s,border-color .25s,background .25s}
+  .faq-item.open .ic{transform:rotate(45deg);border-color:var(--yellow);background:var(--yellow-soft)}
+  .faq-q .ic svg{width:14px;height:14px;color:var(--text)}
+  .faq-item.open .ic svg{color:var(--yellow)}
+  .faq-a{max-height:0;overflow:hidden;transition:max-height .3s ease,opacity .25s,padding .25s;opacity:0;color:var(--muted);font-size:14.5px;line-height:1.65}
+  .faq-item.open .faq-a{max-height:400px;opacity:1;padding-top:14px;padding-right:50px}
+
+  /* ===== Final CTA ===== */
+  .final-cta{position:relative;padding:120px 0;overflow:hidden;background:linear-gradient(160deg,#161616 0%,#0a0a0a 100%);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+  .final-cta::before,.final-cta::after{content:'';position:absolute;width:600px;height:600px;border-radius:50%;filter:blur(160px);opacity:.18}
+  .final-cta::before{background:#FFC400;top:-200px;left:-100px;opacity:.12}
+  .final-cta::after{background:#FFC400;bottom:-200px;right:-100px;opacity:.08}
+  .final-inner{position:relative;z-index:2;text-align:center;max-width:880px;margin:0 auto}
+  .final-inner .mono{display:block;margin-bottom:18px}
+  .final-inner h2{font-family:'Rajdhani',sans-serif;font-weight:700;font-size:clamp(36px,5vw,68px);line-height:1.05;margin-bottom:18px}
+  .final-inner h2 em{font-style:normal;color:var(--yellow)}
+  .final-inner p{color:var(--silver);font-size:16px;line-height:1.6;max-width:540px;margin:0 auto 36px}
+  .final-cta .cta-row{justify-content:center}
+  .road-runner{position:absolute;left:0;right:0;bottom:34px;height:2px;background:repeating-linear-gradient(90deg,var(--yellow) 0 22px,transparent 22px 38px);opacity:.4}
+
+  /* ===== Footer ===== */
+  footer{padding:80px 0 36px;background:var(--bg);border-top:1px solid var(--line)}
+  .foot-grid{display:grid;grid-template-columns:1.4fr 1fr 1fr 1.1fr;gap:48px;margin-bottom:60px}
+  @media (max-width:880px){.foot-grid{grid-template-columns:1fr 1fr;gap:36px}}
+  @media (max-width:520px){.foot-grid{grid-template-columns:1fr}}
+  .foot-col h5{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.2em;color:var(--muted);text-transform:uppercase;margin-bottom:18px}
+  .foot-col ul{list-style:none;display:flex;flex-direction:column;gap:10px}
+  .foot-col ul a{color:var(--silver);font-size:13.5px;transition:color .2s}
+  .foot-col ul a:hover{color:var(--yellow)}
+  .foot-brand p{color:var(--muted);font-size:13.5px;line-height:1.6;margin-top:18px;max-width:340px}
+  .foot-contact .row{display:flex;align-items:center;gap:10px;color:var(--silver);font-size:13.5px;margin-bottom:10px}
+  .foot-contact .row svg{width:14px;height:14px;color:var(--yellow);stroke-width:1.5}
+  .foot-bottom{display:flex;align-items:center;justify-content:space-between;padding-top:30px;border-top:1px solid var(--line);font-size:12px;color:var(--muted);flex-wrap:wrap;gap:16px}
+  .foot-bottom .socials{display:flex;gap:8px}
+  .foot-bottom .socials a{width:34px;height:34px;border:1px solid var(--line-2);border-radius:50%;display:grid;place-items:center;transition:border-color .2s,color .2s}
+  .foot-bottom .socials a:hover{border-color:var(--yellow);color:var(--yellow)}
+  .foot-bottom .socials svg{width:14px;height:14px}
+
+  /* ===== Floating WhatsApp ===== */
+  .float-wa{position:fixed;right:24px;bottom:24px;width:58px;height:58px;border-radius:50%;background:#25D366;display:grid;place-items:center;z-index:90;box-shadow:0 12px 32px -8px rgba(37,211,102,.5);transition:transform .25s}
+  .float-wa:hover{transform:scale(1.08)}
+  .float-wa::before{content:'';position:absolute;inset:-6px;border-radius:50%;border:2px solid rgba(37,211,102,.4);animation:wave 2s infinite}
+  @keyframes wave{0%{transform:scale(1);opacity:.7}100%{transform:scale(1.4);opacity:0}}
+  .float-wa svg{width:28px;height:28px;color:#fff}
+
+  /* ===== Reveal animations ===== */
+  .reveal{opacity:0;transform:translateY(24px);transition:opacity .8s ease,transform .8s ease}
+  .reveal.in{opacity:1;transform:none}
+  .reveal-stagger > *{opacity:0;transform:translateY(18px);transition:opacity .6s ease,transform .6s ease}
+  .reveal-stagger.in > *{opacity:1;transform:none}
+  .reveal-stagger.in > *:nth-child(1){transition-delay:.05s}
+  .reveal-stagger.in > *:nth-child(2){transition-delay:.12s}
+  .reveal-stagger.in > *:nth-child(3){transition-delay:.19s}
+  .reveal-stagger.in > *:nth-child(4){transition-delay:.26s}
+  .reveal-stagger.in > *:nth-child(5){transition-delay:.33s}
+  .reveal-stagger.in > *:nth-child(6){transition-delay:.4s}
+  .reveal-stagger.in > *:nth-child(7){transition-delay:.47s}
+  .reveal-stagger.in > *:nth-child(8){transition-delay:.54s}
+
+  /* Counters strip */
+  .counters{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:14px;overflow:hidden;margin-top:48px}
+  @media (max-width:720px){.counters{grid-template-columns:1fr 1fr}}
+  .counter{padding:24px 24px;background:var(--bg-2);text-align:center}
+  .counter .v{font-family:'Rajdhani',sans-serif;font-weight:700;font-size:42px;color:var(--yellow);line-height:1}
+  .counter .v span{color:var(--text)}
+  .counter .l{font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-top:8px}
+</style>
+</head>
+<body>
+
+<!-- ===== Logo template (reused) ===== -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="tt-mark" viewBox="0 0 32 32">
+      <!-- road frame -->
+      <path d="M4 26 L16 6 L28 26 Z" stroke="#C9C9C9" stroke-width="1.4" fill="none" stroke-linejoin="round"/>
+      <!-- yellow centerline -->
+      <path d="M16 8 L16 13 M16 16 L16 21" stroke="#FFC400" stroke-width="2.2" stroke-linecap="round"/>
+      <!-- horizon dash -->
+      <path d="M10 23 L22 23" stroke="#FFC400" stroke-width="1.4" stroke-linecap="round" stroke-dasharray="2 2"/>
+    </symbol>
+
+    <!-- Vehicle silhouettes -->
+    <symbol id="veh-sedan" viewBox="0 0 240 100">
+      <path d="M20 70 L40 50 Q60 35 100 32 L160 32 Q190 35 215 55 L225 65 L225 78 L210 78 Q205 88 195 88 Q185 88 180 78 L70 78 Q65 88 55 88 Q45 88 40 78 L20 78 Z" fill="currentColor"/>
+      <circle cx="55" cy="78" r="9" fill="#0E0E0E" stroke="#FFC400" stroke-width="1.5"/>
+      <circle cx="195" cy="78" r="9" fill="#0E0E0E" stroke="#FFC400" stroke-width="1.5"/>
+      <path d="M60 50 Q80 38 105 36 L155 36 Q180 38 200 54" fill="none" stroke="#0E0E0E" stroke-width="2"/>
+    </symbol>
+    <symbol id="veh-suv" viewBox="0 0 240 100">
+      <path d="M14 75 L26 45 Q40 32 70 30 L170 30 Q200 32 218 50 L228 70 L228 82 L212 82 Q207 92 197 92 Q187 92 182 82 L70 82 Q65 92 55 92 Q45 92 40 82 L14 82 Z" fill="currentColor"/>
+      <circle cx="55" cy="82" r="9" fill="#0E0E0E" stroke="#FFC400" stroke-width="1.5"/>
+      <circle cx="197" cy="82" r="9" fill="#0E0E0E" stroke="#FFC400" stroke-width="1.5"/>
+      <path d="M44 45 Q60 34 90 32 L160 32 Q188 34 206 48" fill="none" stroke="#0E0E0E" stroke-width="2"/>
+      <path d="M120 32 L120 48" stroke="#0E0E0E" stroke-width="2"/>
+    </symbol>
+    <symbol id="veh-van" viewBox="0 0 240 100">
+      <path d="M14 78 L18 36 Q22 26 40 26 L200 26 Q220 28 226 50 L230 70 L230 84 L214 84 Q210 92 200 92 Q190 92 186 84 L72 84 Q68 92 58 92 Q48 92 44 84 L14 84 Z" fill="currentColor"/>
+      <circle cx="58" cy="84" r="9" fill="#0E0E0E" stroke="#FFC400" stroke-width="1.5"/>
+      <circle cx="200" cy="84" r="9" fill="#0E0E0E" stroke="#FFC400" stroke-width="1.5"/>
+      <path d="M30 38 L80 38 L80 60 L30 60 Z" fill="#0E0E0E"/>
+      <path d="M90 38 L150 38 L150 60 L90 60 Z" fill="#0E0E0E"/>
+      <path d="M160 38 L210 38 L210 60 L160 60 Z" fill="#0E0E0E"/>
+    </symbol>
+  </defs>
+</svg>
+
+<!-- ===== Nav ===== -->
+<nav class="nav" id="nav" data-screen-label="01 Nav">
+  <div class="container nav-inner">
+    <a href="#top" class="logo">
+      <span class="logo-mark"><svg width="22" height="22"><use href="#tt-mark"/></svg></span>
+      <span class="logo-wm">
+        <span class="t1">TRANSFER <em>TATÁ</em></span>
+        <span class="t2">PREMIUM TRANSFERS</span>
+      </span>
+    </a>
+    <div class="nav-links">
+      <a href="#servicios">Servicios</a>
+      <a href="#flota">Flota</a>
+      <a href="#como">Cómo funciona</a>
+      <a href="#destinos">Destinos</a>
+      <a href="#reseñas">Reseñas</a>
+      <a href="#faq">FAQ</a>
+      <a href="#contacto">Contacto</a>
+    </div>
+    <a href="#reserva" class="nav-cta nav-cta-desktop">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+      Reservar
+    </a>
+    <button class="hamburger" id="hamburger" aria-label="Menu"><span></span></button>
+  </div>
+</nav>
+
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#servicios"><span>Servicios</span><span class="num">01</span></a>
+  <a href="#flota"><span>Flota</span><span class="num">02</span></a>
+  <a href="#como"><span>Cómo funciona</span><span class="num">03</span></a>
+  <a href="#destinos"><span>Destinos</span><span class="num">04</span></a>
+  <a href="#reseñas"><span>Reseñas</span><span class="num">05</span></a>
+  <a href="#faq"><span>FAQ</span><span class="num">06</span></a>
+  <a href="#contacto"><span>Contacto</span><span class="num">07</span></a>
+  <button class="mobile-cta">Reservar traslado →</button>
+</div>
+
+<!-- ===== Hero ===== -->
+<section class="hero" id="top" data-screen-label="02 Hero">
+  <div class="hero-bg">
+    <div class="glow g1"></div>
+    <div class="glow g2"></div>
+    <div class="grid-overlay"></div>
+    <svg class="road" viewBox="0 0 1600 800" preserveAspectRatio="xMidYMid slice">
+      <defs>
+        <linearGradient id="rg" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#FFC400" stop-opacity="0"/>
+          <stop offset="1" stop-color="#FFC400" stop-opacity=".18"/>
+        </linearGradient>
+        <linearGradient id="rg2" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#222"/>
+          <stop offset="1" stop-color="#0c0c0c"/>
+        </linearGradient>
+      </defs>
+      <!-- ground -->
+      <path d="M0 800 L0 580 Q600 480 800 470 Q1000 480 1600 580 L1600 800 Z" fill="url(#rg2)"/>
+      <!-- road -->
+      <path d="M0 800 L640 540 L800 510 L960 540 L1600 800 Z" fill="#171717"/>
+      <!-- center dashes -->
+      <g stroke="#FFC400" stroke-width="3" stroke-linecap="round" opacity=".8">
+        <line x1="800" y1="520" x2="800" y2="540"/>
+        <line x1="800" y1="565" x2="800" y2="600"/>
+        <line x1="800" y1="630" x2="800" y2="680"/>
+        <line x1="800" y1="715" x2="800" y2="790"/>
+      </g>
+      <!-- side stripes -->
+      <path d="M640 540 L0 800" stroke="#3a3a3a" stroke-width="2" fill="none"/>
+      <path d="M960 540 L1600 800" stroke="#3a3a3a" stroke-width="2" fill="none"/>
+      <!-- horizon glow -->
+      <rect x="600" y="480" width="400" height="60" fill="url(#rg)"/>
+    </svg>
+  </div>
+
+  <div class="container hero-inner">
+    <div>
+      <div class="eyebrow reveal">
+        <span class="dot"></span>
+        <span class="mono">Disponible 24/7 · Paraguay</span>
+      </div>
+      <h1 class="hero-title reveal">Traslados<br>seguros, cómodos<br>y <em>puntuales.</em></h1>
+      <p class="hero-sub reveal">Servicio de transfer personalizado para viajes, aeropuerto, eventos, empresas y traslados privados. Tu próximo viaje empieza con tranquilidad.</p>
+      <div class="chips reveal">
+        <span class="chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>Atención 24/7</span>
+        <span class="chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12l2-7h14l2 7M5 12h14v7H5z"/><circle cx="8" cy="16" r="1.5"/><circle cx="16" cy="16" r="1.5"/></svg>Vehículos confortables</span>
+        <span class="chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 13l4 4L19 7"/></svg>Puntualidad garantizada</span>
+        <span class="chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.5 8.5 0 1 1-3.5-6.9L21 3v6h-6"/></svg>Reservas por WhatsApp</span>
+      </div>
+      <div class="cta-row reveal">
+        <a class="btn btn-primary" href="#reserva">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.5 14.4l-2.5-1.2c-.3-.2-.7-.1-.9.2l-1 1.3c-1.6-.8-2.9-2.1-3.7-3.7l1.3-1c.3-.2.4-.6.2-.9L9.6 6.5c-.2-.3-.6-.5-.9-.4l-2.1.5C6.2 6.7 6 7 6 7.4c0 5.8 4.8 10.6 10.6 10.6.4 0 .7-.2.8-.6l.5-2.1c.1-.4-.1-.7-.4-.9z"/></svg>
+          Reservar por WhatsApp
+        </a>
+        <a class="btn btn-ghost" href="#servicios">
+          Ver servicios
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+        </a>
+      </div>
+    </div>
+
+    <!-- Quote card -->
+    <form class="quote-card reveal" onsubmit="event.preventDefault();showToast('Cotización enviada (demo) — un agente te contactará por WhatsApp')">
+      <div class="quote-head">
+        <span class="mono">// Cotizá tu traslado</span>
+        <span class="live"><span class="dot"></span> en línea</span>
+      </div>
+      <div class="field-grid">
+        <div class="field">
+          <label>Origen</label>
+          <div class="field-wrap">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="10" r="3"/><path d="M12 21s-7-7.5-7-12a7 7 0 0 1 14 0c0 4.5-7 12-7 12z"/></svg>
+            <input class="inp" placeholder="Aeropuerto Silvio Pettirossi" />
+          </div>
+        </div>
+        <div class="field">
+          <label>Destino</label>
+          <div class="field-wrap">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M3 11l18-8-8 18-2-8z"/></svg>
+            <input class="inp" placeholder="Hotel · Asunción centro" />
+          </div>
+        </div>
+      </div>
+      <div class="field-grid-3">
+        <div class="field">
+          <label>Fecha</label>
+          <div class="field-wrap">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 9h18M8 3v4M16 3v4"/></svg>
+            <input class="inp" type="text" placeholder="28 May 2026" />
+          </div>
+        </div>
+        <div class="field">
+          <label>Hora</label>
+          <div class="field-wrap">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+            <input class="inp" type="text" placeholder="14:30" />
+          </div>
+        </div>
+        <div class="field">
+          <label>Pasajeros</label>
+          <div class="field-wrap">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>
+            <input class="inp" type="text" placeholder="2 adultos" />
+          </div>
+        </div>
+      </div>
+      <button class="btn btn-primary" type="submit">
+        Cotizar traslado
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+      </button>
+    </form>
+  </div>
+</section>
+
+<!-- ===== Benefits / Trust ===== -->
+<section class="benefits" data-screen-label="03 Beneficios">
+  <div class="container">
+    <div class="benefits-grid reveal-stagger">
+      <div class="benefit">
+        <div class="num">B/01</div>
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+        <h3>Puntualidad garantizada</h3>
+        <p>Llegamos antes que vos. Monitoreamos cada traslado para evitar imprevistos.</p>
+      </div>
+      <div class="benefit">
+        <div class="num">B/02</div>
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 2l8 4v6c0 5-4 9-8 10-4-1-8-5-8-10V6l8-4z"/><path d="M9 12l2 2 4-4"/></svg>
+        <h3>Conductores responsables</h3>
+        <p>Equipo profesional, capacitado y verificado. Manejo defensivo y discreto.</p>
+      </div>
+      <div class="benefit">
+        <div class="num">B/03</div>
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 12l2-7h14l2 7M5 12h14v7H5z"/><circle cx="8" cy="16" r="1.5"/><circle cx="16" cy="16" r="1.5"/></svg>
+        <h3>Vehículos cómodos y seguros</h3>
+        <p>Unidades modernas, climatizadas y revisadas antes de cada salida.</p>
+      </div>
+      <div class="benefit">
+        <div class="num">B/04</div>
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M21 11.5a8.5 8.5 0 1 1-3.5-6.9L21 3v6h-6"/></svg>
+        <h3>Atención personalizada 24/7</h3>
+        <p>Reservás, consultás y coordinás directo con un humano por WhatsApp.</p>
+      </div>
+    </div>
+
+    <div class="counters reveal">
+      <div class="counter"><div class="v" data-target="2400">0<span>+</span></div><div class="l">Traslados completados</div></div>
+      <div class="counter"><div class="v" data-target="99">0<span>%</span></div><div class="l">Puntualidad</div></div>
+      <div class="counter"><div class="v" data-target="24">0<span>/7</span></div><div class="l">Disponibilidad</div></div>
+      <div class="counter"><div class="v" data-target="4.9">0</div><div class="l">Calificación promedio</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== Services ===== -->
+<section class="block" id="servicios" data-screen-label="04 Servicios">
+  <div class="container">
+    <div class="section-head reveal">
+      <div class="lead">
+        <span class="mono">// 04 — Servicios</span>
+        <h2>Cada viaje, <em>resuelto.</em></h2>
+      </div>
+      <p class="desc">Cubrimos todo tipo de traslados: privados, corporativos, aeropuerto, eventos y turismo. Coordinamos por WhatsApp en minutos.</p>
+    </div>
+
+    <div class="services-grid reveal-stagger">
+      <article class="service">
+        <div class="service-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 16l-4-4V5l-2-1-2 1v3L3 14v2l8-2v4l-2 2v2l4-1 4 1v-2l-2-2v-4l6 2z"/></svg></div>
+        <h3>Transfer al aeropuerto</h3>
+        <p>Ida y vuelta a Silvio Pettirossi, Guaraní y aeropuertos regionales con seguimiento de vuelo.</p>
+        <a class="link" href="#contacto">Consultar <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg></a>
+      </article>
+      <article class="service">
+        <div class="service-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M3 13h18"/></svg></div>
+        <h3>Traslados corporativos</h3>
+        <p>Cuentas empresariales, facturación, choferes asignados y reportes mensuales.</p>
+        <a class="link" href="#contacto">Consultar <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg></a>
+      </article>
+      <article class="service">
+        <div class="service-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 22s-7-7-7-12a7 7 0 0 1 14 0c0 5-7 12-7 12z"/><circle cx="12" cy="10" r="3"/></svg></div>
+        <h3>Viajes privados</h3>
+        <p>Recorridos a medida dentro y fuera de la ciudad, con choferes que conocen el camino.</p>
+        <a class="link" href="#contacto">Consultar <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg></a>
+      </article>
+      <article class="service">
+        <div class="service-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 3l1.9 5.8H20l-4.9 3.6L17 18l-5-3.7L7 18l1.9-5.6L4 8.8h6.1z"/></svg></div>
+        <h3>Traslados para eventos</h3>
+        <p>Bodas, cumpleaños, congresos y conciertos. Coordinación con horarios precisos.</p>
+        <a class="link" href="#contacto">Consultar <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg></a>
+      </article>
+      <article class="service">
+        <div class="service-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg></div>
+        <h3>Turismo y recorridos</h3>
+        <p>City tours, excursiones al interior y recorridos personalizados para visitantes.</p>
+        <a class="link" href="#contacto">Consultar <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg></a>
+      </article>
+      <article class="service">
+        <div class="service-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="9" cy="8" r="3"/><circle cx="17" cy="9" r="2.5"/><path d="M3 20a6 6 0 0 1 12 0M14 20a5 5 0 0 1 7 0"/></svg></div>
+        <h3>Familiares o grupales</h3>
+        <p>Vans confortables para grupos de hasta 14 pasajeros, equipaje y mascotas.</p>
+        <a class="link" href="#contacto">Consultar <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg></a>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ===== How it works ===== -->
+<section class="block how-bg" id="como" data-screen-label="05 Como funciona">
+  <div class="container">
+    <div class="section-head reveal">
+      <div class="lead">
+        <span class="mono">// 05 — Cómo funciona</span>
+        <h2>4 pasos, cero <em>fricción.</em></h2>
+      </div>
+      <p class="desc">Desde la consulta hasta el viaje, el proceso es directo. Sin formularios eternos ni esperas.</p>
+    </div>
+    <div class="steps reveal-stagger">
+      <div class="road-line"></div>
+      <div class="step">
+        <div class="num">01</div>
+        <h4>Solicitás tu traslado</h4>
+        <p>Escribinos por WhatsApp o completá el formulario con origen, destino y horario.</p>
+        <div class="dot"></div>
+      </div>
+      <div class="step">
+        <div class="num">02</div>
+        <h4>Confirmamos datos</h4>
+        <p>En minutos recibís precio, vehículo asignado y horario confirmado.</p>
+        <div class="dot"></div>
+      </div>
+      <div class="step">
+        <div class="num">03</div>
+        <h4>Te buscamos puntual</h4>
+        <p>Tu chofer llega al punto acordado, identificado y a tiempo.</p>
+        <div class="dot"></div>
+      </div>
+      <div class="step">
+        <div class="num">04</div>
+        <h4>Llegás cómodo</h4>
+        <p>Vehículo climatizado, manejo seguro y atención dedicada hasta el destino.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== Fleet ===== -->
+<section class="block" id="flota" data-screen-label="06 Flota">
+  <div class="container">
+    <div class="section-head reveal">
+      <div class="lead">
+        <span class="mono">// 06 — Flota</span>
+        <h2>Vehículos a la <em>altura.</em></h2>
+      </div>
+      <p class="desc">Tres categorías cuidadosamente mantenidas para cada tipo de viaje. Climatización, equipaje cómodo y choferes capacitados.</p>
+    </div>
+
+    <div class="fleet-grid reveal-stagger">
+      <article class="fleet-card">
+        <div class="fleet-img">
+          <span class="badge">Categoría · Sedán</span>
+          <svg class="veh" viewBox="0 0 240 100"><use href="#veh-sedan"/></svg>
+        </div>
+        <div class="fleet-body">
+          <h3>Sedán Ejecutivo <span class="cap">1–3 pax</span></h3>
+          <p class="subt">Confort discreto para ejecutivos y viajes individuales.</p>
+          <div class="specs">
+            <div class="spec"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>Hasta 3 pasajeros</div>
+            <div class="spec"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 3v18M3 12h18"/></svg>Aire acondicionado</div>
+            <div class="spec"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M4 11l8-7 8 7v9H4z"/></svg>Asientos premium</div>
+            <div class="spec"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="9" width="18" height="11" rx="2"/><path d="M8 9V6h8v3"/></svg>2 valijas</div>
+          </div>
+          <a class="btn btn-ghost" href="#contacto">Consultar disponibilidad</a>
+        </div>
+      </article>
+
+      <article class="fleet-card">
+        <div class="fleet-img">
+          <span class="badge">Categoría · SUV</span>
+          <svg class="veh" viewBox="0 0 240 100"><use href="#veh-suv"/></svg>
+        </div>
+        <div class="fleet-body">
+          <h3>SUV Familiar <span class="cap">1–5 pax</span></h3>
+          <p class="subt">Espacio extra para familias o viajes con más equipaje.</p>
+          <div class="specs">
+            <div class="spec"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>Hasta 5 pasajeros</div>
+            <div class="spec"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 3v18M3 12h18"/></svg>Climatización 3 zonas</div>
+            <div class="spec"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M4 11l8-7 8 7v9H4z"/></svg>Asiento infantil opcional</div>
+            <div class="spec"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="9" width="18" height="11" rx="2"/><path d="M8 9V6h8v3"/></svg>5 valijas</div>
+          </div>
+          <a class="btn btn-ghost" href="#contacto">Consultar disponibilidad</a>
+        </div>
+      </article>
+
+      <article class="fleet-card">
+        <div class="fleet-img">
+          <span class="badge">Categoría · Van</span>
+          <svg class="veh" viewBox="0 0 240 100"><use href="#veh-van"/></svg>
+        </div>
+        <div class="fleet-body">
+          <h3>Van Grupal <span class="cap">6–14 pax</span></h3>
+          <p class="subt">Para grupos, empresas y traslados al interior con todo el equipaje.</p>
+          <div class="specs">
+            <div class="spec"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>Hasta 14 pasajeros</div>
+            <div class="spec"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 3v18M3 12h18"/></svg>Aire acondicionado</div>
+            <div class="spec"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M4 11l8-7 8 7v9H4z"/></svg>Butacas reclinables</div>
+            <div class="spec"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="9" width="18" height="11" rx="2"/><path d="M8 9V6h8v3"/></svg>Bodega amplia</div>
+          </div>
+          <a class="btn btn-ghost" href="#contacto">Consultar disponibilidad</a>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ===== Destinations ===== -->
+<section class="block" id="destinos" data-screen-label="07 Destinos">
+  <div class="container">
+    <div class="section-head reveal">
+      <div class="lead">
+        <span class="mono">// 07 — Destinos & escenarios</span>
+        <h2>Te llevamos a <em>donde sea.</em></h2>
+      </div>
+      <p class="desc">Aeropuertos, hoteles, eventos, empresas y viajes al interior — coordinamos cualquier ruta dentro y fuera de la ciudad.</p>
+    </div>
+    <div class="dest-grid reveal-stagger">
+      <a class="dest" href="#reserva"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M21 16l-4-4V5l-2-1-2 1v3L3 14v2l8-2v4l-2 2v2l4-1 4 1v-2l-2-2v-4l6 2z"/></svg><span class="lbl"><strong>Aeropuerto</strong><span>Silvio Pettirossi</span></span></a>
+      <a class="dest" href="#reserva"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="6" width="18" height="14" rx="2"/><path d="M7 6V4h10v2M3 12h18"/></svg><span class="lbl"><strong>Terminal</strong><span>Asunción · CDE</span></span></a>
+      <a class="dest" href="#reserva"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 21V8l9-5 9 5v13M9 21v-7h6v7"/></svg><span class="lbl"><strong>Hoteles</strong><span>Pickup & drop-off</span></span></a>
+      <a class="dest" href="#reserva"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 3l1.9 5.8H20l-4.9 3.6L17 18l-5-3.7L7 18l1.9-5.6L4 8.8h6.1z"/></svg><span class="lbl"><strong>Eventos</strong><span>Bodas · conciertos</span></span></a>
+      <a class="dest" href="#reserva"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg><span class="lbl"><strong>Empresas</strong><span>Cuentas corporativas</span></span></a>
+      <a class="dest" href="#reserva"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg><span class="lbl"><strong>Interior</strong><span>Encarnación · CDE</span></span></a>
+      <a class="dest" href="#reserva"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg><span class="lbl"><strong>Nocturnos</strong><span>Vuelta segura</span></span></a>
+      <a class="dest" href="#reserva"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 22s-7-7-7-12a7 7 0 0 1 14 0c0 5-7 12-7 12z"/><circle cx="12" cy="10" r="3"/></svg><span class="lbl"><strong>Turismo</strong><span>City tours</span></span></a>
+    </div>
+  </div>
+</section>
+
+<!-- ===== Booking ===== -->
+<section class="block" id="reserva" data-screen-label="08 Reserva">
+  <div class="container">
+    <div class="book-block reveal">
+      <div class="book-grid">
+        <div class="book-left">
+          <span class="mono" style="display:block;margin-bottom:14px">// 08 — Cotización</span>
+          <h2>Solicitá tu traslado en <em>minutos.</em></h2>
+          <p>Completá los datos básicos y coordinamos la disponibilidad por WhatsApp. Sin compromiso, sin pagos adelantados.</p>
+          <div class="book-points">
+            <div class="pt"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 13l4 4L19 7"/></svg>Respuesta en menos de 10 minutos en horario diurno.</div>
+            <div class="pt"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 13l4 4L19 7"/></svg>Precio cerrado antes de salir — sin sorpresas.</div>
+            <div class="pt"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 13l4 4L19 7"/></svg>Coordinación directa por WhatsApp con tu chofer.</div>
+            <div class="pt"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 13l4 4L19 7"/></svg>Cancelación flexible hasta 4 hs antes del traslado.</div>
+          </div>
+        </div>
+        <form class="book-form" onsubmit="event.preventDefault();showToast('Solicitud preparada — abriendo WhatsApp (demo)')">
+          <div class="field-grid">
+            <div class="field"><label>Nombre</label><div class="field-wrap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg><input class="inp" placeholder="Tu nombre completo" /></div></div>
+            <div class="field"><label>Teléfono</label><div class="field-wrap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.7 19.7 0 0 1-8.6-3.1A19.4 19.4 0 0 1 5 12.6 19.7 19.7 0 0 1 1.9 4 2 2 0 0 1 4 2h3a2 2 0 0 1 2 1.7l.8 4a2 2 0 0 1-.6 2L7.6 11a16 16 0 0 0 6 6l1.3-1.7a2 2 0 0 1 2-.6l4 .8a2 2 0 0 1 1.7 2z"/></svg><input class="inp" placeholder="+595 9XX XXX XXX" /></div></div>
+            <div class="field"><label>Origen</label><div class="field-wrap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="10" r="3"/><path d="M12 21s-7-7.5-7-12a7 7 0 0 1 14 0c0 4.5-7 12-7 12z"/></svg><input class="inp" placeholder="Dirección de origen" /></div></div>
+            <div class="field"><label>Destino</label><div class="field-wrap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M3 11l18-8-8 18-2-8z"/></svg><input class="inp" placeholder="Dirección de destino" /></div></div>
+          </div>
+          <div class="field-grid-3">
+            <div class="field"><label>Fecha</label><div class="field-wrap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 9h18M8 3v4M16 3v4"/></svg><input class="inp" placeholder="DD / MM / AAAA" /></div></div>
+            <div class="field"><label>Hora</label><div class="field-wrap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><input class="inp" placeholder="HH : MM" /></div></div>
+            <div class="field"><label>Pasajeros</label><div class="field-wrap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg><input class="inp" placeholder="Cantidad" /></div></div>
+          </div>
+          <div class="field"><label>Comentarios</label><div class="field-wrap" style="position:relative"><svg style="top:18px;transform:none" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 4h16v12H8l-4 4z"/></svg><textarea class="inp" rows="3" placeholder="Equipaje extra, asiento infantil, parada intermedia..." style="resize:none;padding-top:14px"></textarea></div></div>
+          <button class="btn btn-primary" type="submit" style="width:100%;justify-content:center">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.5 14.4l-2.5-1.2c-.3-.2-.7-.1-.9.2l-1 1.3c-1.6-.8-2.9-2.1-3.7-3.7l1.3-1c.3-.2.4-.6.2-.9L9.6 6.5c-.2-.3-.6-.5-.9-.4l-2.1.5C6.2 6.7 6 7 6 7.4c0 5.8 4.8 10.6 10.6 10.6.4 0 .7-.2.8-.6l.5-2.1c.1-.4-.1-.7-.4-.9z"/></svg>
+            Enviar solicitud por WhatsApp
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== Testimonials ===== -->
+<section class="block" id="reseñas" data-screen-label="09 Reseñas">
+  <div class="container">
+    <div class="section-head reveal">
+      <div class="lead">
+        <span class="mono">// 09 — Reseñas</span>
+        <h2>Lo que dicen <em>nuestros clientes.</em></h2>
+      </div>
+      <p class="desc">Resultados consistentes que se traducen en confianza y viajes repetidos.</p>
+    </div>
+    <div class="test-grid reveal-stagger">
+      <div class="test">
+        <div class="stars"><svg viewBox="0 0 24 24"><path d="M12 2l3 7 7 .5-5.5 4.7L18 22l-6-4-6 4 1.5-7.8L2 9.5 9 9z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3 7 7 .5-5.5 4.7L18 22l-6-4-6 4 1.5-7.8L2 9.5 9 9z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3 7 7 .5-5.5 4.7L18 22l-6-4-6 4 1.5-7.8L2 9.5 9 9z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3 7 7 .5-5.5 4.7L18 22l-6-4-6 4 1.5-7.8L2 9.5 9 9z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3 7 7 .5-5.5 4.7L18 22l-6-4-6 4 1.5-7.8L2 9.5 9 9z"/></svg></div>
+        <p class="quote">"Reservé un traslado al aeropuerto para un vuelo a las 5am. Llegaron 15 minutos antes, vehículo impecable. La diferencia se nota."</p>
+        <div class="who"><div class="avatar">MR</div><div><strong>María R.</strong><span>Viaje · Aeropuerto</span></div></div>
+      </div>
+      <div class="test">
+        <div class="stars"><svg viewBox="0 0 24 24"><path d="M12 2l3 7 7 .5-5.5 4.7L18 22l-6-4-6 4 1.5-7.8L2 9.5 9 9z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3 7 7 .5-5.5 4.7L18 22l-6-4-6 4 1.5-7.8L2 9.5 9 9z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3 7 7 .5-5.5 4.7L18 22l-6-4-6 4 1.5-7.8L2 9.5 9 9z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3 7 7 .5-5.5 4.7L18 22l-6-4-6 4 1.5-7.8L2 9.5 9 9z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3 7 7 .5-5.5 4.7L18 22l-6-4-6 4 1.5-7.8L2 9.5 9 9z"/></svg></div>
+        <p class="quote">"Usamos Transfer Tatá para visitas corporativas. Choferes formales, vehículos limpios y facturación al día. Recomendados."</p>
+        <div class="who"><div class="avatar">JL</div><div><strong>Jorge L.</strong><span>Cuenta · Empresarial</span></div></div>
+      </div>
+      <div class="test">
+        <div class="stars"><svg viewBox="0 0 24 24"><path d="M12 2l3 7 7 .5-5.5 4.7L18 22l-6-4-6 4 1.5-7.8L2 9.5 9 9z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3 7 7 .5-5.5 4.7L18 22l-6-4-6 4 1.5-7.8L2 9.5 9 9z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3 7 7 .5-5.5 4.7L18 22l-6-4-6 4 1.5-7.8L2 9.5 9 9z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3 7 7 .5-5.5 4.7L18 22l-6-4-6 4 1.5-7.8L2 9.5 9 9z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3 7 7 .5-5.5 4.7L18 22l-6-4-6 4 1.5-7.8L2 9.5 9 9z"/></svg></div>
+        <p class="quote">"Contraté la van para llevar al equipo a un congreso en CDE. Cómodos, puntuales y muy buen trato. Volvemos a contratar."</p>
+        <div class="who"><div class="avatar">CV</div><div><strong>Carolina V.</strong><span>Viaje · Interior</span></div></div>
+      </div>
+      <div class="test">
+        <div class="stars"><svg viewBox="0 0 24 24"><path d="M12 2l3 7 7 .5-5.5 4.7L18 22l-6-4-6 4 1.5-7.8L2 9.5 9 9z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3 7 7 .5-5.5 4.7L18 22l-6-4-6 4 1.5-7.8L2 9.5 9 9z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3 7 7 .5-5.5 4.7L18 22l-6-4-6 4 1.5-7.8L2 9.5 9 9z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3 7 7 .5-5.5 4.7L18 22l-6-4-6 4 1.5-7.8L2 9.5 9 9z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3 7 7 .5-5.5 4.7L18 22l-6-4-6 4 1.5-7.8L2 9.5 9 9z"/></svg></div>
+        <p class="quote">"Atención por WhatsApp impecable. Coordinamos un traslado nocturno y todo salió como dijeron. Tranquilidad total."</p>
+        <div class="who"><div class="avatar">DG</div><div><strong>Daniela G.</strong><span>Traslado · Nocturno</span></div></div>
+      </div>
+      <div class="test">
+        <div class="stars"><svg viewBox="0 0 24 24"><path d="M12 2l3 7 7 .5-5.5 4.7L18 22l-6-4-6 4 1.5-7.8L2 9.5 9 9z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3 7 7 .5-5.5 4.7L18 22l-6-4-6 4 1.5-7.8L2 9.5 9 9z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3 7 7 .5-5.5 4.7L18 22l-6-4-6 4 1.5-7.8L2 9.5 9 9z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3 7 7 .5-5.5 4.7L18 22l-6-4-6 4 1.5-7.8L2 9.5 9 9z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3 7 7 .5-5.5 4.7L18 22l-6-4-6 4 1.5-7.8L2 9.5 9 9z"/></svg></div>
+        <p class="quote">"Mejor experiencia de transfer en mucho tiempo. El chofer se manejó con discreción y profesionalismo. Cinco estrellas."</p>
+        <div class="who"><div class="avatar">RF</div><div><strong>Rodrigo F.</strong><span>Viaje · Privado</span></div></div>
+      </div>
+      <div class="test">
+        <div class="stars"><svg viewBox="0 0 24 24"><path d="M12 2l3 7 7 .5-5.5 4.7L18 22l-6-4-6 4 1.5-7.8L2 9.5 9 9z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3 7 7 .5-5.5 4.7L18 22l-6-4-6 4 1.5-7.8L2 9.5 9 9z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3 7 7 .5-5.5 4.7L18 22l-6-4-6 4 1.5-7.8L2 9.5 9 9z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3 7 7 .5-5.5 4.7L18 22l-6-4-6 4 1.5-7.8L2 9.5 9 9z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3 7 7 .5-5.5 4.7L18 22l-6-4-6 4 1.5-7.8L2 9.5 9 9z"/></svg></div>
+        <p class="quote">"Nos buscaron para la boda con tiempo de sobra. El detalle del agua fría y la música suave hizo toda la diferencia."</p>
+        <div class="who"><div class="avatar">PS</div><div><strong>Patricia S.</strong><span>Evento · Boda</span></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== Instagram ===== -->
+<section class="block" id="instagram" data-screen-label="10 Instagram">
+  <div class="container">
+    <div class="section-head reveal">
+      <div class="lead">
+        <span class="mono">// 10 — @transfertata</span>
+        <h2>Seguinos en <em>Instagram.</em></h2>
+      </div>
+      <a class="btn btn-ghost" href="#">Ver Instagram <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg></a>
+    </div>
+    <div class="insta-grid reveal-stagger">
+      <div class="insta-tile" data-tag="#aeropuerto"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M21 16l-4-4V5l-2-1-2 1v3L3 14v2l8-2v4l-2 2v2l4-1 4 1v-2l-2-2v-4l6 2z"/></svg></div>
+      <div class="insta-tile" data-tag="#flota"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 12l2-7h14l2 7M5 12h14v7H5z"/><circle cx="8" cy="16" r="1.5"/><circle cx="16" cy="16" r="1.5"/></svg></div>
+      <div class="insta-tile" data-tag="#ruta"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 21l9-18 9 18M8 14h8"/></svg></div>
+      <div class="insta-tile" data-tag="#nocturno"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg></div>
+      <div class="insta-tile" data-tag="#viajes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg></div>
+      <div class="insta-tile" data-tag="#cliente"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg></div>
+      <div class="insta-tile" data-tag="#evento"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 3l1.9 5.8H20l-4.9 3.6L17 18l-5-3.7L7 18l1.9-5.6L4 8.8h6.1z"/></svg></div>
+      <div class="insta-tile" data-tag="#suv"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 12l2-7h14l2 7M5 12h14v7H5z"/></svg></div>
+      <div class="insta-tile" data-tag="#detalles"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="3"/><circle cx="12" cy="12" r="9"/></svg></div>
+      <div class="insta-tile" data-tag="#ruta"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 21V8l9-5 9 5v13"/></svg></div>
+      <div class="insta-tile" data-tag="#equipo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="9" cy="8" r="3"/><circle cx="17" cy="9" r="2.5"/><path d="M3 20a6 6 0 0 1 12 0M14 20a5 5 0 0 1 7 0"/></svg></div>
+      <div class="insta-tile" data-tag="#ciudad"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 21V8h6v13M9 21V4h6v17M15 21V12h6v9"/></svg></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== FAQ ===== -->
+<section class="block" id="faq" data-screen-label="11 FAQ">
+  <div class="container">
+    <div class="section-head reveal" style="justify-content:center;text-align:center;flex-direction:column;align-items:center">
+      <div class="lead" style="text-align:center">
+        <span class="mono">// 11 — Preguntas frecuentes</span>
+        <h2>Todo lo que querés <em>saber.</em></h2>
+      </div>
+    </div>
+
+    <div class="faq-list reveal" id="faqList">
+      <div class="faq-item"><div class="faq-q">¿Con cuánta anticipación debo reservar? <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg></span></div><div class="faq-a">Recomendamos reservar con al menos 4 horas de anticipación para asegurar disponibilidad. Para horarios de alta demanda (aeropuerto, eventos, fines de semana), idealmente con 24 hs.</div></div>
+      <div class="faq-item"><div class="faq-q">¿Realizan traslados al aeropuerto? <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg></span></div><div class="faq-a">Sí. Cubrimos Silvio Pettirossi, Guaraní y aeropuertos regionales con seguimiento del número de vuelo para ajustar el horario en caso de retrasos.</div></div>
+      <div class="faq-item"><div class="faq-q">¿Trabajan 24/7? <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg></span></div><div class="faq-a">Sí, atención y traslados las 24 horas, todos los días. Los horarios nocturnos requieren coordinación previa.</div></div>
+      <div class="faq-item"><div class="faq-q">¿Puedo reservar para grupos? <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg></span></div><div class="faq-a">Sí. Disponemos de vans con capacidad para 6 a 14 pasajeros, con espacio amplio para equipaje.</div></div>
+      <div class="faq-item"><div class="faq-q">¿Cómo se confirma el precio? <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg></span></div><div class="faq-a">Te enviamos una cotización cerrada por WhatsApp antes del traslado. Sin recargos sorpresa por demoras o cambios menores.</div></div>
+      <div class="faq-item"><div class="faq-q">¿Aceptan viajes al interior? <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg></span></div><div class="faq-a">Sí. Realizamos traslados a Encarnación, Ciudad del Este, Pilar y todo el interior del país.</div></div>
+      <div class="faq-item"><div class="faq-q">¿Puedo coordinar ida y vuelta? <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg></span></div><div class="faq-a">Sí, podés reservar ida y vuelta en una misma solicitud y obtenés una tarifa preferencial.</div></div>
+      <div class="faq-item"><div class="faq-q">¿Qué datos necesito enviar para cotizar? <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg></span></div><div class="faq-a">Origen, destino, fecha, hora estimada y cantidad de pasajeros. Si tenés equipaje extra o necesidades especiales, también es útil.</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== Final CTA ===== -->
+<section class="final-cta" data-screen-label="12 CTA final">
+  <div class="container">
+    <div class="final-inner reveal">
+      <span class="mono">// 12 — Tu próximo traslado</span>
+      <h2>Tu próximo traslado empieza con <em>seguridad y puntualidad.</em></h2>
+      <p>Reservá en minutos, recibí confirmación inmediata y viajá tranquilo. Te llevamos a tu destino, siempre.</p>
+      <div class="cta-row">
+        <a class="btn btn-primary" href="#reserva">Reservar ahora
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+        </a>
+        <a class="btn btn-ghost" href="#">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.5 14.4l-2.5-1.2c-.3-.2-.7-.1-.9.2l-1 1.3c-1.6-.8-2.9-2.1-3.7-3.7l1.3-1c.3-.2.4-.6.2-.9L9.6 6.5c-.2-.3-.6-.5-.9-.4l-2.1.5C6.2 6.7 6 7 6 7.4c0 5.8 4.8 10.6 10.6 10.6.4 0 .7-.2.8-.6l.5-2.1c.1-.4-.1-.7-.4-.9z"/></svg>
+          Consultar por WhatsApp
+        </a>
+      </div>
+    </div>
+  </div>
+  <div class="road-runner"></div>
+</section>
+
+<!-- ===== Footer ===== -->
+<footer id="contacto" data-screen-label="13 Footer">
+  <div class="container">
+    <div class="foot-grid">
+      <div class="foot-col foot-brand">
+        <div class="logo">
+          <span class="logo-mark"><svg width="22" height="22"><use href="#tt-mark"/></svg></span>
+          <span class="logo-wm">
+            <span class="t1">TRANSFER <em>TATÁ</em></span>
+            <span class="t2">PREMIUM TRANSFERS</span>
+          </span>
+        </div>
+        <p>Traslados privados de personas. Seguridad, puntualidad y atención dedicada — siempre.</p>
+      </div>
+      <div class="foot-col">
+        <h5>Navegación</h5>
+        <ul>
+          <li><a href="#top">Inicio</a></li>
+          <li><a href="#servicios">Servicios</a></li>
+          <li><a href="#flota">Flota</a></li>
+          <li><a href="#destinos">Destinos</a></li>
+          <li><a href="#faq">FAQ</a></li>
+        </ul>
+      </div>
+      <div class="foot-col">
+        <h5>Servicios</h5>
+        <ul>
+          <li><a href="#servicios">Aeropuerto</a></li>
+          <li><a href="#servicios">Corporativo</a></li>
+          <li><a href="#servicios">Eventos</a></li>
+          <li><a href="#servicios">Turismo</a></li>
+          <li><a href="#servicios">Viajes al interior</a></li>
+        </ul>
+      </div>
+      <div class="foot-col foot-contact">
+        <h5>Contacto</h5>
+        <div class="row"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M17.5 14.4l-2.5-1.2c-.3-.2-.7-.1-.9.2l-1 1.3c-1.6-.8-2.9-2.1-3.7-3.7l1.3-1c.3-.2.4-.6.2-.9L9.6 6.5c-.2-.3-.6-.5-.9-.4l-2.1.5C6.2 6.7 6 7 6 7.4c0 5.8 4.8 10.6 10.6 10.6.4 0 .7-.2.8-.6l.5-2.1c.1-.4-.1-.7-.4-.9z" fill="currentColor" stroke="none"/></svg>WhatsApp: +595 9XX XXX XXX</div>
+        <div class="row"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1"/></svg>@transfertata</div>
+        <div class="row"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg>hola@transfertata.com.py</div>
+        <div class="row"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>Atención 24/7</div>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <div>© 2026 Transfer Tatá. Todos los derechos reservados.</div>
+      <div class="socials">
+        <a href="#" aria-label="WhatsApp"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.5 14.4l-2.5-1.2c-.3-.2-.7-.1-.9.2l-1 1.3c-1.6-.8-2.9-2.1-3.7-3.7l1.3-1c.3-.2.4-.6.2-.9L9.6 6.5c-.2-.3-.6-.5-.9-.4l-2.1.5C6.2 6.7 6 7 6 7.4c0 5.8 4.8 10.6 10.6 10.6.4 0 .7-.2.8-.6l.5-2.1c.1-.4-.1-.7-.4-.9z"/></svg></a>
+        <a href="#" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor"/></svg></a>
+        <a href="#" aria-label="Email"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg></a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- Floating WhatsApp -->
+<a href="#reserva" class="float-wa" aria-label="WhatsApp">
+  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.5 14.4l-2.5-1.2c-.3-.2-.7-.1-.9.2l-1 1.3c-1.6-.8-2.9-2.1-3.7-3.7l1.3-1c.3-.2.4-.6.2-.9L9.6 6.5c-.2-.3-.6-.5-.9-.4l-2.1.5C6.2 6.7 6 7 6 7.4c0 5.8 4.8 10.6 10.6 10.6.4 0 .7-.2.8-.6l.5-2.1c.1-.4-.1-.7-.4-.9z"/></svg>
+</a>
+
+<div id="toast" style="position:fixed;left:50%;bottom:32px;transform:translateX(-50%) translateY(20px);background:#1a1a1a;border:1px solid var(--yellow);color:var(--text);padding:14px 22px;border-radius:12px;font-size:13.5px;z-index:120;opacity:0;transition:opacity .25s,transform .25s;pointer-events:none;box-shadow:0 12px 32px -8px rgba(0,0,0,.6)"></div>
+
+<script>
+(function(){
+  // Nav scroll state
+  const nav=document.getElementById('nav');
+  const onScroll=()=>{nav.classList.toggle('scrolled',window.scrollY>20)};
+  window.addEventListener('scroll',onScroll,{passive:true});onScroll();
+
+  // Hamburger
+  const burger=document.getElementById('hamburger');
+  const menu=document.getElementById('mobileMenu');
+  const toggleMenu=(open)=>{
+    const willOpen = open === undefined ? !menu.classList.contains('open') : open;
+    menu.classList.toggle('open',willOpen);
+    burger.classList.toggle('open',willOpen);
+    document.body.style.overflow=willOpen?'hidden':'';
+  };
+  burger.addEventListener('click',()=>toggleMenu());
+  menu.querySelectorAll('a, .mobile-cta').forEach(a=>a.addEventListener('click',()=>toggleMenu(false)));
+
+  // FAQ
+  document.querySelectorAll('.faq-item').forEach(el=>{
+    el.querySelector('.faq-q').addEventListener('click',()=>{
+      const wasOpen=el.classList.contains('open');
+      document.querySelectorAll('.faq-item.open').forEach(o=>o.classList.remove('open'));
+      if(!wasOpen) el.classList.add('open');
+    });
+  });
+
+  // Reveal on scroll
+  const io=new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}})
+  },{threshold:.12,rootMargin:'0px 0px -40px 0px'});
+  document.querySelectorAll('.reveal,.reveal-stagger').forEach(el=>io.observe(el));
+
+  // Counters
+  const counterIO=new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{
+      if(!e.isIntersecting) return;
+      const node=e.target;
+      const target=parseFloat(node.dataset.target);
+      const isDecimal=target%1!==0;
+      const dur=1200; const start=performance.now();
+      const suffix=node.querySelector('span')?node.querySelector('span').textContent:'';
+      const step=(t)=>{
+        const p=Math.min(1,(t-start)/dur);
+        const eased=1-Math.pow(1-p,3);
+        const val=isDecimal?(target*eased).toFixed(1):Math.floor(target*eased);
+        node.innerHTML=val+(suffix?`<span>${suffix}</span>`:'');
+        if(p<1) requestAnimationFrame(step);
+      };
+      requestAnimationFrame(step);
+      counterIO.unobserve(node);
+    });
+  },{threshold:.4});
+  document.querySelectorAll('.counter .v').forEach(c=>counterIO.observe(c));
+
+  // Smooth scroll
+  document.querySelectorAll('a[href^="#"]').forEach(a=>{
+    a.addEventListener('click',ev=>{
+      const id=a.getAttribute('href');
+      if(id.length>1 && document.querySelector(id)){
+        ev.preventDefault();
+        const el=document.querySelector(id);
+        const top=el.getBoundingClientRect().top+window.scrollY-60;
+        window.scrollTo({top,behavior:'smooth'});
+      }
+    });
+  });
+
+  // Toast
+  window.showToast=(msg)=>{
+    const t=document.getElementById('toast');
+    t.textContent=msg;
+    t.style.opacity='1';t.style.transform='translateX(-50%) translateY(0)';
+    clearTimeout(window.__toastTO);
+    window.__toastTO=setTimeout(()=>{
+      t.style.opacity='0';t.style.transform='translateX(-50%) translateY(20px)';
+    },3200);
+  };
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,12 @@
+.thumbnail
+.DS_Store
+Thumbs.db
+node_modules/
+.env
+.env.local
+dist/
+build/
+.next/
+.vscode/
+.idea/
+*.log
