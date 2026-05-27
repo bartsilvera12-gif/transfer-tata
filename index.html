@@ -353,27 +353,65 @@
   .cta-meta .avatars span:nth-child(3){ background: linear-gradient(135deg, #3A2A20, #1E1713) }
   .cta-meta strong{ color: var(--chocolate); font-weight: 600 }
 
-  /* hero logo composition */
+  /* hero photo composition */
   .hero-art{
     position: relative;
-    aspect-ratio: 1 / 1;
+    aspect-ratio: 4 / 3;
     width: 100%;
     max-width: 560px;
     justify-self: end;
-    display: grid;
-    place-items: center;
   }
   .hero-art .logo-wrap{
     width: 100%; height: 100%;
-    display: grid;
-    place-items: center;
+    border-radius: 28px;
+    overflow: hidden;
+    box-shadow:
+      0 40px 90px rgba(45,31,24,.28),
+      0 12px 28px rgba(45,31,24,.14),
+      0 0 0 1.5px rgba(184,135,47,.30);
+    position: relative;
+  }
+  .hero-art .logo-wrap::after{
+    content: "";
+    position: absolute; inset: 0;
+    background: linear-gradient(to top, rgba(30,23,19,.55) 0%, rgba(30,23,19,.10) 45%, transparent 70%);
+    border-radius: 28px;
+    pointer-events: none;
   }
   .hero-art .logo-img{
     width: 100%; height: 100%;
-    object-fit: contain;
-    filter: drop-shadow(0 30px 60px rgba(45,31,24,.18))
-            drop-shadow(0 6px 14px rgba(45,31,24,.10));
-    pointer-events: none;
+    object-fit: cover;
+    object-position: center 20%;
+    display: block;
+  }
+  /* badge flotante sobre la foto */
+  .hero-art .photo-badge{
+    position: absolute;
+    bottom: 20px; left: 20px;
+    z-index: 2;
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 16px;
+    background: rgba(255,255,255,.92);
+    border: 1px solid rgba(184,135,47,.28);
+    border-radius: 40px;
+    backdrop-filter: blur(12px);
+    box-shadow: 0 8px 24px rgba(45,31,24,.14);
+  }
+  .hero-art .photo-badge .pb-dot{
+    width: 8px; height: 8px; border-radius: 50%;
+    background: #22C55E;
+    box-shadow: 0 0 0 3px rgba(34,197,94,.2);
+    flex-shrink: 0;
+  }
+  .hero-art .photo-badge .pb-text{
+    font-size: 12px; font-weight: 700;
+    color: var(--chocolate);
+    letter-spacing: .01em;
+  }
+  .hero-art .photo-badge .pb-sub{
+    font-size: 10.5px; font-weight: 500;
+    color: var(--ink-2);
+    margin-left: 2px;
   }
 
   /* floating tags */
@@ -433,7 +471,7 @@
   @media (max-width: 920px){
     .hero{padding: 12px 0 20px}
     .hero-grid{ grid-template-columns: 1fr; gap: 40px }
-    .hero-art{ max-width: 380px; margin: 0 auto }
+    .hero-art{ max-width: 460px; margin: 0 auto }
     .hero-stats{ grid-template-columns: 1fr 1fr; margin-top: 36px; gap: 16px }
     .stat .n{ font-size: 26px }
   }
@@ -1580,6 +1618,11 @@
           <div class="logo-wrap">
             <img class="logo-img" src="uploads/imagen.png" alt="Transfers Tatá" />
           </div>
+          <div class="photo-badge">
+            <span class="pb-dot"></span>
+            <span class="pb-text">Servicio activo</span>
+            <span class="pb-sub">· Disponible ahora</span>
+          </div>
         </div>
       </div>
 
@@ -1647,7 +1690,7 @@
           <p class="section-sub" data-i18n="flota.sub">Del privado ejecutivo al bus completo. Todos los vehículos con mantenimiento riguroso, climatización y choferes profesionales.</p>
         </div>
         <div class="right reveal">
-          <a class="btn btn-secondary" href="#cotizar" data-i18n="flota.btn">Consultar disponibilidad →</a>
+          <a class="btn btn-secondary" href="#" target="_blank" rel="noopener" data-wa-msg="wa.fleetGeneral" data-i18n="flota.btn">Consultar disponibilidad →</a>
         </div>
       </div>
 
@@ -1880,29 +1923,29 @@
 <script src="admin-config.js"></script>
 <script>
   const DEFAULT_VEHICLES = [
-    { name:'Auto',    image:'uploads/kia.png',     imageAlt:'Kia Picanto',    pill:'Compacto', cat:'Económico', cap:'<strong>1 pasajero</strong> · city',                      desc:'Ideal para traslados individuales rápidos dentro de la ciudad. Ágil, climatizado y siempre puntual.',                                               f1:'Aire acondicionado', f2:'Tarifa económica',    f3:'Tráficos urbanos' },
-    { name:'SUV',     image:'uploads/tucson.png',   imageAlt:'Hyundai Tucson', pill:'SUV',      cat:'Familia',   cap:'<strong>Hasta 3 pasajeros</strong> · equipaje amplio',    desc:'Una SUV cómoda y ejecutiva, ideal para familias o viajes con equipaje. Asientos amplios y suspensión suave.',                                          f1:'Equipaje XL',        f2:'SUV ejecutiva',        f3:'Familias' },
-    { name:'Pickup',  image:'uploads/changan.png',  imageAlt:'Changan Hunter', pill:'Pick-up',  cat:'Carga',     cap:'<strong>Hasta 4 pasajeros</strong> · carga especial',     desc:'Robusta y versátil. Pensada para equipaje pesado, cargas especiales o trayectos más exigentes fuera de la ciudad.',                                    f1:'Carga adicional',    f2:'Largas distancias',    f3:'Tracción' },
-    { name:'Minibus', image:'uploads/h1.png',       imageAlt:'Hyundai H1',     pill:'Van',      cat:'Grupos',    cap:'<strong>10 pasajeros</strong> · contamos con 2 unidades', desc:'La van preferida para comitivas chicas, aeropuerto y traslados corporativos. Espacio para todos sin sacrificar confort.',                              f1:'2 unidades disponibles', f2:'Aeropuerto',       f3:'10 pax' },
-    { name:'Bus',     image:'uploads/bus.png',      imageAlt:'Bus',            pill:'Bus',      cat:'Comitivas', cap:'<strong>+30 pasajeros</strong> · butacas reclinables',    desc:'Pensado para grupos grandes y traslados masivos: delegaciones, congresos y viajes de larga distancia con confort total.',                             f1:'Larga distancia',    f2:'Delegaciones',         f3:'+30 pax' },
+    { name:'Auto',    name_en:'Car',     image:'uploads/kia.png',     imageAlt:'Kia Picanto',    pill:'Compacto', pill_en:'Compact',  cat:'Económico', cat_en:'Economy',  cap:'<strong>1 pasajero</strong> · ciudad',                       cap_en:'<strong>1 passenger</strong> · city',                       desc:'Ideal para traslados individuales rápidos dentro de la ciudad. Ágil, climatizado y siempre puntual.',                                               desc_en:'Ideal for quick individual transfers within the city. Agile, air-conditioned and always punctual.',                                              f1:'Aire acondicionado',     f1_en:'Air conditioning',    f2:'Tarifa económica',   f2_en:'Economy rate',      f3:'Tráficos urbanos',  f3_en:'Urban traffic' },
+    { name:'SUV',     name_en:'SUV',     image:'uploads/tucson.png',   imageAlt:'Hyundai Tucson', pill:'SUV',      pill_en:'SUV',      cat:'Familia',   cat_en:'Family',   cap:'<strong>Hasta 3 pasajeros</strong> · equipaje amplio',        cap_en:'<strong>Up to 3 passengers</strong> · ample luggage',       desc:'Una SUV cómoda y ejecutiva, ideal para familias o viajes con equipaje. Asientos amplios y suspensión suave.',                                          desc_en:'A comfortable executive SUV, ideal for families or trips with luggage. Spacious seats and smooth suspension.',                                      f1:'Equipaje XL',            f1_en:'XL Luggage',           f2:'SUV ejecutiva',      f2_en:'Executive SUV',     f3:'Familias',          f3_en:'Families' },
+    { name:'Pickup',  name_en:'Pickup',  image:'uploads/changan.png',  imageAlt:'Changan Hunter', pill:'Pick-up',  pill_en:'Pick-up',  cat:'Carga',     cat_en:'Cargo',    cap:'<strong>Hasta 4 pasajeros</strong> · carga especial',         cap_en:'<strong>Up to 4 passengers</strong> · special cargo',       desc:'Robusta y versátil. Pensada para equipaje pesado, cargas especiales o trayectos más exigentes fuera de la ciudad.',                                    desc_en:'Robust and versatile. Designed for heavy luggage, special cargo or more demanding trips outside the city.',                                         f1:'Carga adicional',        f1_en:'Additional cargo',     f2:'Largas distancias',  f2_en:'Long distances',    f3:'Tracción',          f3_en:'4WD' },
+    { name:'Minibus', name_en:'Minibus', image:'uploads/h1.png',       imageAlt:'Hyundai H1',     pill:'Van',      pill_en:'Van',      cat:'Grupos',    cat_en:'Groups',   cap:'<strong>10 pasajeros</strong> · contamos con 2 unidades',     cap_en:'<strong>10 passengers</strong> · 2 units available',        desc:'La van preferida para comitivas chicas, aeropuerto y traslados corporativos. Espacio para todos sin sacrificar confort.',                              desc_en:'The preferred van for small groups, airport and corporate transfers. Room for everyone without sacrificing comfort.',                                f1:'2 unidades disponibles', f1_en:'2 units available',    f2:'Aeropuerto',         f2_en:'Airport',           f3:'10 pax',            f3_en:'10 pax' },
+    { name:'Bus',     name_en:'Bus',     image:'uploads/bus.png',      imageAlt:'Bus',            pill:'Bus',      pill_en:'Bus',      cat:'Comitivas', cat_en:'Groups',   cap:'<strong>+30 pasajeros</strong> · butacas reclinables',        cap_en:'<strong>+30 passengers</strong> · reclining seats',         desc:'Pensado para grupos grandes y traslados masivos: delegaciones, congresos y viajes de larga distancia con confort total.',                             desc_en:'Designed for large groups and mass transfers: delegations, congresses and long-distance trips with full comfort.',                                  f1:'Larga distancia',        f1_en:'Long distance',        f2:'Delegaciones',       f2_en:'Delegations',       f3:'+30 pax',           f3_en:'+30 pax' },
   ];
   const SVG_ARROW = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>`;
   const DEFAULT_SERVICES = [
-    { title:'Traslados al aeropuerto',            description:'Llegadas, salidas y conexiones con seguimiento de vuelo. Esperamos por vos cuando hay demoras.',                              cta:'Reservar',           dark:false, icon_svg:'<path d="M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z"/>' },
-    { title:'Viajes nacionales e internacionales', description:'Cruces por Argentina, Brasil y Paraguay. Documentación al día, paradas planificadas y descanso de chofer.',                cta:'Itinerarios',        dark:true,  icon_svg:'<circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15 15 0 0 1 0 20"/><path d="M12 2a15 15 0 0 0 0 20"/>' },
-    { title:'Traslados turísticos',               description:'Hoteles, city tours, Cataratas, Yacyretá. Choferes que conocen los caminos y los tiempos.',                                 cta:'Armar ruta',         dark:false, icon_svg:'<path d="M3 9 12 3l9 6v12H3z"/><path d="M9 21V12h6v9"/>' },
-    { title:'Traslados corporativos',             description:'Cuentas mensuales para empresas, facturación clara, choferes asignados y discreción ejecutiva.',                            cta:'Cuenta empresa',     dark:false, icon_svg:'<path d="M16 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2"/><circle cx="9.5" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>' },
-    { title:'Servicios para eventos',             description:'Bodas, conciertos, congresos. Coordinamos flota, choferes uniformados y horarios al detalle.',                              cta:'Solicitar logística', dark:true,  icon_svg:'<path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>' },
-    { title:'Traslado con mascotas',              description:'Vehículos preparados para llevar a tu mascota cómoda y segura. Pet-friendly de verdad.',                                    cta:'Coordinar',          dark:false, icon_svg:'<circle cx="11" cy="4" r="2"/><circle cx="18" cy="8" r="2"/><circle cx="20" cy="16" r="2"/><path d="M9 10a5 5 0 0 1 5 5v3.5a3.5 3.5 0 1 1-6.84 1.045Q6.52 17.48 4.46 16.84A3.5 3.5 0 1 1 5.5 10z"/>' },
+    { title:'Traslados al aeropuerto',            title_en:'Airport Transfers',              description:'Llegadas, salidas y conexiones con seguimiento de vuelo. Esperamos por vos cuando hay demoras.',                            description_en:'Arrivals, departures and connections with live flight tracking. We wait for you when there are delays.',                         dark:false, icon_svg:'<path d="M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z"/>' },
+    { title:'Viajes nacionales e internacionales', title_en:'National & International Trips', description:'Cruces por Argentina, Brasil y Paraguay. Documentación al día, paradas planificadas y descanso de chofer.',              description_en:'Crossings through Argentina, Brazil and Paraguay. Up-to-date documentation, planned stops and driver rest.',                     dark:true,  icon_svg:'<circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15 15 0 0 1 0 20"/><path d="M12 2a15 15 0 0 0 0 20"/>' },
+    { title:'Traslados turísticos',               title_en:'Tourism Transfers',              description:'Hoteles, city tours, Cataratas, Yacyretá. Choferes que conocen los caminos y los tiempos.',                               description_en:'Hotels, city tours, Iguazú Falls, Yacyretá. Drivers who know the roads and the times.',                                         dark:false, icon_svg:'<path d="M3 9 12 3l9 6v12H3z"/><path d="M9 21V12h6v9"/>' },
+    { title:'Traslados corporativos',             title_en:'Corporate Transfers',            description:'Cuentas mensuales para empresas, facturación clara, choferes asignados y discreción ejecutiva.',                          description_en:'Monthly accounts for companies, clear invoicing, assigned drivers and executive discretion.',                                     dark:false, icon_svg:'<path d="M16 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2"/><circle cx="9.5" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>' },
+    { title:'Servicios para eventos',             title_en:'Event Services',                 description:'Bodas, conciertos, congresos. Coordinamos flota, choferes uniformados y horarios al detalle.',                            description_en:'Weddings, concerts, congresses. We coordinate fleet, uniformed drivers and schedules in detail.',                                 dark:true,  icon_svg:'<path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>' },
+    { title:'Traslado con mascotas',              title_en:'Pet-Friendly Transfers',         description:'Vehículos preparados para llevar a tu mascota cómoda y segura. Pet-friendly de verdad.',                                  description_en:'Vehicles prepared to transport your pet comfortably and safely. Truly pet-friendly.',                                            dark:false, icon_svg:'<circle cx="11" cy="4" r="2"/><circle cx="18" cy="8" r="2"/><circle cx="20" cy="16" r="2"/><path d="M9 10a5 5 0 0 1 5 5v3.5a3.5 3.5 0 1 1-6.84 1.045Q6.52 17.48 4.46 16.84A3.5 3.5 0 1 1 5.5 10z"/>' },
   ];
 
   const DEFAULT_FAQS = [
-    { q:'¿Operan dentro y fuera del país?',                       a:'Sí. Hacemos traslados nacionales en todo Paraguay e internacionales a Argentina y Brasil, con documentación al día y planificación de ruta.' },
-    { q:'¿Tienen vehículos para mascotas?',                       a:'Sí, contamos con vehículos adaptados y choferes con experiencia para que tu mascota viaje cómoda y segura.' },
-    { q:'¿Cómo manejan demoras de vuelo?',                        a:'Hacemos seguimiento del vuelo en tiempo real. Si tu llegada se atrasa, ajustamos el horario sin costo adicional.' },
-    { q:'¿Aceptan cuentas empresariales con facturación mensual?', a:'Sí, abrimos cuentas para empresas con consolidado mensual, factura legal y choferes asignados. Te asesoramos en el armado del servicio.' },
-    { q:'¿Cómo cotizan? ¿Hay recargos sorpresa?',                a:'Cotizamos por escrito con tarifa cerrada. Sin recargos por equipaje ni esperas razonables. Lo que firmás es lo que pagás.' },
-    { q:'¿Puedo cancelar o reprogramar?',                         a:'Sí. Hasta 12 hs antes del servicio podés reprogramar sin costo. Para cancelaciones consultá con coordinación.' },
+    { q:'¿Operan dentro y fuera del país?',                        q_en:'Do you operate inside and outside the country?',               a:'Sí. Hacemos traslados nacionales en todo Paraguay e internacionales a Argentina y Brasil, con documentación al día y planificación de ruta.',                                                         a_en:'Yes. We offer national transfers throughout Paraguay and international transfers to Argentina and Brazil, with up-to-date documentation and route planning.' },
+    { q:'¿Tienen vehículos para mascotas?',                        q_en:'Do you have pet-friendly vehicles?',                           a:'Sí, contamos con vehículos adaptados y choferes con experiencia para que tu mascota viaje cómoda y segura.',                                                                                          a_en:'Yes, we have adapted vehicles and experienced drivers so your pet can travel comfortably and safely.' },
+    { q:'¿Cómo manejan demoras de vuelo?',                         q_en:'How do you handle flight delays?',                             a:'Hacemos seguimiento del vuelo en tiempo real. Si tu llegada se atrasa, ajustamos el horario sin costo adicional.',                                                                                       a_en:'We track the flight in real time. If your arrival is delayed, we adjust the schedule at no extra cost.' },
+    { q:'¿Aceptan cuentas empresariales con facturación mensual?', q_en:'Do you accept corporate accounts with monthly billing?',       a:'Sí, abrimos cuentas para empresas con consolidado mensual, factura legal y choferes asignados. Te asesoramos en el armado del servicio.',                                                              a_en:'Yes, we open accounts for companies with monthly consolidation, legal invoice and assigned drivers. We advise on service setup.' },
+    { q:'¿Cómo cotizan? ¿Hay recargos sorpresa?',                  q_en:'How do you quote? Are there surprise charges?',                a:'Cotizamos por escrito con tarifa cerrada. Sin recargos por equipaje ni esperas razonables. Lo que firmás es lo que pagás.',                                                                              a_en:'We quote in writing with a fixed rate. No luggage or reasonable waiting surcharges. What you sign is what you pay.' },
+    { q:'¿Puedo cancelar o reprogramar?',                          q_en:'Can I cancel or reschedule?',                                  a:'Sí. Hasta 12 hs antes del servicio podés reprogramar sin costo. Para cancelaciones consultá con coordinación.',                                                                                          a_en:'Yes. Up to 12 hours before the service you can reschedule at no cost. For cancellations, consult with coordination.' },
   ];
 
   // FAQ toggle (event delegation — funciona antes y después del render)
@@ -1939,14 +1982,24 @@
           sb.from('servicios').select('*').order('sort_order'),
         ]);
         if (vData && vData.length) vehicles = vData.map(r => ({
-          name: r.name, image: r.image, imageAlt: r.image_alt,
-          pill: r.pill, cat: r.cat, cap: r.cap, desc: r.description,
-          f1: r.f1, f2: r.f2, f3: r.f3,
+          name: r.name, name_en: r.name_en,
+          image: r.image, imageAlt: r.image_alt,
+          pill: r.pill, pill_en: r.pill_en,
+          cat: r.cat, cat_en: r.cat_en,
+          cap: r.cap, cap_en: r.cap_en,
+          desc: r.description, desc_en: r.description_en,
+          f1: r.f1, f1_en: r.f1_en,
+          f2: r.f2, f2_en: r.f2_en,
+          f3: r.f3, f3_en: r.f3_en,
         }));
-        if (fData && fData.length) faqs = fData.map(r => ({ q: r.question, a: r.answer }));
+        if (fData && fData.length) faqs = fData.map(r => ({
+          q: r.question, q_en: r.question_en,
+          a: r.answer, a_en: r.answer_en,
+        }));
         if (sData && sData.length) services = sData.map(r => ({
-          title: r.title, description: r.description,
-          cta: r.cta, dark: r.dark, icon_svg: r.icon_svg,
+          title: r.title, title_en: r.title_en,
+          description: r.description, description_en: r.description_en,
+          dark: r.dark, icon_svg: r.icon_svg,
         }));
       }
     } catch(e) { /* usa defaults */ }
@@ -1957,14 +2010,14 @@
       services.forEach((s, i) => {
         const art = document.createElement('article');
         art.className = 'svc reveal' + (s.dark ? ' dark' : '');
+        art.dataset.svcI = i;
         art.innerHTML = `
           <span class="svc-tag">${String(i+1).padStart(2,'0')}</span>
           <div class="svc-ic">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">${s.icon_svg}</svg>
           </div>
           <h3>${s.title}</h3>
-          <p>${s.description}</p>
-          <a class="svc-link" href="#cotizar"><span>${s.cta}</span>${SVG_ARROW}</a>`;
+          <p>${s.description}</p>`;
         servicesGrid.appendChild(art);
         io.observe(art);
       });
@@ -2002,6 +2055,76 @@
         showcaseTabs.appendChild(tab);
       });
       if (stageWatermark) stageWatermark.textContent = vehicles[0].name;
+
+      // Guarda data globalmente para traducciones dinámicas
+      window._rawVehicles = vehicles;
+      window._rawServices = services;
+      window._rawFaqs     = faqs;
+
+      window.updateContentLang = function(lang) {
+        const isEn = lang === 'en';
+        const t  = (obj, k) => (isEn && obj[k+'_en']) ? obj[k+'_en'] : obj[k];
+        const th = (obj, k) => (isEn && obj[k+'_en']) ? obj[k+'_en'] : obj[k]; // para innerHTML
+
+        // Vehículos
+        (window._rawVehicles || []).forEach((v, i) => {
+          const slide = document.querySelector(`.info-slide[data-i="${i}"]`);
+          if (slide) {
+            const pill = slide.querySelector('.pill');
+            if (pill) pill.textContent = t(v,'pill');
+            const catSpans = slide.querySelectorAll('.info-cat span');
+            if (catSpans[1]) catSpans[1].textContent = t(v,'cat');
+            const nm = slide.querySelector('.info-name');
+            if (nm) nm.textContent = t(v,'name');
+            const cap = slide.querySelector('.info-cap');
+            if (cap) cap.innerHTML = th(v,'cap');
+            const desc = slide.querySelector('.info-desc');
+            if (desc) desc.textContent = t(v,'desc');
+            const lis = slide.querySelectorAll('.info-features li');
+            if (lis[0]) lis[0].textContent = t(v,'f1');
+            if (lis[1]) lis[1].textContent = t(v,'f2');
+            if (lis[2]) lis[2].textContent = t(v,'f3');
+            const cta = slide.querySelector('[data-wa-vehicle]');
+            if (cta) cta.setAttribute('data-wa-vehicle', t(v,'name'));
+          }
+          const tab = document.querySelector(`.tab[data-i="${i}"]`);
+          if (tab) {
+            const numSpan = tab.querySelector('.tab-num');
+            tab.textContent = '';
+            if (numSpan) tab.appendChild(numSpan);
+            tab.appendChild(document.createTextNode(t(v,'name')));
+          }
+        });
+        const wm = document.getElementById('stageWatermark');
+        if (wm) {
+          const activeTab = document.querySelector('.tab.active');
+          const idx = activeTab ? parseInt(activeTab.dataset.i) : 0;
+          const v = (window._rawVehicles || [])[idx];
+          if (v) wm.textContent = t(v,'name');
+        }
+
+        // Servicios
+        (window._rawServices || []).forEach((s, i) => {
+          const el = document.querySelector(`.svc[data-svc-i="${i}"]`);
+          if (!el) return;
+          const h3 = el.querySelector('h3');
+          if (h3) h3.textContent = t(s,'title');
+          const p = el.querySelector('p');
+          if (p) p.textContent = t(s,'description');
+        });
+
+        // FAQ
+        (window._rawFaqs || []).forEach((f, i) => {
+          const el = document.querySelector(`.faq-item[data-faq-i="${i}"]`);
+          if (!el) return;
+          const qSpan = el.querySelector('.faq-q span');
+          if (qSpan) qSpan.textContent = t(f,'q');
+          const aInner = el.querySelector('.faq-a-inner');
+          if (aInner) aInner.textContent = t(f,'a');
+        });
+      };
+
+      if (window.applyI18n) window.applyI18n(window._currentLang || 'es');
       const ofEl = document.querySelector('.stage-index .of');
       if (ofEl) ofEl.textContent = '/ ' + String(vehicles.length).padStart(2,'0');
     }
@@ -2012,6 +2135,7 @@
       faqs.forEach((f, i) => {
         const item = document.createElement('div');
         item.className = 'faq-item' + (i === 0 ? ' open' : '');
+        item.dataset.faqI = i;
         item.innerHTML = `
           <button class="faq-q" type="button"><span>${f.q}</span><span class="plus"></span></button>
           <div class="faq-a"><div class="faq-a-inner">${f.a}</div></div>`;
@@ -2289,7 +2413,8 @@
         'foot.h3':'Contacto','foot.loc':'Asunción · Paraguay','foot.hours':'24/7 · todos los días',
         'foot.copy':'© 2026 Transfers Tatá. Todos los derechos reservados.','foot.privacy':'Privacidad','foot.terms':'Términos','foot.legal':'Aviso legal',
         'foot.credit':'Desarrollado por <a href="https://neura.com.py" target="_blank" rel="noopener">Neura</a>',
-        'wa.fleetConsult':'Hola! Quisiera consultar disponibilidad para {vehicle}.'
+        'wa.fleetConsult':'Hola! Quisiera consultar disponibilidad para {vehicle}.',
+        'wa.fleetGeneral':'Hola! Quisiera consultar disponibilidad y tarifas de la flota.'
       },
       en: {
         'nav.experience':'Experience','nav.fleet':'Fleet','nav.quote':'Quote','nav.services':'Services','nav.faq':'FAQ','nav.cta':'Quote',
@@ -2358,7 +2483,8 @@
         'foot.h3':'Contact','foot.loc':'Asunción · Paraguay','foot.hours':'24/7 · every day',
         'foot.copy':'© 2026 Transfers Tatá. All rights reserved.','foot.privacy':'Privacy','foot.terms':'Terms','foot.legal':'Legal notice',
         'foot.credit':'Developed by <a href="https://neura.com.py" target="_blank" rel="noopener">Neura</a>',
-        'wa.fleetConsult':"Hi! I'd like to check availability for {vehicle}."
+        'wa.fleetConsult':"Hi! I'd like to check availability for {vehicle}.",
+        'wa.fleetGeneral':"Hi! I'd like to check fleet availability and rates."
       }
     };
 
@@ -2366,6 +2492,7 @@
 
     function applyI18n(lang){
       const dict = I18N[lang] || I18N.es;
+      window._currentLang = lang;
       document.querySelectorAll('[data-i18n]').forEach(el => {
         const k = el.getAttribute('data-i18n');
         if (dict[k] != null) el.textContent = dict[k];
@@ -2378,17 +2505,26 @@
         const k = el.getAttribute('data-i18n-ph');
         if (dict[k] != null) el.setAttribute('placeholder', dict[k]);
       });
-      // Build WhatsApp links with translated message + vehicle name
+      // Actualiza contenido dinámico (vehículos, servicios, FAQ)
+      if (window.updateContentLang) window.updateContentLang(lang);
+      // WhatsApp links — vehículo específico (usa atributo ya traducido por updateContentLang)
       document.querySelectorAll('[data-wa-vehicle]').forEach(el => {
         const vehicle = el.getAttribute('data-wa-vehicle');
         const tpl = dict['wa.fleetConsult'] || '';
         const msg = tpl.replace('{vehicle}', vehicle);
         el.setAttribute('href', `https://wa.me/${WA_PHONE}?text=${encodeURIComponent(msg)}`);
       });
+      // WhatsApp links — mensaje genérico (sin vehículo)
+      document.querySelectorAll('[data-wa-msg]').forEach(el => {
+        const key = el.getAttribute('data-wa-msg');
+        const msg = dict[key] || '';
+        el.setAttribute('href', `https://wa.me/${WA_PHONE}?text=${encodeURIComponent(msg)}`);
+      });
       document.documentElement.lang = lang;
       document.querySelectorAll('.lang-btn').forEach(b => b.classList.toggle('active', b.dataset.lang === lang));
       try { localStorage.setItem('lang', lang); } catch(e) {}
     }
+    window.applyI18n = applyI18n;
 
     const saved = (()=>{ try { return localStorage.getItem('lang'); } catch(e) { return null; } })();
     applyI18n(saved || 'es');

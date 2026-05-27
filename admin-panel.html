@@ -164,6 +164,12 @@
   .field textarea { min-height: 80px; }
   .g2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
   .g3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
+  .lang-sep {
+    font-size: 10px; font-weight: 700; letter-spacing: .12em;
+    color: #9A8070; text-transform: uppercase;
+    padding: 10px 0 4px; border-top: 1px solid rgba(184,135,47,.18);
+    margin: 4px 0 2px; display: flex; align-items: center; gap: 6px;
+  }
   .preview-img {
     width: 100%; height: 100px; object-fit: contain;
     background: #FFF4EA; border-radius: 10px; margin-top: 8px;
@@ -279,6 +285,7 @@
       <button class="btn-close" onclick="closeModal('vehicleModal')">×</button>
     </div>
     <input type="hidden" id="vm-id" />
+    <div class="lang-sep">ES · Español</div>
     <div class="field"><label>Nombre</label><input type="text" id="vm-name" placeholder="Ej: SUV" /></div>
     <div class="g2">
       <div class="field"><label>Etiqueta (pill)</label><input type="text" id="vm-pill" placeholder="Compacto" /></div>
@@ -290,6 +297,19 @@
       <div class="field"><label>Característica 1</label><input type="text" id="vm-f1" /></div>
       <div class="field"><label>Característica 2</label><input type="text" id="vm-f2" /></div>
       <div class="field"><label>Característica 3</label><input type="text" id="vm-f3" /></div>
+    </div>
+    <div class="lang-sep">EN · English</div>
+    <div class="field"><label>Name (EN)</label><input type="text" id="vm-name-en" placeholder="Eg: SUV" /></div>
+    <div class="g2">
+      <div class="field"><label>Pill (EN)</label><input type="text" id="vm-pill-en" placeholder="Compact" /></div>
+      <div class="field"><label>Category (EN)</label><input type="text" id="vm-cat-en" placeholder="Economy" /></div>
+    </div>
+    <div class="field"><label>Capacity (EN)</label><input type="text" id="vm-cap-en" placeholder="&lt;strong&gt;4 passengers&lt;/strong&gt; · luggage" /></div>
+    <div class="field"><label>Description (EN)</label><textarea id="vm-desc-en"></textarea></div>
+    <div class="g3">
+      <div class="field"><label>Feature 1 (EN)</label><input type="text" id="vm-f1-en" /></div>
+      <div class="field"><label>Feature 2 (EN)</label><input type="text" id="vm-f2-en" /></div>
+      <div class="field"><label>Feature 3 (EN)</label><input type="text" id="vm-f3-en" /></div>
     </div>
     <div class="field">
       <label>Ruta de imagen</label>
@@ -315,8 +335,12 @@
       <button class="btn-close" onclick="closeModal('svcModal')">×</button>
     </div>
     <input type="hidden" id="sm-id" />
+    <div class="lang-sep">ES · Español</div>
     <div class="field"><label>Título</label><input type="text" id="sm-title-input" placeholder="Ej: Traslados al aeropuerto" /></div>
     <div class="field"><label>Descripción</label><textarea id="sm-desc"></textarea></div>
+    <div class="lang-sep">EN · English</div>
+    <div class="field"><label>Title (EN)</label><input type="text" id="sm-title-en" placeholder="Eg: Airport Transfers" /></div>
+    <div class="field"><label>Description (EN)</label><textarea id="sm-desc-en"></textarea></div>
     <div class="g2">
       <div class="field"><label>Texto del botón CTA</label><input type="text" id="sm-cta" placeholder="Ej: Reservar" /></div>
       <div class="field" style="display:flex;align-items:center;gap:10px;padding-top:22px">
@@ -346,8 +370,12 @@
       <button class="btn-close" onclick="closeModal('faqModal')">×</button>
     </div>
     <input type="hidden" id="fm-id" />
+    <div class="lang-sep">ES · Español</div>
     <div class="field"><label>Pregunta</label><input type="text" id="fm-q" placeholder="¿...?" /></div>
-    <div class="field"><label>Respuesta</label><textarea id="fm-a" style="min-height:110px"></textarea></div>
+    <div class="field"><label>Respuesta</label><textarea id="fm-a" style="min-height:90px"></textarea></div>
+    <div class="lang-sep">EN · English</div>
+    <div class="field"><label>Question (EN)</label><input type="text" id="fm-q-en" placeholder="Do you...?" /></div>
+    <div class="field"><label>Answer (EN)</label><textarea id="fm-a-en" style="min-height:90px"></textarea></div>
     <div class="modal-footer">
       <button class="btn-sm btn-del" id="fm-delete" onclick="deleteFaq()" style="display:none">Eliminar</button>
       <div class="modal-footer-right">
@@ -440,6 +468,14 @@
     document.getElementById('vm-f1').value           = v.f1 || '';
     document.getElementById('vm-f2').value           = v.f2 || '';
     document.getElementById('vm-f3').value           = v.f3 || '';
+    document.getElementById('vm-name-en').value      = v.name_en || '';
+    document.getElementById('vm-pill-en').value      = v.pill_en || '';
+    document.getElementById('vm-cat-en').value       = v.cat_en || '';
+    document.getElementById('vm-cap-en').value       = v.cap_en || '';
+    document.getElementById('vm-desc-en').value      = v.description_en || '';
+    document.getElementById('vm-f1-en').value        = v.f1_en || '';
+    document.getElementById('vm-f2-en').value        = v.f2_en || '';
+    document.getElementById('vm-f3-en').value        = v.f3_en || '';
     document.getElementById('vm-image').value        = v.image || '';
     document.getElementById('vm-alt').value          = v.image_alt || '';
     previewImg(v.image || '', 'vm-preview');
@@ -450,15 +486,23 @@
   async function saveVehicle() {
     const id   = document.getElementById('vm-id').value;
     const data = {
-      name:        document.getElementById('vm-name').value.trim(),
-      pill:        document.getElementById('vm-pill').value.trim(),
-      cat:         document.getElementById('vm-cat').value.trim(),
-      cap:         document.getElementById('vm-cap').value.trim(),
-      description: document.getElementById('vm-desc').value.trim(),
-      f1:          document.getElementById('vm-f1').value.trim(),
-      f2:          document.getElementById('vm-f2').value.trim(),
-      f3:          document.getElementById('vm-f3').value.trim(),
-      image:       document.getElementById('vm-image').value.trim(),
+      name:           document.getElementById('vm-name').value.trim(),
+      pill:           document.getElementById('vm-pill').value.trim(),
+      cat:            document.getElementById('vm-cat').value.trim(),
+      cap:            document.getElementById('vm-cap').value.trim(),
+      description:    document.getElementById('vm-desc').value.trim(),
+      f1:             document.getElementById('vm-f1').value.trim(),
+      f2:             document.getElementById('vm-f2').value.trim(),
+      f3:             document.getElementById('vm-f3').value.trim(),
+      name_en:        document.getElementById('vm-name-en').value.trim(),
+      pill_en:        document.getElementById('vm-pill-en').value.trim(),
+      cat_en:         document.getElementById('vm-cat-en').value.trim(),
+      cap_en:         document.getElementById('vm-cap-en').value.trim(),
+      description_en: document.getElementById('vm-desc-en').value.trim(),
+      f1_en:          document.getElementById('vm-f1-en').value.trim(),
+      f2_en:          document.getElementById('vm-f2-en').value.trim(),
+      f3_en:          document.getElementById('vm-f3-en').value.trim(),
+      image:          document.getElementById('vm-image').value.trim(),
       image_alt:   document.getElementById('vm-alt').value.trim(),
     };
     if (!data.name) { alert('El nombre es obligatorio'); return; }
@@ -531,6 +575,8 @@
     document.getElementById('sm-id').value                 = isNew ? '' : s.id;
     document.getElementById('sm-title-input').value        = s.title || '';
     document.getElementById('sm-desc').value               = s.description || '';
+    document.getElementById('sm-title-en').value           = s.title_en || '';
+    document.getElementById('sm-desc-en').value            = s.description_en || '';
     document.getElementById('sm-cta').value                = s.cta || '';
     document.getElementById('sm-dark').checked             = s.dark || false;
     document.getElementById('sm-svg').value                = s.icon_svg || '';
@@ -541,9 +587,11 @@
   async function saveSvc() {
     const id   = document.getElementById('sm-id').value;
     const data = {
-      title:       document.getElementById('sm-title-input').value.trim(),
-      description: document.getElementById('sm-desc').value.trim(),
-      cta:         document.getElementById('sm-cta').value.trim(),
+      title:          document.getElementById('sm-title-input').value.trim(),
+      description:    document.getElementById('sm-desc').value.trim(),
+      title_en:       document.getElementById('sm-title-en').value.trim(),
+      description_en: document.getElementById('sm-desc-en').value.trim(),
+      cta:            document.getElementById('sm-cta').value.trim(),
       dark:        document.getElementById('sm-dark').checked,
       icon_svg:    document.getElementById('sm-svg').value.trim(),
     };
@@ -615,8 +663,10 @@
     const f = isNew ? {} : faqsData[idx];
     document.getElementById('fm-title').textContent = isNew ? 'Nueva pregunta' : 'Editar pregunta';
     document.getElementById('fm-id').value = isNew ? '' : f.id;
-    document.getElementById('fm-q').value  = f.question || '';
-    document.getElementById('fm-a').value  = f.answer   || '';
+    document.getElementById('fm-q').value    = f.question    || '';
+    document.getElementById('fm-a').value    = f.answer      || '';
+    document.getElementById('fm-q-en').value = f.question_en || '';
+    document.getElementById('fm-a-en').value = f.answer_en   || '';
     document.getElementById('fm-delete').style.display = isNew ? 'none' : 'inline-block';
     document.getElementById('faqModal').classList.add('open');
   }
@@ -624,8 +674,10 @@
   async function saveFaq() {
     const id   = document.getElementById('fm-id').value;
     const data = {
-      question: document.getElementById('fm-q').value.trim(),
-      answer:   document.getElementById('fm-a').value.trim(),
+      question:    document.getElementById('fm-q').value.trim(),
+      answer:      document.getElementById('fm-a').value.trim(),
+      question_en: document.getElementById('fm-q-en').value.trim(),
+      answer_en:   document.getElementById('fm-a-en').value.trim(),
     };
     if (!data.question || !data.answer) { alert('Completá pregunta y respuesta'); return; }
     let error;
