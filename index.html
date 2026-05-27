@@ -68,6 +68,18 @@
     padding: 14px 0;
   }
   .brand{ display:flex; align-items:center; gap:12px }
+  .brand-full{
+    height: 72px;
+    width: auto;
+    display: block;
+    filter: drop-shadow(0 1px 2px rgba(45,31,24,.18));
+  }
+  .footer-brand-full{
+    height: 88px;
+    margin-bottom: 4px;
+    filter: drop-shadow(0 2px 6px rgba(0,0,0,.35));
+  }
+  /* legacy bits kept for fallback / footer */
   .brand-logo{
     width: 40px; height: 40px;
     background: url('assets/logo.png') center/contain no-repeat;
@@ -87,6 +99,9 @@
     font-style: normal;
     color: var(--gold);
     font-weight: 700;
+  }
+  @media (max-width: 520px){
+    .brand-full{ height: 52px }
   }
   .nav{ display:flex; gap: 32px; align-items:center }
   .nav a{
@@ -345,58 +360,13 @@
     width: 100%;
     max-width: 560px;
     justify-self: end;
+    display: grid;
+    place-items: center;
   }
-  .hero-art .halo{
-    position:absolute; inset: -6%;
-    border-radius: 50%;
-    background:
-      radial-gradient(closest-side, rgba(255,244,234,.95), rgba(241,222,208,.65) 55%, rgba(241,222,208,0) 75%);
-    filter: blur(2px);
-    animation: haloPulse 5.5s ease-in-out infinite;
-    will-change: transform, opacity;
-  }
-  .hero-art .halo-gold{
-    position:absolute; inset: 6%;
-    border-radius: 50%;
-    background:
-      radial-gradient(closest-side, rgba(216,174,85,.28), rgba(216,174,85,0) 70%);
-    animation: haloPulseGold 4s ease-in-out infinite;
-    will-change: transform, opacity;
-  }
-  .hero-art .ring{
-    position:absolute; inset: 0;
-    border-radius: 50%;
-    border: 1px dashed rgba(184,135,47,.32);
-    animation: ringSpin 22s linear infinite;
-    will-change: transform;
-  }
-  .hero-art .ring.ring-2{
-    inset: 8%;
-    border-style: solid;
-    border-color: rgba(184,135,47,.20);
-    animation-name: ringSpinReverse;
-    animation-duration: 32s;
-  }
-  @keyframes ringSpin{
-    from { transform: rotate(0deg) }
-    to   { transform: rotate(360deg) }
-  }
-  @keyframes ringSpinReverse{
-    from { transform: rotate(360deg) }
-    to   { transform: rotate(0deg) }
-  }
-  @keyframes haloPulse{
-    0%, 100% { transform: scale(1);    opacity: .92 }
-    50%      { transform: scale(1.05); opacity: 1 }
-  }
-  @keyframes haloPulseGold{
-    0%, 100% { transform: scale(1);    opacity: .85 }
-    50%      { transform: scale(1.08); opacity: 1 }
-  }
-
   .hero-art .logo-wrap{
-    position:absolute; inset: 8%;
-    display:grid; place-items:center;
+    width: 100%; height: 100%;
+    display: grid;
+    place-items: center;
   }
   .hero-art .logo-img{
     width: 100%; height: 100%;
@@ -406,13 +376,6 @@
     pointer-events: none;
   }
 
-  @media (prefers-reduced-motion: reduce){
-    .hero-art .halo,
-    .hero-art .halo-gold,
-    .hero-art .ring{ animation: none !important }
-  }
-  /* (legacy logo flameFlicker removed — animation now lives on the rings/halos) */
-
   /* floating tags */
   .float-tag{
     position:absolute;
@@ -420,7 +383,7 @@
     padding: 10px 14px;
     background: rgba(255,255,255,.88);
     border: 1px solid rgba(184,135,47,.22);
-    border-radius: 14px;
+    border-radius: 30px;
     font-size: 12.5px;
     font-weight: 500;
     color: var(--chocolate);
@@ -526,7 +489,7 @@
   .svc{
     position:relative;
     padding: 32px 28px;
-    border-radius: 24px;
+    border-radius: 48px;
     background: #FBEEDC;
     border: 1px solid var(--line);
     transition: transform .5s ease, box-shadow .5s ease, border-color .5s ease, background .5s ease;
@@ -759,7 +722,7 @@
     height: 480px;
     background: linear-gradient(180deg, #FFF7EC 0%, #F2DEC8 100%);
     border: 1px solid rgba(184,135,47,.22);
-    border-radius: 28px;
+    border-radius: 56px;
     overflow: hidden;
     box-shadow: 0 30px 70px rgba(45,31,24,.10);
     display: grid;
@@ -1084,7 +1047,7 @@
     gap: 1px;
     background: rgba(184,135,47,.18);
     border: 1px solid rgba(184,135,47,.18);
-    border-radius: 24px;
+    border-radius: 48px;
     overflow: hidden;
     position: relative; z-index: 1;
   }
@@ -1133,7 +1096,7 @@
   .quote-form{
     background: #fff;
     border: 1px solid var(--line);
-    border-radius: 28px;
+    border-radius: 56px;
     padding: 36px;
     box-shadow: 0 30px 60px rgba(45,31,24,.10);
   }
@@ -1166,7 +1129,7 @@
     -moz-appearance:none;
     border: 1px solid var(--line);
     background: #FBEEDC;
-    border-radius: 12px;
+    border-radius: 28px;
     padding: 14px 16px;
     font: 500 15px/1.4 var(--sans);
     color: var(--chocolate);
@@ -1226,7 +1189,7 @@
     width: 100%;
     border: 1px solid var(--line);
     background: #FBEEDC;
-    border-radius: 12px;
+    border-radius: 28px;
     padding: 14px 16px;
     font: 500 15px/1.4 var(--sans);
     color: var(--chocolate);
@@ -1257,7 +1220,7 @@
     top: calc(100% + 6px); left: 0; right: 0;
     background: #fff;
     border: 1px solid rgba(184,135,47,.32);
-    border-radius: 14px;
+    border-radius: 30px;
     padding: 6px;
     box-shadow: 0 18px 40px rgba(45,31,24,.18), 0 4px 10px rgba(45,31,24,.08);
     opacity: 0;
@@ -1528,9 +1491,8 @@
   <!-- ============== HEADER ============== -->
   <header class="header">
     <div class="container header-inner">
-      <a href="#" class="brand">
-        <div class="brand-logo" aria-hidden="true"></div>
-        <div class="brand-name">Transfers <em>Tatá</em></div>
+      <a href="#" class="brand" aria-label="Transfers Tatá">
+        <img class="brand-full" src="uploads/logocompleto2.png" alt="Transfers Tatá" />
       </a>
       <nav class="nav">
         <a href="#experiencia" data-i18n="nav.experience">Experiencia</a>
@@ -1615,13 +1577,8 @@
         </div>
 
         <div class="hero-art reveal in">
-          <div class="halo"></div>
-          <div class="halo-gold"></div>
-          <div class="ring"></div>
-          <div class="ring ring-2"></div>
-
           <div class="logo-wrap">
-            <img class="logo-img" src="assets/logo.png" alt="Transfers Tatá" />
+            <img class="logo-img" src="uploads/imagen.png" alt="Transfers Tatá" />
           </div>
         </div>
       </div>
@@ -1698,118 +1655,19 @@
         <div class="showcase-frame">
           <!-- STAGE / IMAGE -->
           <div class="stage">
-            <div class="stage-index"><span class="now">01</span><span class="of">/ 06</span></div>
-            <div class="stage-watermark" id="stageWatermark">Picanto</div>
-            <div class="stage-image-wrap" id="stageImages">
-              <div class="stage-image active" data-i="0">
-                <img src="uploads/kia.png" alt="Kia Picanto" loading="eager" />
-              </div>
-              <div class="stage-image" data-i="1">
-                <img src="uploads/tucson.png" alt="Hyundai Tucson" loading="lazy" />
-              </div>
-              <div class="stage-image" data-i="2">
-                <img src="uploads/changan.png" alt="Changan Hunter" loading="lazy" />
-              </div>
-              <div class="stage-image" data-i="3">
-                <img src="uploads/h1.png" alt="Hyundai H1" loading="lazy" />
-              </div>
-              <div class="stage-image" data-i="4">
-                <img src="uploads/minibus.png" alt="Mini bus" loading="lazy" />
-              </div>
-              <div class="stage-image" data-i="5">
-                <img src="uploads/bus.png" alt="Bus" loading="lazy" />
-              </div>
-            </div>
+            <div class="stage-index"><span class="now">01</span><span class="of">/ 05</span></div>
+            <div class="stage-watermark" id="stageWatermark"></div>
+            <div class="stage-image-wrap" id="stageImages"></div>
           </div>
 
           <!-- INFO -->
-          <div class="info" id="showcaseInfo">
-            <div class="info-slide active" data-i="0">
-              <div class="info-cat"><span class="pill" data-i18n="veh.0.pill">Compacto</span> <span data-i18n="veh.0.cat">Económico</span></div>
-              <h3 class="info-name">Kia Picanto</h3>
-              <div class="info-cap" data-i18n-html="veh.0.cap"><strong>1 pasajero</strong> · city</div>
-              <p class="info-desc" data-i18n="veh.0.desc">Ideal para traslados individuales rápidos dentro de la ciudad. Ágil, climatizado y siempre puntual.</p>
-              <ul class="info-features">
-                <li data-i18n="veh.0.f1">Aire acondicionado</li>
-                <li data-i18n="veh.0.f2">Tarifa económica</li>
-                <li data-i18n="veh.0.f3">Tráficos urbanos</li>
-              </ul>
-              <a class="info-cta" target="_blank" rel="noopener" data-wa-vehicle="Kia Picanto" data-i18n="veh.cta">Consultar disponibilidad →</a>
-            </div>
-            <div class="info-slide" data-i="1">
-              <div class="info-cat"><span class="pill" data-i18n="veh.1.pill">SUV</span> <span data-i18n="veh.1.cat">Familia</span></div>
-              <h3 class="info-name">Hyundai Tucson</h3>
-              <div class="info-cap" data-i18n-html="veh.1.cap"><strong>Hasta 3 pasajeros</strong> · equipaje amplio</div>
-              <p class="info-desc" data-i18n="veh.1.desc">Una SUV cómoda y ejecutiva, ideal para familias o viajes con equipaje. Asientos amplios y suspensión suave.</p>
-              <ul class="info-features">
-                <li data-i18n="veh.1.f1">Equipaje XL</li>
-                <li data-i18n="veh.1.f2">SUV ejecutiva</li>
-                <li data-i18n="veh.1.f3">Familias</li>
-              </ul>
-              <a class="info-cta" target="_blank" rel="noopener" data-wa-vehicle="Hyundai Tucson" data-i18n="veh.cta">Consultar disponibilidad →</a>
-            </div>
-            <div class="info-slide" data-i="2">
-              <div class="info-cat"><span class="pill" data-i18n="veh.2.pill">Pick-up</span> <span data-i18n="veh.2.cat">Carga</span></div>
-              <h3 class="info-name">Changan Hunter</h3>
-              <div class="info-cap" data-i18n-html="veh.2.cap"><strong>Hasta 4 pasajeros</strong> · carga especial</div>
-              <p class="info-desc" data-i18n="veh.2.desc">Robusta y versátil. Pensada para equipaje pesado, cargas especiales o trayectos más exigentes fuera de la ciudad.</p>
-              <ul class="info-features">
-                <li data-i18n="veh.2.f1">Carga adicional</li>
-                <li data-i18n="veh.2.f2">Largas distancias</li>
-                <li data-i18n="veh.2.f3">Tracción</li>
-              </ul>
-              <a class="info-cta" target="_blank" rel="noopener" data-wa-vehicle="Changan Hunter" data-i18n="veh.cta">Consultar disponibilidad →</a>
-            </div>
-            <div class="info-slide" data-i="3">
-              <div class="info-cat"><span class="pill" data-i18n="veh.3.pill">Van</span> <span data-i18n="veh.3.cat">Grupos</span></div>
-              <h3 class="info-name">Hyundai H1</h3>
-              <div class="info-cap" data-i18n-html="veh.3.cap"><strong>10 pasajeros</strong> · contamos con 2 unidades</div>
-              <p class="info-desc" data-i18n="veh.3.desc">La van preferida para comitivas chicas, aeropuerto y traslados corporativos. Espacio para todos sin sacrificar confort.</p>
-              <ul class="info-features">
-                <li data-i18n="veh.3.f1">2 unidades disponibles</li>
-                <li data-i18n="veh.3.f2">Aeropuerto</li>
-                <li data-i18n="veh.3.f3">10 pax</li>
-              </ul>
-              <a class="info-cta" target="_blank" rel="noopener" data-wa-vehicle="Hyundai H1" data-i18n="veh.cta">Consultar disponibilidad →</a>
-            </div>
-            <div class="info-slide" data-i="4">
-              <div class="info-cat"><span class="pill" data-i18n="veh.4.pill">Minibus</span> <span data-i18n="veh.4.cat">Eventos</span></div>
-              <h3 class="info-name">Mini bus</h3>
-              <div class="info-cap" data-i18n-html="veh.4.cap"><strong>19 pasajeros</strong> · bodega amplia</div>
-              <p class="info-desc" data-i18n="veh.4.desc">Ideal para grupos medianos, excursiones, eventos corporativos y traslados a interior del país con equipaje completo.</p>
-              <ul class="info-features">
-                <li data-i18n="veh.4.f1">Eventos</li>
-                <li data-i18n="veh.4.f2">Excursiones</li>
-                <li data-i18n="veh.4.f3">19 pax</li>
-              </ul>
-              <a class="info-cta" target="_blank" rel="noopener" data-wa-vehicle="Mini bus 19 pax" data-i18n="veh.cta">Consultar disponibilidad →</a>
-            </div>
-            <div class="info-slide" data-i="5">
-              <div class="info-cat"><span class="pill" data-i18n="veh.5.pill">Bus</span> <span data-i18n="veh.5.cat">Comitivas</span></div>
-              <h3 class="info-name">Bus</h3>
-              <div class="info-cap" data-i18n-html="veh.5.cap"><strong>+30 pasajeros</strong> · butacas reclinables</div>
-              <p class="info-desc" data-i18n="veh.5.desc">Pensado para grupos grandes y traslados masivos: delegaciones, congresos y viajes de larga distancia con confort total.</p>
-              <ul class="info-features">
-                <li data-i18n="veh.5.f1">Larga distancia</li>
-                <li data-i18n="veh.5.f2">Delegaciones</li>
-                <li data-i18n="veh.5.f3">+30 pax</li>
-              </ul>
-              <a class="info-cta" target="_blank" rel="noopener" data-wa-vehicle="Bus" data-i18n="veh.cta">Consultar disponibilidad →</a>
-            </div>
-          </div>
+          <div class="info" id="showcaseInfo"></div>
 
           <div class="showcase-progress"><span id="showcaseProgress"></span></div>
         </div>
 
         <div class="showcase-nav">
-          <div class="showcase-tabs" id="showcaseTabs">
-            <button class="tab active" data-i="0"><span class="tab-num">01</span>Picanto</button>
-            <button class="tab" data-i="1"><span class="tab-num">02</span>Tucson</button>
-            <button class="tab" data-i="2"><span class="tab-num">03</span>Hunter</button>
-            <button class="tab" data-i="3"><span class="tab-num">04</span>H1</button>
-            <button class="tab" data-i="4"><span class="tab-num">05</span>Mini bus</button>
-            <button class="tab" data-i="5"><span class="tab-num">06</span>Bus</button>
-          </div>
+          <div class="showcase-tabs" id="showcaseTabs"></div>
           <div class="showcase-arrows">
             <button class="arr" id="arrPrev" aria-label="Anterior">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
@@ -1914,79 +1772,7 @@
         </div>
       </div>
 
-      <div class="services-grid">
-        <article class="svc reveal">
-          <span class="svc-tag">01</span>
-          <div class="svc-ic">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z"/></svg>
-          </div>
-          <h3 data-i18n="svc1.t">Traslados al aeropuerto</h3>
-          <p data-i18n="svc1.d">Llegadas, salidas y conexiones con seguimiento de vuelo. Esperamos por vos cuando hay demoras.</p>
-          <a class="svc-link" href="#cotizar"><span data-i18n="svc1.cta">Reservar</span>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
-          </a>
-        </article>
-
-        <article class="svc dark reveal">
-          <span class="svc-tag">02</span>
-          <div class="svc-ic">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15 15 0 0 1 0 20"/><path d="M12 2a15 15 0 0 0 0 20"/></svg>
-          </div>
-          <h3 data-i18n="svc2.t">Viajes nacionales e internacionales</h3>
-          <p data-i18n="svc2.d">Cruces por Argentina, Brasil y Paraguay. Documentación al día, paradas planificadas y descanso de chofer.</p>
-          <a class="svc-link" href="#cotizar"><span data-i18n="svc2.cta">Itinerarios</span>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
-          </a>
-        </article>
-
-        <article class="svc reveal">
-          <span class="svc-tag">03</span>
-          <div class="svc-ic">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9 12 3l9 6v12H3z"/><path d="M9 21V12h6v9"/></svg>
-          </div>
-          <h3 data-i18n="svc3.t">Traslados turísticos</h3>
-          <p data-i18n="svc3.d">Hoteles, city tours, Cataratas, Yacyretá. Choferes que conocen los caminos y los tiempos.</p>
-          <a class="svc-link" href="#cotizar"><span data-i18n="svc3.cta">Armar ruta</span>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
-          </a>
-        </article>
-
-        <article class="svc reveal">
-          <span class="svc-tag">04</span>
-          <div class="svc-ic">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2"/><circle cx="9.5" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-          </div>
-          <h3 data-i18n="svc4.t">Traslados corporativos</h3>
-          <p data-i18n="svc4.d">Cuentas mensuales para empresas, facturación clara, choferes asignados y discreción ejecutiva.</p>
-          <a class="svc-link" href="#cotizar"><span data-i18n="svc4.cta">Cuenta empresa</span>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
-          </a>
-        </article>
-
-        <article class="svc dark reveal">
-          <span class="svc-tag">05</span>
-          <div class="svc-ic">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-          </div>
-          <h3 data-i18n="svc5.t">Servicios para eventos</h3>
-          <p data-i18n="svc5.d">Bodas, conciertos, congresos. Coordinamos flota, choferes uniformados y horarios al detalle.</p>
-          <a class="svc-link" href="#cotizar"><span data-i18n="svc5.cta">Solicitar logística</span>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
-          </a>
-        </article>
-
-        <article class="svc reveal">
-          <span class="svc-tag">06</span>
-          <div class="svc-ic">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="4" r="2"/><circle cx="18" cy="8" r="2"/><circle cx="20" cy="16" r="2"/><path d="M9 10a5 5 0 0 1 5 5v3.5a3.5 3.5 0 1 1-6.84 1.045Q6.52 17.48 4.46 16.84A3.5 3.5 0 1 1 5.5 10z"/></svg>
-          </div>
-          <h3 data-i18n="svc6.t">Traslado con mascotas</h3>
-          <p data-i18n="svc6.d">Vehículos preparados para llevar a tu mascota cómoda y segura. Pet-friendly de verdad.</p>
-          <a class="svc-link" href="#cotizar"><span data-i18n="svc6.cta">Coordinar</span>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
-          </a>
-        </article>
-      </div>
+      <div class="services-grid" id="servicesGrid"></div>
     </div>
   </section>
 
@@ -2033,32 +1819,7 @@
           <h2 class="section-title" data-i18n-html="faq.title">Lo que <em>todos preguntan</em> antes de reservar.</h2>
           <p class="section-sub" data-i18n="faq.sub">Si no encontrás tu respuesta, escribinos por WhatsApp — coordinación contesta en minutos.</p>
         </div>
-        <div class="faq-list reveal">
-          <div class="faq-item open">
-            <button class="faq-q" type="button"><span data-i18n="faq1.q">¿Operan dentro y fuera del país?</span><span class="plus"></span></button>
-            <div class="faq-a"><div class="faq-a-inner" data-i18n="faq1.a">Sí. Hacemos traslados nacionales en todo Paraguay e internacionales a Argentina y Brasil, con documentación al día y planificación de ruta.</div></div>
-          </div>
-          <div class="faq-item">
-            <button class="faq-q" type="button"><span data-i18n="faq2.q">¿Tienen vehículos para mascotas?</span><span class="plus"></span></button>
-            <div class="faq-a"><div class="faq-a-inner" data-i18n="faq2.a">Sí, contamos con vehículos adaptados y choferes con experiencia para que tu mascota viaje cómoda y segura.</div></div>
-          </div>
-          <div class="faq-item">
-            <button class="faq-q" type="button"><span data-i18n="faq3.q">¿Cómo manejan demoras de vuelo?</span><span class="plus"></span></button>
-            <div class="faq-a"><div class="faq-a-inner" data-i18n="faq3.a">Hacemos seguimiento del vuelo en tiempo real. Si tu llegada se atrasa, ajustamos el horario sin costo adicional.</div></div>
-          </div>
-          <div class="faq-item">
-            <button class="faq-q" type="button"><span data-i18n="faq4.q">¿Aceptan cuentas empresariales con facturación mensual?</span><span class="plus"></span></button>
-            <div class="faq-a"><div class="faq-a-inner" data-i18n="faq4.a">Sí, abrimos cuentas para empresas con consolidado mensual, factura legal y choferes asignados. Te asesoramos en el armado del servicio.</div></div>
-          </div>
-          <div class="faq-item">
-            <button class="faq-q" type="button"><span data-i18n="faq5.q">¿Cómo cotizan? ¿Hay recargos sorpresa?</span><span class="plus"></span></button>
-            <div class="faq-a"><div class="faq-a-inner" data-i18n="faq5.a">Cotizamos por escrito con tarifa cerrada. Sin recargos por equipaje ni esperas razonables. Lo que firmás es lo que pagás.</div></div>
-          </div>
-          <div class="faq-item">
-            <button class="faq-q" type="button"><span data-i18n="faq6.q">¿Puedo cancelar o reprogramar?</span><span class="plus"></span></button>
-            <div class="faq-a"><div class="faq-a-inner" data-i18n="faq6.a">Sí. Hasta 12 hs antes del servicio podés reprogramar sin costo. Para cancelaciones consultá con coordinación.</div></div>
-          </div>
-        </div>
+        <div class="faq-list reveal" id="faqList"></div>
       </div>
     </div>
   </section>
@@ -2068,9 +1829,8 @@
     <div class="container">
       <div class="footer-grid">
         <div>
-          <a href="#" class="brand">
-            <div class="brand-logo" aria-hidden="true"></div>
-            <div class="brand-name">Transfers <em>Tatá</em></div>
+          <a href="#" class="brand" aria-label="Transfers Tatá">
+            <img class="brand-full footer-brand-full" src="uploads/logocompleto2.jpg" alt="Transfers Tatá" />
           </a>
           <p class="brand-tag" data-i18n="foot.tag">Traslados privados y ejecutivos en Paraguay. Cómodos, puntuales y a la medida de cada viaje.</p>
         </div>
@@ -2087,10 +1847,10 @@
         <div>
           <h5 data-i18n="foot.h2">Flota</h5>
           <ul>
-            <li><a href="#flota">Kia Picanto</a></li>
-            <li><a href="#flota">Hyundai Tucson</a></li>
-            <li><a href="#flota">Changan Hunter</a></li>
-            <li><a href="#flota">Hyundai H1</a></li>
+            <li><a href="#flota">Auto</a></li>
+            <li><a href="#flota">SUV</a></li>
+            <li><a href="#flota">Pickup</a></li>
+            <li><a href="#flota">Minibus</a></li>
             <li><a href="#flota" data-i18n="foot.flota5">Minibus & Bus</a></li>
           </ul>
         </div>
@@ -2116,49 +1876,168 @@
     <span class="icon-wa" aria-hidden="true"></span>
   </a>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="admin-config.js"></script>
 <script>
-  // FAQ toggle
-  document.querySelectorAll('.faq-q').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const item = btn.closest('.faq-item');
-      const wasOpen = item.classList.contains('open');
-      document.querySelectorAll('.faq-item.open').forEach(i => i.classList.remove('open'));
-      if (!wasOpen) item.classList.add('open');
-    });
+  const DEFAULT_VEHICLES = [
+    { name:'Auto',    image:'uploads/kia.png',     imageAlt:'Kia Picanto',    pill:'Compacto', cat:'Económico', cap:'<strong>1 pasajero</strong> · city',                      desc:'Ideal para traslados individuales rápidos dentro de la ciudad. Ágil, climatizado y siempre puntual.',                                               f1:'Aire acondicionado', f2:'Tarifa económica',    f3:'Tráficos urbanos' },
+    { name:'SUV',     image:'uploads/tucson.png',   imageAlt:'Hyundai Tucson', pill:'SUV',      cat:'Familia',   cap:'<strong>Hasta 3 pasajeros</strong> · equipaje amplio',    desc:'Una SUV cómoda y ejecutiva, ideal para familias o viajes con equipaje. Asientos amplios y suspensión suave.',                                          f1:'Equipaje XL',        f2:'SUV ejecutiva',        f3:'Familias' },
+    { name:'Pickup',  image:'uploads/changan.png',  imageAlt:'Changan Hunter', pill:'Pick-up',  cat:'Carga',     cap:'<strong>Hasta 4 pasajeros</strong> · carga especial',     desc:'Robusta y versátil. Pensada para equipaje pesado, cargas especiales o trayectos más exigentes fuera de la ciudad.',                                    f1:'Carga adicional',    f2:'Largas distancias',    f3:'Tracción' },
+    { name:'Minibus', image:'uploads/h1.png',       imageAlt:'Hyundai H1',     pill:'Van',      cat:'Grupos',    cap:'<strong>10 pasajeros</strong> · contamos con 2 unidades', desc:'La van preferida para comitivas chicas, aeropuerto y traslados corporativos. Espacio para todos sin sacrificar confort.',                              f1:'2 unidades disponibles', f2:'Aeropuerto',       f3:'10 pax' },
+    { name:'Bus',     image:'uploads/bus.png',      imageAlt:'Bus',            pill:'Bus',      cat:'Comitivas', cap:'<strong>+30 pasajeros</strong> · butacas reclinables',    desc:'Pensado para grupos grandes y traslados masivos: delegaciones, congresos y viajes de larga distancia con confort total.',                             f1:'Larga distancia',    f2:'Delegaciones',         f3:'+30 pax' },
+  ];
+  const SVG_ARROW = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>`;
+  const DEFAULT_SERVICES = [
+    { title:'Traslados al aeropuerto',            description:'Llegadas, salidas y conexiones con seguimiento de vuelo. Esperamos por vos cuando hay demoras.',                              cta:'Reservar',           dark:false, icon_svg:'<path d="M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z"/>' },
+    { title:'Viajes nacionales e internacionales', description:'Cruces por Argentina, Brasil y Paraguay. Documentación al día, paradas planificadas y descanso de chofer.',                cta:'Itinerarios',        dark:true,  icon_svg:'<circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15 15 0 0 1 0 20"/><path d="M12 2a15 15 0 0 0 0 20"/>' },
+    { title:'Traslados turísticos',               description:'Hoteles, city tours, Cataratas, Yacyretá. Choferes que conocen los caminos y los tiempos.',                                 cta:'Armar ruta',         dark:false, icon_svg:'<path d="M3 9 12 3l9 6v12H3z"/><path d="M9 21V12h6v9"/>' },
+    { title:'Traslados corporativos',             description:'Cuentas mensuales para empresas, facturación clara, choferes asignados y discreción ejecutiva.',                            cta:'Cuenta empresa',     dark:false, icon_svg:'<path d="M16 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2"/><circle cx="9.5" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>' },
+    { title:'Servicios para eventos',             description:'Bodas, conciertos, congresos. Coordinamos flota, choferes uniformados y horarios al detalle.',                              cta:'Solicitar logística', dark:true,  icon_svg:'<path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>' },
+    { title:'Traslado con mascotas',              description:'Vehículos preparados para llevar a tu mascota cómoda y segura. Pet-friendly de verdad.',                                    cta:'Coordinar',          dark:false, icon_svg:'<circle cx="11" cy="4" r="2"/><circle cx="18" cy="8" r="2"/><circle cx="20" cy="16" r="2"/><path d="M9 10a5 5 0 0 1 5 5v3.5a3.5 3.5 0 1 1-6.84 1.045Q6.52 17.48 4.46 16.84A3.5 3.5 0 1 1 5.5 10z"/>' },
+  ];
+
+  const DEFAULT_FAQS = [
+    { q:'¿Operan dentro y fuera del país?',                       a:'Sí. Hacemos traslados nacionales en todo Paraguay e internacionales a Argentina y Brasil, con documentación al día y planificación de ruta.' },
+    { q:'¿Tienen vehículos para mascotas?',                       a:'Sí, contamos con vehículos adaptados y choferes con experiencia para que tu mascota viaje cómoda y segura.' },
+    { q:'¿Cómo manejan demoras de vuelo?',                        a:'Hacemos seguimiento del vuelo en tiempo real. Si tu llegada se atrasa, ajustamos el horario sin costo adicional.' },
+    { q:'¿Aceptan cuentas empresariales con facturación mensual?', a:'Sí, abrimos cuentas para empresas con consolidado mensual, factura legal y choferes asignados. Te asesoramos en el armado del servicio.' },
+    { q:'¿Cómo cotizan? ¿Hay recargos sorpresa?',                a:'Cotizamos por escrito con tarifa cerrada. Sin recargos por equipaje ni esperas razonables. Lo que firmás es lo que pagás.' },
+    { q:'¿Puedo cancelar o reprogramar?',                         a:'Sí. Hasta 12 hs antes del servicio podés reprogramar sin costo. Para cancelaciones consultá con coordinación.' },
+  ];
+
+  // FAQ toggle (event delegation — funciona antes y después del render)
+  document.getElementById('faqList').addEventListener('click', e => {
+    const btn = e.target.closest('.faq-q');
+    if (!btn) return;
+    const item = btn.closest('.faq-item');
+    const wasOpen = item.classList.contains('open');
+    document.querySelectorAll('.faq-item.open').forEach(i => i.classList.remove('open'));
+    if (!wasOpen) item.classList.add('open');
   });
 
-  // Intersection-observer reveal + fleet stagger
+  // Intersection-observer reveal
   const io = new IntersectionObserver((entries) => {
     entries.forEach(e => {
-      if (e.isIntersecting) {
-        e.target.classList.add('in');
-        io.unobserve(e.target);
-      }
+      if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
     });
   }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
-
   document.querySelectorAll('.reveal').forEach(el => io.observe(el));
 
-  // Fleet showcase carousel
-  (function(){
+  // Async init: carga desde Supabase si está configurado, si no usa defaults
+  (async function(){
+    let vehicles = DEFAULT_VEHICLES;
+    let faqs     = DEFAULT_FAQS;
+
+    let services = DEFAULT_SERVICES;
+
+    try {
+      if (typeof SUPABASE_URL !== 'undefined' && SUPABASE_URL && SUPABASE_URL !== 'YOUR_SUPABASE_URL') {
+        const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY, { db: { schema: 'transfertata' } });
+        const [{ data: vData }, { data: fData }, { data: sData }] = await Promise.all([
+          sb.from('vehicles').select('*').order('sort_order'),
+          sb.from('faqs').select('*').order('sort_order'),
+          sb.from('servicios').select('*').order('sort_order'),
+        ]);
+        if (vData && vData.length) vehicles = vData.map(r => ({
+          name: r.name, image: r.image, imageAlt: r.image_alt,
+          pill: r.pill, cat: r.cat, cap: r.cap, desc: r.description,
+          f1: r.f1, f2: r.f2, f3: r.f3,
+        }));
+        if (fData && fData.length) faqs = fData.map(r => ({ q: r.question, a: r.answer }));
+        if (sData && sData.length) services = sData.map(r => ({
+          title: r.title, description: r.description,
+          cta: r.cta, dark: r.dark, icon_svg: r.icon_svg,
+        }));
+      }
+    } catch(e) { /* usa defaults */ }
+
+    // Render services
+    const servicesGrid = document.getElementById('servicesGrid');
+    if (servicesGrid) {
+      services.forEach((s, i) => {
+        const art = document.createElement('article');
+        art.className = 'svc reveal' + (s.dark ? ' dark' : '');
+        art.innerHTML = `
+          <span class="svc-tag">${String(i+1).padStart(2,'0')}</span>
+          <div class="svc-ic">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">${s.icon_svg}</svg>
+          </div>
+          <h3>${s.title}</h3>
+          <p>${s.description}</p>
+          <a class="svc-link" href="#cotizar"><span>${s.cta}</span>${SVG_ARROW}</a>`;
+        servicesGrid.appendChild(art);
+        io.observe(art);
+      });
+    }
+
+    // Render vehicles
+    const stageImagesWrap = document.getElementById('stageImages');
+    const showcaseInfo    = document.getElementById('showcaseInfo');
+    const showcaseTabs    = document.getElementById('showcaseTabs');
+    const stageWatermark  = document.getElementById('stageWatermark');
+    if (stageImagesWrap) {
+      vehicles.forEach((v, i) => {
+        const imgDiv = document.createElement('div');
+        imgDiv.className = 'stage-image' + (i === 0 ? ' active' : '');
+        imgDiv.dataset.i = i;
+        imgDiv.innerHTML = `<img src="${v.image}" alt="${v.imageAlt}" loading="${i===0?'eager':'lazy'}" />`;
+        stageImagesWrap.appendChild(imgDiv);
+
+        const infoDiv = document.createElement('div');
+        infoDiv.className = 'info-slide' + (i === 0 ? ' active' : '');
+        infoDiv.dataset.i = i;
+        infoDiv.innerHTML = `
+          <div class="info-cat"><span class="pill">${v.pill}</span> <span>${v.cat}</span></div>
+          <h3 class="info-name">${v.name}</h3>
+          <div class="info-cap">${v.cap}</div>
+          <p class="info-desc">${v.desc}</p>
+          <ul class="info-features"><li>${v.f1}</li><li>${v.f2}</li><li>${v.f3}</li></ul>
+          <a class="info-cta" target="_blank" rel="noopener" data-wa-vehicle="${v.name}">Consultar disponibilidad →</a>`;
+        showcaseInfo.appendChild(infoDiv);
+
+        const tab = document.createElement('button');
+        tab.className = 'tab' + (i === 0 ? ' active' : '');
+        tab.dataset.i = i;
+        tab.innerHTML = `<span class="tab-num">${String(i+1).padStart(2,'0')}</span>${v.name}`;
+        showcaseTabs.appendChild(tab);
+      });
+      if (stageWatermark) stageWatermark.textContent = vehicles[0].name;
+      const ofEl = document.querySelector('.stage-index .of');
+      if (ofEl) ofEl.textContent = '/ ' + String(vehicles.length).padStart(2,'0');
+    }
+
+    // Render FAQ
+    const faqList = document.getElementById('faqList');
+    if (faqList) {
+      faqs.forEach((f, i) => {
+        const item = document.createElement('div');
+        item.className = 'faq-item' + (i === 0 ? ' open' : '');
+        item.innerHTML = `
+          <button class="faq-q" type="button"><span>${f.q}</span><span class="plus"></span></button>
+          <div class="faq-a"><div class="faq-a-inner">${f.a}</div></div>`;
+        faqList.appendChild(item);
+      });
+    }
+
+    // Fleet showcase carousel
     const showcase = document.getElementById('showcase');
     if (!showcase) return;
-    const total = 6;
+    const total = vehicles.length;
     const stageImages = showcase.querySelectorAll('.stage-image');
     const infoSlides = showcase.querySelectorAll('.info-slide');
     const tabs = showcase.querySelectorAll('.tab');
     const progress = document.getElementById('showcaseProgress');
-    const stageWatermark = document.getElementById('stageWatermark');
+    const stageWm = document.getElementById('stageWatermark');
     const stageIndexNow = showcase.querySelector('.stage-index .now');
     const arrPrev = document.getElementById('arrPrev');
     const arrNext = document.getElementById('arrNext');
-    const names = ['Picanto','Tucson','Hunter','H1','Mini bus','Bus'];
+    const names = vehicles.map(v => v.name);
 
     let current = 0;
     let timer = null;
     let progressStart = 0;
     let progressRaf = null;
-    const DURATION = 5800; // ms per slide
+    const DURATION = 3200; // ms per slide
     let paused = false;
 
     function setActive(i, dir){
@@ -2184,7 +2063,7 @@
 
       // index + watermark
       stageIndexNow.textContent = String(i+1).padStart(2,'0');
-      stageWatermark.textContent = names[i];
+      if (stageWm) stageWm.textContent = names[i];
 
       current = i;
       restartProgress();

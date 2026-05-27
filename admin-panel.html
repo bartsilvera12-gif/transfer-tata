@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Panel — Transfers Tatá</title>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="admin-config.js"></script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Manrope', sans-serif;
+    background: #F5EDE3;
+    color: #1E1713;
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+  }
+
+  /* ── Sidebar ── */
+  .sidebar {
+    width: 248px; flex-shrink: 0;
+    background: #1E1713;
+    display: flex; flex-direction: column;
+    height: 100vh; overflow-y: auto;
+    border-right: 1px solid rgba(184,135,47,.12);
+  }
+  .sidebar-brand {
+    padding: 18px 16px 16px;
+    display: flex; align-items: center; gap: 12px;
+    border-bottom: 1px solid rgba(184,135,47,.1);
+  }
+  .brand-avatar {
+    width: 38px; height: 38px; border-radius: 10px;
+    background: linear-gradient(135deg, #B8872F, #D8AE55);
+    display: grid; place-items: center;
+    font-weight: 800; font-size: 13px; color: #1E1713;
+    flex-shrink: 0; letter-spacing: .02em;
+  }
+  .brand-sub { font-size: 9px; font-weight: 700; letter-spacing: .14em; color: rgba(255,244,234,.3); }
+  .brand-name { font-size: 13px; font-weight: 700; color: #D8AE55; margin-top: 2px; }
+
+  .sidebar-nav { flex: 1; padding: 10px 10px 0; }
+  .nav-item {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 12px; border-radius: 10px;
+    text-decoration: none; cursor: pointer;
+    color: rgba(255,244,234,.5); font-size: 13.5px; font-weight: 500;
+    transition: background .18s, color .18s;
+    margin-bottom: 2px; border: none; background: none;
+    width: 100%; text-align: left;
+  }
+  .nav-item:hover { background: rgba(184,135,47,.07); color: rgba(255,244,234,.8); }
+  .nav-item.active {
+    background: rgba(184,135,47,.13);
+    color: #D8AE55; font-weight: 600;
+    border-left: 3px solid #B8872F;
+    padding-left: 9px;
+  }
+  .nav-icon { font-size: 15px; width: 20px; text-align: center; flex-shrink: 0; }
+  .nav-label { flex: 1; }
+  .nav-tag { font-size: 10px; color: rgba(255,244,234,.22); font-weight: 500; }
+  .sidebar-footer { padding: 10px; border-top: 1px solid rgba(184,135,47,.1); }
+
+  /* ── Main ── */
+  .main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+  .main-header {
+    background: #fff;
+    border-bottom: 1px solid rgba(184,135,47,.14);
+    padding: 0 28px; height: 54px;
+    display: flex; align-items: center; justify-content: space-between;
+    flex-shrink: 0;
+  }
+  .breadcrumb { font-size: 13px; color: #9A8070; }
+  .breadcrumb strong { color: #1E1713; font-weight: 600; }
+  .header-right { display: flex; align-items: center; gap: 16px; font-size: 13px; color: #9A8070; }
+  .status { display: flex; align-items: center; gap: 6px; font-weight: 600; color: #2E7D32; }
+  .status-dot { width: 7px; height: 7px; border-radius: 50%; background: #4CAF50; }
+
+  .main-body { flex: 1; overflow-y: auto; padding: 28px 32px; }
+
+  /* ── Sections ── */
+  .section { display: none; }
+  .section.active { display: block; }
+  .section-head {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 22px;
+  }
+  .section-head h1 { font-size: 24px; font-weight: 700; color: #1E1713; }
+  .btn-add {
+    background: linear-gradient(135deg, #B8872F, #D8AE55);
+    color: #1E1713; border: none; border-radius: 999px;
+    padding: 10px 22px; font: 700 13px 'Manrope', sans-serif;
+    cursor: pointer; transition: opacity .2s;
+  }
+  .btn-add:hover { opacity: .85; }
+
+  /* ── Item cards ── */
+  .item-card {
+    background: #fff;
+    border: 1px solid rgba(184,135,47,.13);
+    border-radius: 16px;
+    padding: 15px 18px;
+    margin-bottom: 10px;
+    display: flex; align-items: center; gap: 16px;
+  }
+  .item-thumb {
+    width: 80px; height: 52px; border-radius: 10px;
+    object-fit: contain; background: #FFF4EA; flex-shrink: 0;
+  }
+  .item-body { flex: 1; min-width: 0; }
+  .item-name { font-weight: 700; font-size: 14px; color: #1E1713; }
+  .item-meta { font-size: 12px; color: #9A8070; margin-top: 3px; line-height: 1.5; }
+  .item-actions { display: flex; gap: 6px; flex-shrink: 0; }
+  .btn-sm {
+    padding: 6px 13px; border-radius: 999px;
+    font: 600 12px 'Manrope', sans-serif; cursor: pointer; border: none; transition: opacity .2s;
+  }
+  .btn-sm:hover { opacity: .8; }
+  .btn-order { background: rgba(184,135,47,.1); color: #B8872F; }
+  .btn-edit  { background: #B8872F; color: #fff; }
+  .btn-del   { background: #C0392B; color: #fff; }
+  .btn-cancel { background: transparent; border: 1.5px solid rgba(184,135,47,.3); color: #9A8070; }
+
+  /* ── Modals ── */
+  .modal-bg {
+    display: none; position: fixed; inset: 0;
+    background: rgba(14,13,12,.65); backdrop-filter: blur(6px);
+    z-index: 100; align-items: center; justify-content: center; padding: 20px;
+  }
+  .modal-bg.open { display: flex; }
+  .modal {
+    background: #fff; border-radius: 24px;
+    padding: 28px 32px; width: 100%; max-width: 560px;
+    max-height: 92vh; overflow-y: auto;
+    box-shadow: 0 40px 80px rgba(14,13,12,.28);
+  }
+  .modal-top {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 22px;
+  }
+  .modal-top h2 { font-size: 17px; font-weight: 700; color: #1E1713; }
+  .btn-close {
+    width: 30px; height: 30px; border-radius: 8px;
+    border: none; background: rgba(184,135,47,.1);
+    color: #B8872F; font-size: 18px; cursor: pointer; display: grid; place-items: center;
+  }
+
+  /* ── Form ── */
+  .field { margin-bottom: 13px; }
+  .field label {
+    display: block; font-size: 10px; font-weight: 700;
+    letter-spacing: .08em; color: #9A8070; margin-bottom: 5px; text-transform: uppercase;
+  }
+  .field input, .field textarea {
+    width: 100%; padding: 11px 14px; border-radius: 14px;
+    border: 1.5px solid rgba(184,135,47,.2);
+    font: 500 14px 'Manrope', sans-serif;
+    color: #1E1713; background: #FFF4EA; outline: none; resize: vertical;
+    transition: border-color .2s;
+  }
+  .field input:focus, .field textarea:focus { border-color: #B8872F; }
+  .field textarea { min-height: 80px; }
+  .g2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .g3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
+  .preview-img {
+    width: 100%; height: 100px; object-fit: contain;
+    background: #FFF4EA; border-radius: 10px; margin-top: 8px;
+    display: none; border: 1px solid rgba(184,135,47,.18);
+  }
+  .modal-footer {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-top: 22px; padding-top: 16px;
+    border-top: 1px solid rgba(184,135,47,.13);
+  }
+  .modal-footer-right { display: flex; gap: 8px; }
+  .btn-save {
+    background: linear-gradient(135deg, #B8872F, #D8AE55);
+    color: #1E1713; border: none; border-radius: 999px;
+    padding: 10px 24px; font: 700 13px 'Manrope', sans-serif; cursor: pointer;
+    transition: opacity .2s;
+  }
+  .btn-save:hover { opacity: .85; }
+
+  /* ── Toast ── */
+  .toast {
+    position: fixed; bottom: 24px; right: 24px;
+    background: #1E1713; color: #FFF4EA;
+    padding: 13px 20px; border-radius: 14px;
+    font-size: 13px; font-weight: 500; z-index: 200;
+    opacity: 0; transform: translateY(8px);
+    transition: opacity .3s, transform .3s; pointer-events: none;
+    border-left: 3px solid #B8872F;
+  }
+  .toast.show { opacity: 1; transform: translateY(0); }
+  .loading { text-align: center; color: #9A8070; padding: 36px; font-size: 14px; }
+</style>
+</head>
+<body>
+
+<!-- Sidebar -->
+<aside class="sidebar">
+  <div class="sidebar-brand">
+    <div class="brand-avatar">TT</div>
+    <div>
+      <div class="brand-sub">PANEL</div>
+      <div class="brand-name">Administración</div>
+    </div>
+  </div>
+  <nav class="sidebar-nav">
+    <button class="nav-item active" onclick="switchSection('flota', this)">
+      <span class="nav-label">Flota</span>
+      <span class="nav-tag">Vehículos</span>
+    </button>
+    <button class="nav-item" onclick="switchSection('servicios', this)">
+      <span class="nav-label">Servicios</span>
+      <span class="nav-tag">Principales</span>
+    </button>
+    <button class="nav-item" onclick="switchSection('faq', this)">
+      <span class="nav-label">FAQ</span>
+      <span class="nav-tag">Preguntas</span>
+    </button>
+  </nav>
+  <div class="sidebar-footer">
+    <a class="nav-item" href="index.html" target="_blank" style="text-decoration:none">
+      <span class="nav-label">Ver sitio</span>
+    </a>
+    <button class="nav-item" onclick="logout()" style="margin-top:4px">
+      <span class="nav-label">Cerrar sesión</span>
+    </button>
+  </div>
+</aside>
+
+<!-- Main -->
+<div class="main">
+  <header class="main-header">
+    <div class="breadcrumb">
+      Admin / <strong id="bc-section">Flota</strong> · <span id="bc-sub">Vehículos</span>
+    </div>
+    <div class="header-right">
+      <span id="hdrDate"></span>
+      <span class="status"><span class="status-dot"></span> Conectado</span>
+    </div>
+  </header>
+
+  <div class="main-body">
+    <div id="section-flota" class="section active">
+      <div class="section-head">
+        <h1>Flota</h1>
+        <button class="btn-add" onclick="openVehicleModal()">+ Agregar vehículo</button>
+      </div>
+      <div id="vehicleList"><div class="loading">Cargando…</div></div>
+    </div>
+
+    <div id="section-servicios" class="section">
+      <div class="section-head">
+        <h1>Servicios principales</h1>
+        <button class="btn-add" onclick="openSvcModal()">+ Agregar servicio</button>
+      </div>
+      <div id="svcList"><div class="loading">Cargando…</div></div>
+    </div>
+
+    <div id="section-faq" class="section">
+      <div class="section-head">
+        <h1>Preguntas frecuentes</h1>
+        <button class="btn-add" onclick="openFaqModal()">+ Agregar pregunta</button>
+      </div>
+      <div id="faqList"><div class="loading">Cargando…</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: Vehículo -->
+<div class="modal-bg" id="vehicleModal">
+  <div class="modal">
+    <div class="modal-top">
+      <h2 id="vm-title">Vehículo</h2>
+      <button class="btn-close" onclick="closeModal('vehicleModal')">×</button>
+    </div>
+    <input type="hidden" id="vm-id" />
+    <div class="field"><label>Nombre</label><input type="text" id="vm-name" placeholder="Ej: SUV" /></div>
+    <div class="g2">
+      <div class="field"><label>Etiqueta (pill)</label><input type="text" id="vm-pill" placeholder="Compacto" /></div>
+      <div class="field"><label>Categoría</label><input type="text" id="vm-cat" placeholder="Económico" /></div>
+    </div>
+    <div class="field"><label>Capacidad <small style="text-transform:none;font-weight:400;font-size:10px">(HTML permitido)</small></label><input type="text" id="vm-cap" placeholder="&lt;strong&gt;4 pasajeros&lt;/strong&gt; · equipaje" /></div>
+    <div class="field"><label>Descripción</label><textarea id="vm-desc"></textarea></div>
+    <div class="g3">
+      <div class="field"><label>Característica 1</label><input type="text" id="vm-f1" /></div>
+      <div class="field"><label>Característica 2</label><input type="text" id="vm-f2" /></div>
+      <div class="field"><label>Característica 3</label><input type="text" id="vm-f3" /></div>
+    </div>
+    <div class="field">
+      <label>Ruta de imagen</label>
+      <input type="text" id="vm-image" placeholder="uploads/nombre.png" oninput="previewImg(this.value,'vm-preview')" />
+      <img id="vm-preview" class="preview-img" alt="preview" />
+    </div>
+    <div class="field"><label>Alt de imagen</label><input type="text" id="vm-alt" placeholder="Ej: Hyundai Tucson" /></div>
+    <div class="modal-footer">
+      <button class="btn-sm btn-del" id="vm-delete" onclick="deleteVehicle()" style="display:none">Eliminar</button>
+      <div class="modal-footer-right">
+        <button class="btn-sm btn-cancel" onclick="closeModal('vehicleModal')">Cancelar</button>
+        <button class="btn-save" onclick="saveVehicle()">Guardar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: Servicio -->
+<div class="modal-bg" id="svcModal">
+  <div class="modal">
+    <div class="modal-top">
+      <h2 id="sm-title">Servicio</h2>
+      <button class="btn-close" onclick="closeModal('svcModal')">×</button>
+    </div>
+    <input type="hidden" id="sm-id" />
+    <div class="field"><label>Título</label><input type="text" id="sm-title-input" placeholder="Ej: Traslados al aeropuerto" /></div>
+    <div class="field"><label>Descripción</label><textarea id="sm-desc"></textarea></div>
+    <div class="g2">
+      <div class="field"><label>Texto del botón CTA</label><input type="text" id="sm-cta" placeholder="Ej: Reservar" /></div>
+      <div class="field" style="display:flex;align-items:center;gap:10px;padding-top:22px">
+        <input type="checkbox" id="sm-dark" style="width:18px;height:18px;accent-color:#B8872F" />
+        <label for="sm-dark" style="text-transform:none;font-size:13px;font-weight:600;color:#1E1713;margin:0">Estilo oscuro (dark)</label>
+      </div>
+    </div>
+    <div class="field">
+      <label>SVG del ícono <small style="text-transform:none;font-weight:400;font-size:10px">(contenido interno del &lt;svg&gt;, ej: &lt;path d="..."/&gt;)</small></label>
+      <textarea id="sm-svg" style="min-height:70px;font-family:monospace;font-size:12px" placeholder='&lt;path d="M5 12h14"/&gt;'></textarea>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-sm btn-del" id="sm-delete" onclick="deleteSvc()" style="display:none">Eliminar</button>
+      <div class="modal-footer-right">
+        <button class="btn-sm btn-cancel" onclick="closeModal('svcModal')">Cancelar</button>
+        <button class="btn-save" onclick="saveSvc()">Guardar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: FAQ -->
+<div class="modal-bg" id="faqModal">
+  <div class="modal">
+    <div class="modal-top">
+      <h2 id="fm-title">Pregunta</h2>
+      <button class="btn-close" onclick="closeModal('faqModal')">×</button>
+    </div>
+    <input type="hidden" id="fm-id" />
+    <div class="field"><label>Pregunta</label><input type="text" id="fm-q" placeholder="¿...?" /></div>
+    <div class="field"><label>Respuesta</label><textarea id="fm-a" style="min-height:110px"></textarea></div>
+    <div class="modal-footer">
+      <button class="btn-sm btn-del" id="fm-delete" onclick="deleteFaq()" style="display:none">Eliminar</button>
+      <div class="modal-footer-right">
+        <button class="btn-sm btn-cancel" onclick="closeModal('faqModal')">Cancelar</button>
+        <button class="btn-save" onclick="saveFaq()">Guardar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+  const { createClient } = supabase;
+  const sb = createClient(SUPABASE_URL, SUPABASE_KEY, { db: { schema: 'transfertata' } });
+
+  // Auth guard — verifica sesión Supabase Auth
+  (async () => {
+    const { data: { session } } = await sb.auth.getSession();
+    if (!session) { location.href = 'admin.html'; return; }
+    init();
+  })();
+
+  // Date header
+  document.getElementById('hdrDate').textContent =
+    new Date().toLocaleDateString('es-PY', { weekday:'long', day:'numeric', month:'long' });
+
+  function switchSection(name, btn) {
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    document.getElementById('section-' + name).classList.add('active');
+    btn.classList.add('active');
+    const labels = { flota:['Flota','Vehículos'], servicios:['Servicios','Principales'], faq:['FAQ','Preguntas'] };
+    document.getElementById('bc-section').textContent = labels[name][0];
+    document.getElementById('bc-sub').textContent     = labels[name][1];
+  }
+
+  function init() { loadVehicles(); loadSvcs(); loadFaqs(); }
+
+  /* ── VEHICLES ── */
+  let vehiclesData = [];
+
+  async function loadVehicles() {
+    const { data, error } = await sb.from('vehicles').select('*').order('sort_order');
+    if (error) { document.getElementById('vehicleList').innerHTML = `<div class="loading" style="color:#E05C5C">Error: ${error.message}</div>`; return; }
+    vehiclesData = data || [];
+    renderVehicles();
+  }
+
+  function renderVehicles() {
+    const list = document.getElementById('vehicleList');
+    if (!vehiclesData.length) { list.innerHTML = '<div class="loading">No hay vehículos todavía</div>'; return; }
+    list.innerHTML = vehiclesData.map((v, i) => `
+      <div class="item-card">
+        <img class="item-thumb" src="${v.image}" alt="${v.image_alt||''}" onerror="this.style.opacity='.15'" />
+        <div class="item-body">
+          <div class="item-name">${v.name}</div>
+          <div class="item-meta">${v.pill} · ${v.cat} · ${v.f1}, ${v.f2}, ${v.f3}</div>
+        </div>
+        <div class="item-actions">
+          ${i > 0 ? `<button class="btn-sm btn-order" onclick="moveVehicle(${i},-1)">↑</button>` : ''}
+          ${i < vehiclesData.length-1 ? `<button class="btn-sm btn-order" onclick="moveVehicle(${i},1)">↓</button>` : ''}
+          <button class="btn-sm btn-edit" onclick="openVehicleModal(${i})">Editar</button>
+        </div>
+      </div>`).join('');
+  }
+
+  async function moveVehicle(i, dir) {
+    const j = i + dir;
+    const [a, b] = [vehiclesData[i], vehiclesData[j]];
+    await Promise.all([
+      sb.from('vehicles').update({ sort_order: b.sort_order }).eq('id', a.id),
+      sb.from('vehicles').update({ sort_order: a.sort_order }).eq('id', b.id),
+    ]);
+    [vehiclesData[i], vehiclesData[j]] = [vehiclesData[j], vehiclesData[i]];
+    renderVehicles();
+    toast('Orden actualizado');
+  }
+
+  function openVehicleModal(idx) {
+    const isNew = idx === undefined;
+    const v = isNew ? {} : vehiclesData[idx];
+    document.getElementById('vm-title').textContent  = isNew ? 'Nuevo vehículo' : 'Editar vehículo';
+    document.getElementById('vm-id').value           = isNew ? '' : v.id;
+    document.getElementById('vm-name').value         = v.name || '';
+    document.getElementById('vm-pill').value         = v.pill || '';
+    document.getElementById('vm-cat').value          = v.cat || '';
+    document.getElementById('vm-cap').value          = v.cap || '';
+    document.getElementById('vm-desc').value         = v.description || '';
+    document.getElementById('vm-f1').value           = v.f1 || '';
+    document.getElementById('vm-f2').value           = v.f2 || '';
+    document.getElementById('vm-f3').value           = v.f3 || '';
+    document.getElementById('vm-image').value        = v.image || '';
+    document.getElementById('vm-alt').value          = v.image_alt || '';
+    previewImg(v.image || '', 'vm-preview');
+    document.getElementById('vm-delete').style.display = isNew ? 'none' : 'inline-block';
+    document.getElementById('vehicleModal').classList.add('open');
+  }
+
+  async function saveVehicle() {
+    const id   = document.getElementById('vm-id').value;
+    const data = {
+      name:        document.getElementById('vm-name').value.trim(),
+      pill:        document.getElementById('vm-pill').value.trim(),
+      cat:         document.getElementById('vm-cat').value.trim(),
+      cap:         document.getElementById('vm-cap').value.trim(),
+      description: document.getElementById('vm-desc').value.trim(),
+      f1:          document.getElementById('vm-f1').value.trim(),
+      f2:          document.getElementById('vm-f2').value.trim(),
+      f3:          document.getElementById('vm-f3').value.trim(),
+      image:       document.getElementById('vm-image').value.trim(),
+      image_alt:   document.getElementById('vm-alt').value.trim(),
+    };
+    if (!data.name) { alert('El nombre es obligatorio'); return; }
+    let error;
+    if (!id) {
+      const maxOrd = vehiclesData.reduce((m, v) => Math.max(m, v.sort_order||0), -1);
+      ({ error } = await sb.from('vehicles').insert({ ...data, sort_order: maxOrd + 1 }));
+    } else {
+      ({ error } = await sb.from('vehicles').update(data).eq('id', id));
+    }
+    if (error) { toast('Error al guardar'); return; }
+    closeModal('vehicleModal');
+    await loadVehicles();
+    toast(id ? 'Vehículo actualizado ✓' : 'Vehículo agregado ✓');
+  }
+
+  async function deleteVehicle() {
+    const id = document.getElementById('vm-id').value;
+    if (!id || !confirm('¿Eliminar este vehículo?')) return;
+    const { error } = await sb.from('vehicles').delete().eq('id', id);
+    if (error) { toast('Error al eliminar'); return; }
+    closeModal('vehicleModal');
+    await loadVehicles();
+    toast('Vehículo eliminado');
+  }
+
+  /* ── SERVICIOS ── */
+  let svcsData = [];
+
+  async function loadSvcs() {
+    const { data, error } = await sb.from('servicios').select('*').order('sort_order');
+    if (error) { document.getElementById('svcList').innerHTML = `<div class="loading" style="color:#E05C5C">Error: ${error.message}</div>`; return; }
+    svcsData = data || [];
+    renderSvcs();
+  }
+
+  function renderSvcs() {
+    const list = document.getElementById('svcList');
+    if (!svcsData.length) { list.innerHTML = '<div class="loading">No hay servicios todavía</div>'; return; }
+    list.innerHTML = svcsData.map((s, i) => `
+      <div class="item-card">
+        <div class="item-body">
+          <div class="item-name">${s.title}${s.dark ? ' <span style="font-size:10px;background:#1E1713;color:#D8AE55;padding:2px 8px;border-radius:999px;font-weight:600">dark</span>' : ''}</div>
+          <div class="item-meta">${s.description.substring(0,100)}${s.description.length>100?'…':''}</div>
+        </div>
+        <div class="item-actions">
+          ${i > 0 ? `<button class="btn-sm btn-order" onclick="moveSvc(${i},-1)">↑</button>` : ''}
+          ${i < svcsData.length-1 ? `<button class="btn-sm btn-order" onclick="moveSvc(${i},1)">↓</button>` : ''}
+          <button class="btn-sm btn-edit" onclick="openSvcModal(${i})">Editar</button>
+        </div>
+      </div>`).join('');
+  }
+
+  async function moveSvc(i, dir) {
+    const j = i + dir;
+    const [a, b] = [svcsData[i], svcsData[j]];
+    await Promise.all([
+      sb.from('servicios').update({ sort_order: b.sort_order }).eq('id', a.id),
+      sb.from('servicios').update({ sort_order: a.sort_order }).eq('id', b.id),
+    ]);
+    [svcsData[i], svcsData[j]] = [svcsData[j], svcsData[i]];
+    renderSvcs();
+    toast('Orden actualizado');
+  }
+
+  function openSvcModal(idx) {
+    const isNew = idx === undefined;
+    const s = isNew ? {} : svcsData[idx];
+    document.getElementById('sm-title').textContent        = isNew ? 'Nuevo servicio' : 'Editar servicio';
+    document.getElementById('sm-id').value                 = isNew ? '' : s.id;
+    document.getElementById('sm-title-input').value        = s.title || '';
+    document.getElementById('sm-desc').value               = s.description || '';
+    document.getElementById('sm-cta').value                = s.cta || '';
+    document.getElementById('sm-dark').checked             = s.dark || false;
+    document.getElementById('sm-svg').value                = s.icon_svg || '';
+    document.getElementById('sm-delete').style.display     = isNew ? 'none' : 'inline-block';
+    document.getElementById('svcModal').classList.add('open');
+  }
+
+  async function saveSvc() {
+    const id   = document.getElementById('sm-id').value;
+    const data = {
+      title:       document.getElementById('sm-title-input').value.trim(),
+      description: document.getElementById('sm-desc').value.trim(),
+      cta:         document.getElementById('sm-cta').value.trim(),
+      dark:        document.getElementById('sm-dark').checked,
+      icon_svg:    document.getElementById('sm-svg').value.trim(),
+    };
+    if (!data.title) { alert('El título es obligatorio'); return; }
+    let error;
+    if (!id) {
+      const maxOrd = svcsData.reduce((m, s) => Math.max(m, s.sort_order||0), -1);
+      ({ error } = await sb.from('servicios').insert({ ...data, sort_order: maxOrd + 1 }));
+    } else {
+      ({ error } = await sb.from('servicios').update(data).eq('id', id));
+    }
+    if (error) { toast('Error al guardar'); return; }
+    closeModal('svcModal');
+    await loadSvcs();
+    toast(id ? 'Servicio actualizado ✓' : 'Servicio agregado ✓');
+  }
+
+  async function deleteSvc() {
+    const id = document.getElementById('sm-id').value;
+    if (!id || !confirm('¿Eliminar este servicio?')) return;
+    const { error } = await sb.from('servicios').delete().eq('id', id);
+    if (error) { toast('Error al eliminar'); return; }
+    closeModal('svcModal');
+    await loadSvcs();
+    toast('Servicio eliminado');
+  }
+
+  /* ── FAQ ── */
+  let faqsData = [];
+
+  async function loadFaqs() {
+    const { data, error } = await sb.from('faqs').select('*').order('sort_order');
+    if (error) { document.getElementById('faqList').innerHTML = `<div class="loading" style="color:#E05C5C">Error: ${error.message}</div>`; return; }
+    faqsData = data || [];
+    renderFaqs();
+  }
+
+  function renderFaqs() {
+    const list = document.getElementById('faqList');
+    if (!faqsData.length) { list.innerHTML = '<div class="loading">No hay preguntas todavía</div>'; return; }
+    list.innerHTML = faqsData.map((f, i) => `
+      <div class="item-card">
+        <div class="item-body">
+          <div class="item-name">${f.question}</div>
+          <div class="item-meta">${f.answer.substring(0,110)}${f.answer.length>110?'…':''}</div>
+        </div>
+        <div class="item-actions">
+          ${i > 0 ? `<button class="btn-sm btn-order" onclick="moveFaq(${i},-1)">↑</button>` : ''}
+          ${i < faqsData.length-1 ? `<button class="btn-sm btn-order" onclick="moveFaq(${i},1)">↓</button>` : ''}
+          <button class="btn-sm btn-edit" onclick="openFaqModal(${i})">Editar</button>
+        </div>
+      </div>`).join('');
+  }
+
+  async function moveFaq(i, dir) {
+    const j = i + dir;
+    const [a, b] = [faqsData[i], faqsData[j]];
+    await Promise.all([
+      sb.from('faqs').update({ sort_order: b.sort_order }).eq('id', a.id),
+      sb.from('faqs').update({ sort_order: a.sort_order }).eq('id', b.id),
+    ]);
+    [faqsData[i], faqsData[j]] = [faqsData[j], faqsData[i]];
+    renderFaqs();
+    toast('Orden actualizado');
+  }
+
+  function openFaqModal(idx) {
+    const isNew = idx === undefined;
+    const f = isNew ? {} : faqsData[idx];
+    document.getElementById('fm-title').textContent = isNew ? 'Nueva pregunta' : 'Editar pregunta';
+    document.getElementById('fm-id').value = isNew ? '' : f.id;
+    document.getElementById('fm-q').value  = f.question || '';
+    document.getElementById('fm-a').value  = f.answer   || '';
+    document.getElementById('fm-delete').style.display = isNew ? 'none' : 'inline-block';
+    document.getElementById('faqModal').classList.add('open');
+  }
+
+  async function saveFaq() {
+    const id   = document.getElementById('fm-id').value;
+    const data = {
+      question: document.getElementById('fm-q').value.trim(),
+      answer:   document.getElementById('fm-a').value.trim(),
+    };
+    if (!data.question || !data.answer) { alert('Completá pregunta y respuesta'); return; }
+    let error;
+    if (!id) {
+      const maxOrd = faqsData.reduce((m, f) => Math.max(m, f.sort_order||0), -1);
+      ({ error } = await sb.from('faqs').insert({ ...data, sort_order: maxOrd + 1 }));
+    } else {
+      ({ error } = await sb.from('faqs').update(data).eq('id', id));
+    }
+    if (error) { toast('Error al guardar'); return; }
+    closeModal('faqModal');
+    await loadFaqs();
+    toast(id ? 'Pregunta actualizada ✓' : 'Pregunta agregada ✓');
+  }
+
+  async function deleteFaq() {
+    const id = document.getElementById('fm-id').value;
+    if (!id || !confirm('¿Eliminar esta pregunta?')) return;
+    const { error } = await sb.from('faqs').delete().eq('id', id);
+    if (error) { toast('Error al eliminar'); return; }
+    closeModal('faqModal');
+    await loadFaqs();
+    toast('Pregunta eliminada');
+  }
+
+  /* ── Utils ── */
+  function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+
+  function previewImg(src, previewId) {
+    const img = document.getElementById(previewId);
+    img.style.display = src ? 'block' : 'none';
+    if (src) img.src = src;
+  }
+
+  function toast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2800);
+  }
+
+  async function logout() {
+    await sb.auth.signOut();
+    location.href = 'admin.html';
+  }
+
+  document.querySelectorAll('.modal-bg').forEach(bg => {
+    bg.addEventListener('click', e => { if (e.target === bg) bg.classList.remove('open'); });
+  });
+</script>
+</body>
+</html>
