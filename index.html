@@ -1,0 +1,2523 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Transfers Tatá — Traslados privados y ejecutivos</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --cream:        #FFF4EA;
+    --cream-deep:   #F1DED0;
+    --cream-warm:   #F7E6D5;
+    --brown:        #1E1713;
+    --chocolate:    #2A1F19;
+    --chocolate-2:  #3A2A20;
+    --gold:         #B8872F;
+    --gold-soft:    #D8AE55;
+    --gold-pale:    #E8C988;
+    --black-coal:   #0E0D0C;
+    --black-soft:   #161311;
+    --fire:         #F26A00;
+    --fire-soft:    #E97A18;
+    --ink:          #1E1713;
+    --ink-2:        #4A3A30;
+    --ink-3:        #7A6657;
+    --line:         rgba(184,135,47,.22);
+    --line-strong:  rgba(184,135,47,.45);
+    --shadow-sm:    0 1px 2px rgba(45,31,24,.06), 0 2px 8px rgba(45,31,24,.04);
+    --shadow-md:    0 8px 24px rgba(45,31,24,.10), 0 2px 6px rgba(45,31,24,.06);
+    --shadow-lg:    0 24px 70px rgba(45,31,24,.22), 0 6px 18px rgba(45,31,24,.10);
+
+    --display: "Manrope", system-ui, -apple-system, sans-serif;
+    --sans:    "Manrope", system-ui, -apple-system, sans-serif;
+    --mono:    "JetBrains Mono", ui-monospace, monospace;
+  }
+
+  *,*::before,*::after{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    font-family: var(--sans);
+    color: var(--ink);
+    background: var(--cream);
+    -webkit-font-smoothing: antialiased;
+    line-height: 1.55;
+    font-size: 16px;
+    overflow-x: hidden;
+  }
+  img{max-width:100%;display:block}
+  a{color:inherit;text-decoration:none}
+  button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
+
+  .container{max-width: 1280px; margin: 0 auto; padding: 0 32px}
+  @media (max-width: 720px){ .container{padding:0 20px} }
+
+  /* ---------- header ---------- */
+  .header{
+    position: sticky; top: 0; z-index: 50;
+    background: rgba(255, 244, 234, 0.72);
+    backdrop-filter: saturate(140%) blur(18px);
+    -webkit-backdrop-filter: saturate(140%) blur(18px);
+    border-bottom: 1px solid rgba(184,135,47,.18);
+  }
+  .header-inner{
+    display:flex; align-items:center; justify-content:space-between;
+    padding: 14px 0;
+  }
+  .brand{ display:flex; align-items:center; gap:12px }
+  .brand-logo{
+    width: 40px; height: 40px;
+    background: url('assets/logo.png') center/contain no-repeat;
+    filter: drop-shadow(0 1px 2px rgba(45,31,24,.18));
+  }
+  .brand-name{
+    font-family: var(--display);
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: -.01em;
+    color: var(--chocolate);
+    white-space: nowrap;
+    line-height: 1;
+    text-transform: uppercase;
+  }
+  .brand-name em{
+    font-style: normal;
+    color: var(--gold);
+    font-weight: 700;
+  }
+  .nav{ display:flex; gap: 32px; align-items:center }
+  .nav a{
+    font-size: 14px; font-weight: 500; color: var(--ink-2);
+    letter-spacing: .01em;
+    transition: color .25s ease;
+  }
+  .nav a:hover{ color: var(--chocolate) }
+  .header .cta-row{ display:flex; gap:10px; align-items:center }
+
+  /* ---------- hamburger / mobile nav drawer ---------- */
+  .hamburger{
+    display: none;
+    width: 42px; height: 42px;
+    border-radius: 10px;
+    border: 1px solid rgba(184,135,47,.32);
+    background: rgba(255,244,234,.5);
+    align-items:center; justify-content:center;
+    cursor: pointer;
+    transition: background .2s ease, border-color .2s ease;
+  }
+  .hamburger:hover{ background: #FFF4E2; border-color: var(--gold) }
+  .hamburger span{
+    display:block; width:18px; height:1.6px; background: var(--chocolate);
+    position:relative; transition: transform .3s ease, opacity .2s ease;
+    border-radius: 1px;
+  }
+  .hamburger span::before, .hamburger span::after{
+    content:''; position:absolute; left:0; width:18px; height:1.6px;
+    background: var(--chocolate); border-radius: 1px;
+    transition: transform .3s ease;
+  }
+  .hamburger span::before{ top: -6px }
+  .hamburger span::after { top: 6px }
+  .hamburger.open span{ background: transparent }
+  .hamburger.open span::before{ transform: translateY(6px) rotate(45deg) }
+  .hamburger.open span::after { transform: translateY(-6px) rotate(-45deg) }
+
+  .mobile-drawer{
+    position: fixed; inset: 68px 0 0 0;
+    background: linear-gradient(180deg, rgba(255,244,234,.98) 0%, rgba(247,232,221,.98) 100%);
+    backdrop-filter: blur(20px);
+    z-index: 40;
+    display: none;
+    flex-direction: column;
+    padding: 28px 24px 40px;
+    gap: 4px;
+    transform: translateY(-12px);
+    opacity: 0;
+    transition: opacity .28s ease, transform .28s ease;
+    overflow-y: auto;
+  }
+  .mobile-drawer.open{
+    display: flex;
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .mobile-drawer a{
+    display: flex; align-items:center; justify-content: space-between;
+    padding: 18px 14px;
+    font-family: var(--display);
+    font-size: 18px; font-weight: 600;
+    color: var(--chocolate);
+    border-bottom: 1px solid rgba(184,135,47,.18);
+    letter-spacing: -.005em;
+  }
+  .mobile-drawer a .num{
+    font-family: var(--mono);
+    font-size: 11px; font-weight: 500;
+    color: var(--gold); letter-spacing: .12em;
+  }
+  .mobile-drawer .drawer-cta{
+    margin-top: 22px;
+    background: linear-gradient(180deg, var(--gold-soft) 0%, var(--gold) 100%);
+    color: var(--chocolate);
+    border-radius: 999px;
+    padding: 16px 22px;
+    font-weight: 700; font-size: 15px;
+    text-align: center;
+    justify-content: center;
+    border: none;
+    box-shadow: 0 6px 18px rgba(184,135,47,.28);
+  }
+  body.drawer-open{ overflow: hidden }
+
+  @media (max-width: 920px){
+    .nav{display:none}
+    .hamburger{display:flex}
+    .header .cta-row .btn-ghost,
+    .header .cta-row .btn-primary{ display:none }
+  }
+  @media (max-width: 520px){
+    .lang-switch{ margin-right: 0 }
+    .container{ padding: 0 16px }
+    .brand-name{ font-size: 15px }
+    .brand-logo{ width: 32px; height: 32px }
+    .hero-stats{ grid-template-columns: 1fr; gap: 14px; margin-top: 28px; padding-top: 18px }
+    .stat .n{ font-size: 28px }
+    .stat .l{ font-size: 12.5px }
+  }
+
+  /* ---------- buttons ---------- */
+  .btn{
+    display:inline-flex; align-items:center; gap:10px;
+    padding: 13px 22px; border-radius: 999px;
+    font-size: 14px; font-weight: 600;
+    letter-spacing: .01em;
+    transition: transform .35s cubic-bezier(.2,.7,.2,1),
+                box-shadow .35s ease, background .35s ease, color .35s ease, border-color .35s ease;
+    white-space: nowrap;
+  }
+  .btn-primary{
+    background: linear-gradient(180deg, var(--gold-soft) 0%, var(--gold) 100%);
+    color: var(--chocolate);
+    box-shadow: 0 6px 18px rgba(184,135,47,.28), inset 0 1px 0 rgba(255,255,255,.35);
+  }
+  .btn-primary:hover{
+    transform: translateY(-2px);
+    box-shadow: 0 14px 32px rgba(184,135,47,.36), inset 0 1px 0 rgba(255,255,255,.45);
+  }
+  .btn-secondary{
+    background: rgba(255,244,234,.0);
+    color: var(--chocolate);
+    border: 1px solid rgba(184,135,47,.45);
+  }
+  .btn-secondary:hover{
+    background: rgba(184,135,47,.08);
+    border-color: rgba(184,135,47,.65);
+  }
+  .btn-ghost{
+    background: transparent; color: var(--chocolate);
+    padding: 10px 16px; font-size: 13px;
+  }
+  .btn-ghost:hover{ color: var(--gold) }
+
+  .icon-wa{
+    width: 16px; height: 16px; display:inline-block;
+    background: currentColor;
+    -webkit-mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M20.52 3.48A11.78 11.78 0 0 0 12.05 0C5.5 0 .2 5.3.2 11.85a11.7 11.7 0 0 0 1.6 5.93L0 24l6.4-1.68a11.78 11.78 0 0 0 5.65 1.44h.01c6.55 0 11.85-5.3 11.85-11.85 0-3.17-1.23-6.15-3.39-8.43zM12.06 21.8h-.01a9.9 9.9 0 0 1-5.04-1.38l-.36-.21-3.8 1 1.02-3.7-.24-.38a9.92 9.92 0 1 1 18.4-5.28c0 5.46-4.45 9.95-9.97 9.95zm5.46-7.4c-.3-.15-1.77-.87-2.04-.97-.27-.1-.47-.15-.67.15s-.77.97-.95 1.17c-.17.2-.35.22-.65.07-.3-.15-1.27-.47-2.42-1.49-.9-.8-1.5-1.79-1.68-2.09-.17-.3-.02-.46.13-.6.13-.13.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.07-.15-.67-1.62-.92-2.22-.24-.58-.49-.5-.67-.51l-.57-.01a1.1 1.1 0 0 0-.8.37c-.27.3-1.05 1.02-1.05 2.49 0 1.47 1.07 2.89 1.22 3.09.15.2 2.1 3.21 5.09 4.5.71.31 1.27.49 1.7.63.71.23 1.36.2 1.87.12.57-.09 1.77-.72 2.02-1.42.25-.7.25-1.3.17-1.42-.07-.12-.27-.2-.57-.35z'/></svg>") center/contain no-repeat;
+            mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M20.52 3.48A11.78 11.78 0 0 0 12.05 0C5.5 0 .2 5.3.2 11.85a11.7 11.7 0 0 0 1.6 5.93L0 24l6.4-1.68a11.78 11.78 0 0 0 5.65 1.44h.01c6.55 0 11.85-5.3 11.85-11.85 0-3.17-1.23-6.15-3.39-8.43zM12.06 21.8h-.01a9.9 9.9 0 0 1-5.04-1.38l-.36-.21-3.8 1 1.02-3.7-.24-.38a9.92 9.92 0 1 1 18.4-5.28c0 5.46-4.45 9.95-9.97 9.95zm5.46-7.4c-.3-.15-1.77-.87-2.04-.97-.27-.1-.47-.15-.67.15s-.77.97-.95 1.17c-.17.2-.35.22-.65.07-.3-.15-1.27-.47-2.42-1.49-.9-.8-1.5-1.79-1.68-2.09-.17-.3-.02-.46.13-.6.13-.13.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.07-.15-.67-1.62-.92-2.22-.24-.58-.49-.5-.67-.51l-.57-.01a1.1 1.1 0 0 0-.8.37c-.27.3-1.05 1.02-1.05 2.49 0 1.47 1.07 2.89 1.22 3.09.15.2 2.1 3.21 5.09 4.5.71.31 1.27.49 1.7.63.71.23 1.36.2 1.87.12.57-.09 1.77-.72 2.02-1.42.25-.7.25-1.3.17-1.42-.07-.12-.27-.2-.57-.35z'/></svg>") center/contain no-repeat;
+  }
+
+  /* ---------- hero ---------- */
+  .hero{
+    position: relative;
+    padding: 16px 0 24px;
+    overflow: hidden;
+    background:
+      radial-gradient(900px 600px at 78% 10%, rgba(216,174,85,.28), transparent 60%),
+      radial-gradient(1100px 700px at 10% 80%, rgba(241,222,208,.7), transparent 65%),
+      linear-gradient(180deg, var(--cream) 0%, #FBE9D6 100%);
+  }
+  .hero::before{
+    /* subtle road */
+    content: "";
+    position: absolute; inset: 0; pointer-events: none;
+    background-image:
+      radial-gradient(circle at 50% 100%, rgba(184,135,47,.18), transparent 60%);
+    opacity: .55;
+  }
+  .hero::after{
+    /* hairline grain */
+    content: "";
+    position: absolute; inset: 0; pointer-events: none;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'><filter id='n'><feTurbulence baseFrequency='.9' numOctaves='2' seed='4'/><feColorMatrix values='0 0 0 0 .1  0 0 0 0 .08  0 0 0 0 .06  0 0 0 .08 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+    opacity: .35;
+    mix-blend-mode: multiply;
+  }
+
+  .eyebrow{
+    display:inline-flex; align-items:center; gap:10px;
+    font-family: var(--mono);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: .22em;
+    color: var(--gold);
+    margin-bottom: 22px;
+  }
+  .eyebrow .dot{ width:6px; height:6px; border-radius:50%; background: var(--fire); box-shadow: 0 0 0 3px rgba(242,106,0,.18) }
+  .eyebrow .line{ width: 28px; height: 1px; background: currentColor; opacity:.6 }
+
+  .hero-grid{
+    position: relative; z-index: 2;
+    display: grid;
+    grid-template-columns: 1.05fr .95fr;
+    gap: 64px;
+    align-items: center;
+  }
+
+  .hero-title{
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: clamp(28px, 3.6vw, 46px);
+    line-height: 1.06;
+    letter-spacing: -.02em;
+    color: var(--chocolate);
+    margin: 0 0 18px;
+    text-wrap: balance;
+  }
+  .hero-title em{
+    font-style: normal;
+    color: var(--gold);
+    font-weight: 700;
+  }
+  .hero-sub{
+    font-size: 15px;
+    color: var(--ink-2);
+    max-width: 520px;
+    margin: 0 0 26px;
+    line-height: 1.55;
+  }
+
+  .badges{
+    display:flex; flex-wrap:wrap; gap:8px;
+    margin: 0 0 36px;
+  }
+  .badge{
+    display:inline-flex; align-items:center; gap:8px;
+    padding: 8px 14px;
+    font-size: 13px; font-weight: 500;
+    color: var(--ink-2);
+    background: rgba(255,255,255,.55);
+    border: 1px solid rgba(184,135,47,.25);
+    border-radius: 999px;
+    backdrop-filter: blur(8px);
+  }
+  .badge::before{
+    content:""; width:5px; height:5px; border-radius:50%;
+    background: var(--gold);
+  }
+
+  .cta-row{ display:flex; flex-wrap:wrap; gap: 12px; align-items:center }
+  .cta-meta{
+    display:flex; align-items:center; gap: 10px;
+    margin-top: 28px;
+    font-size: 13px; color: var(--ink-3);
+  }
+  .cta-meta .avatars{
+    display:flex;
+  }
+  .cta-meta .avatars span{
+    width:28px;height:28px;border-radius:50%;
+    border: 2px solid var(--cream);
+    margin-left: -8px;
+    background: linear-gradient(135deg, var(--gold-soft), var(--gold));
+  }
+  .cta-meta .avatars span:nth-child(1){ background: linear-gradient(135deg, #D8AE55, #B8872F) }
+  .cta-meta .avatars span:nth-child(2){ background: linear-gradient(135deg, #E97A18, #C45A0E) }
+  .cta-meta .avatars span:nth-child(3){ background: linear-gradient(135deg, #3A2A20, #1E1713) }
+  .cta-meta strong{ color: var(--chocolate); font-weight: 600 }
+
+  /* hero logo composition */
+  .hero-art{
+    position: relative;
+    aspect-ratio: 1 / 1;
+    width: 100%;
+    max-width: 560px;
+    justify-self: end;
+  }
+  .hero-art .halo{
+    position:absolute; inset: -6%;
+    border-radius: 50%;
+    background:
+      radial-gradient(closest-side, rgba(255,244,234,.95), rgba(241,222,208,.65) 55%, rgba(241,222,208,0) 75%);
+    filter: blur(2px);
+    animation: haloPulse 5.5s ease-in-out infinite;
+    will-change: transform, opacity;
+  }
+  .hero-art .halo-gold{
+    position:absolute; inset: 6%;
+    border-radius: 50%;
+    background:
+      radial-gradient(closest-side, rgba(216,174,85,.28), rgba(216,174,85,0) 70%);
+    animation: haloPulseGold 4s ease-in-out infinite;
+    will-change: transform, opacity;
+  }
+  .hero-art .ring{
+    position:absolute; inset: 0;
+    border-radius: 50%;
+    border: 1px dashed rgba(184,135,47,.32);
+    animation: ringSpin 22s linear infinite;
+    will-change: transform;
+  }
+  .hero-art .ring.ring-2{
+    inset: 8%;
+    border-style: solid;
+    border-color: rgba(184,135,47,.20);
+    animation-name: ringSpinReverse;
+    animation-duration: 32s;
+  }
+  @keyframes ringSpin{
+    from { transform: rotate(0deg) }
+    to   { transform: rotate(360deg) }
+  }
+  @keyframes ringSpinReverse{
+    from { transform: rotate(360deg) }
+    to   { transform: rotate(0deg) }
+  }
+  @keyframes haloPulse{
+    0%, 100% { transform: scale(1);    opacity: .92 }
+    50%      { transform: scale(1.05); opacity: 1 }
+  }
+  @keyframes haloPulseGold{
+    0%, 100% { transform: scale(1);    opacity: .85 }
+    50%      { transform: scale(1.08); opacity: 1 }
+  }
+
+  .hero-art .logo-wrap{
+    position:absolute; inset: 8%;
+    display:grid; place-items:center;
+  }
+  .hero-art .logo-img{
+    width: 100%; height: 100%;
+    object-fit: contain;
+    filter: drop-shadow(0 30px 60px rgba(45,31,24,.18))
+            drop-shadow(0 6px 14px rgba(45,31,24,.10));
+    pointer-events: none;
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .hero-art .halo,
+    .hero-art .halo-gold,
+    .hero-art .ring{ animation: none !important }
+  }
+  /* (legacy logo flameFlicker removed — animation now lives on the rings/halos) */
+
+  /* floating tags */
+  .float-tag{
+    position:absolute;
+    display:flex; align-items:center; gap:10px;
+    padding: 10px 14px;
+    background: rgba(255,255,255,.88);
+    border: 1px solid rgba(184,135,47,.22);
+    border-radius: 14px;
+    font-size: 12.5px;
+    font-weight: 500;
+    color: var(--chocolate);
+    box-shadow: 0 14px 30px rgba(45,31,24,.10);
+    backdrop-filter: blur(10px);
+    animation: floaty 7s ease-in-out infinite;
+  }
+  .float-tag .ic{
+    width: 28px; height:28px; border-radius: 8px;
+    background: linear-gradient(135deg, var(--gold-soft), var(--gold));
+    display:grid; place-items:center;
+    color: var(--chocolate);
+  }
+  .float-tag.t1{ top: 10%; left: -6%; animation-delay: -2s }
+  .float-tag.t2{ bottom: 22%; right: -10%; animation-delay: -4s }
+  .float-tag.t3{ bottom: 4%; left: 8%; animation-delay: -1s }
+  @keyframes floaty{
+    0%,100%{ transform: translateY(0) }
+    50%   { transform: translateY(-8px) }
+  }
+
+  .hero-stats{
+    display:grid; grid-template-columns: repeat(3, 1fr);
+    gap: 22px;
+    margin-top: 36px;
+    padding-top: 20px;
+    border-top: 1px solid var(--line);
+    position: relative; z-index: 2;
+  }
+  .stat .n{
+    font-family: var(--display);
+    font-size: 30px;
+    font-weight: 700;
+    color: var(--chocolate);
+    line-height: 1;
+    letter-spacing: -.025em;
+    display: inline-flex;
+    align-items: baseline;
+  }
+  .stat .n em, .stat .n .suffix{ color: var(--gold); font-style: normal; font-weight:700 }
+  .stat .l{
+    margin-top: 6px;
+    font-size: 12px; color: var(--ink-3);
+    letter-spacing: .01em;
+  }
+
+  @media (max-width: 920px){
+    .hero{padding: 12px 0 20px}
+    .hero-grid{ grid-template-columns: 1fr; gap: 40px }
+    .hero-art{ max-width: 380px; margin: 0 auto }
+    .hero-stats{ grid-template-columns: 1fr 1fr; margin-top: 36px; gap: 16px }
+    .stat .n{ font-size: 26px }
+  }
+
+  /* ---------- section ---------- */
+  section{ padding: 64px 0 }
+  .section-head{
+    display:flex; align-items:flex-end; justify-content: space-between; gap: 40px;
+    margin-bottom: 40px;
+  }
+  .section-head .left{ max-width: 640px }
+  .section-eyebrow{
+    font-family: var(--mono);
+    font-size: 11px; text-transform: uppercase;
+    letter-spacing: .22em;
+    color: var(--gold);
+    margin-bottom: 18px;
+  }
+  .section-title{
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: clamp(32px, 3.6vw, 48px);
+    line-height: 1.05;
+    letter-spacing: -.03em;
+    color: var(--chocolate);
+    margin: 0 0 16px;
+    text-wrap: balance;
+  }
+  .section-title em{ font-style: normal; color: var(--gold) }
+  .section-sub{
+    color: var(--ink-2);
+    font-size: 17px;
+    max-width: 520px;
+    margin: 0;
+  }
+  .section-head .right{
+    flex-shrink: 0;
+  }
+  @media (max-width: 760px){
+    section{padding: 72px 0}
+    .section-head{flex-direction: column; align-items: flex-start; gap: 18px; margin-bottom: 36px}
+  }
+
+  /* ---------- services ---------- */
+  .services{
+    background: var(--cream);
+  }
+  .services-grid{
+    display:grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+  }
+  .svc{
+    position:relative;
+    padding: 32px 28px;
+    border-radius: 24px;
+    background: #FBEEDC;
+    border: 1px solid var(--line);
+    transition: transform .5s ease, box-shadow .5s ease, border-color .5s ease, background .5s ease;
+    overflow: hidden;
+  }
+  .svc.dark{
+    background: linear-gradient(180deg, var(--chocolate) 0%, #20170F 100%);
+    color: var(--cream);
+    border-color: rgba(184,135,47,.32);
+  }
+  .svc:hover{
+    transform: translateY(-4px);
+    border-color: rgba(184,135,47,.5);
+    box-shadow: 0 24px 50px rgba(45,31,24,.14);
+  }
+  .svc.dark:hover{ box-shadow: 0 24px 60px rgba(0,0,0,.40) }
+
+  .svc-ic{
+    width: 52px; height: 52px;
+    border-radius: 14px;
+    display:grid; place-items:center;
+    background: linear-gradient(135deg, rgba(216,174,85,.25), rgba(184,135,47,.20));
+    color: var(--gold);
+    margin-bottom: 22px;
+    transition: transform .5s ease;
+  }
+  .svc.dark .svc-ic{
+    background: linear-gradient(135deg, rgba(216,174,85,.20), rgba(184,135,47,.10));
+    color: var(--gold-soft);
+  }
+  .svc:hover .svc-ic{ transform: rotate(-6deg) scale(1.05) }
+  .svc-ic svg{ width: 26px; height: 26px }
+
+  .svc h3{
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: 22px;
+    margin: 0 0 8px;
+    line-height: 1.15;
+    color: var(--chocolate);
+    letter-spacing: -.02em;
+  }
+  .svc.dark h3{ color: var(--cream) }
+  .svc p{
+    margin: 0 0 24px;
+    font-size: 14.5px;
+    color: var(--ink-2);
+    line-height: 1.55;
+  }
+  .svc.dark p{ color: rgba(255,244,234,.7) }
+  .svc-link{
+    display:inline-flex; align-items:center; gap:8px;
+    font-size: 13px; font-weight: 600;
+    color: var(--gold);
+    transition: gap .35s ease;
+  }
+  .svc-link:hover{ gap: 14px }
+  .svc-link svg{ width: 14px; height: 14px }
+  .svc.dark .svc-link{ color: var(--gold-soft) }
+  .svc-tag{
+    position: absolute; top: 22px; right: 22px;
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--gold);
+    opacity: .7;
+  }
+  .svc.dark .svc-tag{ color: var(--gold-soft) }
+
+  @media (max-width: 980px){
+    .services-grid{ grid-template-columns: repeat(2, 1fr) }
+  }
+  @media (max-width: 620px){
+    .services-grid{ grid-template-columns: 1fr }
+  }
+
+  /* ---------- experience chips ---------- */
+  .experience{
+    background: linear-gradient(180deg, #FBEEDC 0%, var(--cream) 100%);
+  }
+  .chips{
+    display:grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin-top: 20px;
+    width: 100%;
+  }
+  .chip{
+    display:inline-flex; align-items:center; gap: 10px;
+    padding: 12px 16px;
+    background: linear-gradient(180deg, #fff 0%, #FFFBF3 100%);
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    font-size: 13.5px;
+    font-weight: 500;
+    color: var(--chocolate);
+    white-space: nowrap;
+    box-shadow: 0 2px 6px rgba(45,31,24,.04);
+    transition: transform .35s ease, background .35s ease, border-color .35s ease, box-shadow .35s ease;
+    cursor: default;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .chip:hover{
+    transform: translateY(-2px);
+    background: linear-gradient(180deg, #FFFBF3 0%, #FBEEDC 100%);
+    border-color: var(--gold);
+    box-shadow: 0 8px 18px rgba(184,135,47,.18);
+  }
+  .chip-num{
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--gold);
+    letter-spacing: .12em;
+    padding: 3px 6px;
+    background: rgba(184,135,47,.12);
+    border-radius: 6px;
+    line-height: 1;
+    flex-shrink: 0;
+  }
+  .chip:hover .chip-num{
+    background: var(--gold);
+    color: #fff;
+  }
+  @media (max-width: 980px){
+    .chips{ grid-template-columns: repeat(3, 1fr) }
+  }
+  @media (max-width: 720px){
+    .chips{ grid-template-columns: repeat(2, 1fr); gap: 10px }
+    .chip{ padding: 10px 12px; font-size: 12px }
+  }
+  @media (max-width: 380px){
+    .chips{ grid-template-columns: 1fr }
+  }
+
+  .marquee-wrap{
+    margin-top: 32px;
+    padding: 20px 0;
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+    overflow: hidden;
+    position: relative;
+  }
+  .marquee-wrap::before, .marquee-wrap::after{
+    content:""; position:absolute; top:0; bottom:0; width: 80px; z-index: 2;
+    pointer-events:none;
+  }
+  .marquee-wrap::before{ left:0; background: linear-gradient(90deg, var(--cream), transparent) }
+  .marquee-wrap::after { right:0; background: linear-gradient(-90deg, var(--cream), transparent) }
+  .marquee{
+    display: flex; gap: 56px;
+    animation: marquee 38s linear infinite;
+    width: max-content;
+  }
+  .marquee span{
+    font-family: var(--display);
+    font-style: normal;
+    font-weight: 700;
+    font-size: 24px;
+    color: var(--chocolate);
+    letter-spacing: -.02em;
+    text-transform: uppercase;
+    display:flex; align-items:center; gap: 56px;
+  }
+  .marquee span::after{
+    content: "✦";
+    color: var(--gold);
+    font-size: 18px;
+    font-style: normal;
+  }
+  @keyframes marquee{ to { transform: translateX(-50%) } }
+
+  /* ---------- fleet showcase ---------- */
+  .fleet{
+    background:
+      radial-gradient(900px 600px at 80% 5%, rgba(216,174,85,.16), transparent 60%),
+      radial-gradient(700px 500px at 15% 95%, rgba(242,106,0,.10), transparent 65%),
+      linear-gradient(180deg, #1E1713 0%, #14100D 100%);
+    color: var(--cream);
+    position: relative;
+    overflow: hidden;
+  }
+  .fleet .section-title{ color: var(--cream) }
+  .fleet .section-title em{ color: var(--gold-soft) }
+  .fleet .section-eyebrow{ color: var(--gold-soft) }
+  .fleet .section-sub{ color: rgba(255,244,234,.7) }
+  .fleet .btn-secondary{
+    color: var(--cream);
+    border-color: rgba(216,174,85,.45);
+    background: rgba(255,244,234,.03);
+  }
+  .fleet .btn-secondary:hover{
+    border-color: var(--gold-soft);
+    background: rgba(216,174,85,.12);
+  }
+  .fleet .tab{
+    background: rgba(255,244,234,.06);
+    border-color: rgba(216,174,85,.28);
+    color: rgba(255,244,234,.85);
+  }
+  .fleet .tab:hover{
+    background: rgba(255,244,234,.14);
+    border-color: rgba(216,174,85,.55);
+  }
+  .fleet .tab.active{
+    background: var(--gold);
+    border-color: var(--gold);
+    color: var(--brown);
+  }
+  .fleet .tab.active .tab-num{ color: var(--brown) }
+  .fleet .tab .tab-num{ color: var(--gold-soft) }
+  .fleet .arr{
+    background: rgba(255,244,234,.06);
+    border-color: rgba(216,174,85,.32);
+    color: var(--cream);
+  }
+  .fleet .arr:hover{
+    background: var(--gold);
+    border-color: var(--gold);
+    color: var(--brown);
+  }
+  .showcase{
+    position: relative;
+    max-width: 1180px;
+    margin: 0 auto;
+  }
+  .showcase-frame{
+    position: relative;
+    height: 480px;
+    background: linear-gradient(180deg, #FFF7EC 0%, #F2DEC8 100%);
+    border: 1px solid rgba(184,135,47,.22);
+    border-radius: 28px;
+    overflow: hidden;
+    box-shadow: 0 30px 70px rgba(45,31,24,.10);
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+  }
+  .showcase-frame::before{
+    /* warm spotlight on stage — softened so the road scene reads clearly */
+    content: "";
+    position: absolute;
+    left: 0; top: 0; width: 60%; height: 60%;
+    background: radial-gradient(closest-side at 40% 30%, rgba(255,200,120,.22), transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
+  .showcase-frame::after{
+    /* hairline grain */
+    content:"";
+    position: absolute; inset: 0; pointer-events: none;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence baseFrequency='.9' numOctaves='2' seed='3'/><feColorMatrix values='0 0 0 0 .1 0 0 0 0 .08 0 0 0 0 .06 0 0 0 .06 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+    opacity: .25;
+    mix-blend-mode: multiply;
+  }
+
+  /* stage (left) — soft warm sky fading into asphalt */
+  .stage{
+    position: relative;
+    height: 100%;
+    padding: 32px 24px 32px 40px;
+    display: grid;
+    place-items: center;
+    overflow: hidden;
+    background:
+      linear-gradient(180deg, #F7E2C7 0%, #F2D5B0 35%, #E2BC8F 58%, #4A3F36 65%, #2A2622 75%, #1A1814 100%);
+  }
+  /* (yellow road dashes removed) */
+  .stage-index{
+    position: absolute;
+    top: 28px; left: 40px;
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: .22em;
+    text-transform: uppercase;
+    color: var(--gold);
+    z-index: 4;
+  }
+  .stage-index .of{ color: var(--ink-3); margin-left: 8px }
+  .stage-watermark{
+    position: absolute;
+    bottom: 18px; left: 40px;
+    font-family: var(--display);
+    font-size: 64px;
+    font-weight: 800;
+    letter-spacing: -.04em;
+    color: var(--chocolate);
+    opacity: .055;
+    line-height: 1;
+    z-index: 1;
+    text-transform: uppercase;
+    user-select: none;
+  }
+  .stage-image-wrap{
+    position: relative;
+    width: 100%; height: 100%;
+    display: grid; place-items: center;
+  }
+  .stage-image{
+    position: absolute;
+    inset: 12% 4% 18%;
+    display: grid; place-items: center;
+    opacity: 0;
+    transform: translateX(40px) scale(.96);
+    transition: opacity .8s cubic-bezier(.2,.7,.2,1), transform .8s cubic-bezier(.2,.7,.2,1);
+    z-index: 2;
+  }
+  .stage-image.active{
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+  .stage-image.exit{
+    opacity: 0;
+    transform: translateX(-40px) scale(.96);
+  }
+  .stage-image svg, .stage-image img{ width: 100%; height: auto; max-height: 100%; object-fit: contain; }
+  /* ground shadow under active vehicle */
+  .stage-image::after{
+    content:"";
+    position: absolute;
+    left: 10%; right: 10%; bottom: -6%;
+    height: 22px;
+    background: radial-gradient(closest-side, rgba(45,31,24,.35), transparent 70%);
+    filter: blur(8px);
+    z-index: -1;
+  }
+  /* (vehicle float animation removed — cars now sit still on the asphalt) */
+
+  /* info (right) */
+  .info{
+    position: relative;
+    height: 100%;
+    padding: 40px 40px 40px 24px;
+    border-left: 1px solid rgba(184,135,47,.18);
+    background: linear-gradient(180deg, rgba(255,247,236,.6) 0%, rgba(242,222,200,.4) 100%);
+    display: flex; flex-direction: column; justify-content: center;
+  }
+  .info-slide{
+    position: absolute;
+    inset: 40px 40px 40px 24px;
+    display: flex; flex-direction: column; justify-content: center;
+    opacity: 0;
+    transform: translateY(16px);
+    transition: opacity .7s ease, transform .7s cubic-bezier(.2,.7,.2,1);
+    pointer-events: none;
+  }
+  .info-slide.active{
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+    transition-delay: .15s;
+  }
+  .info-cat{
+    font-family: var(--mono);
+    font-size: 10.5px;
+    letter-spacing: .22em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 14px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .info-cat .pill{
+    padding: 4px 10px;
+    background: rgba(184,135,47,.12);
+    border-radius: 999px;
+    font-size: 10px;
+    letter-spacing: .14em;
+  }
+  .info-name{
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: clamp(32px, 3.4vw, 44px);
+    line-height: 1;
+    letter-spacing: -.035em;
+    color: var(--chocolate);
+    margin: 0 0 8px;
+  }
+  .info-cap{
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--ink-2);
+    margin-bottom: 20px;
+  }
+  .info-cap strong{
+    color: var(--chocolate);
+    font-weight: 600;
+  }
+  .info-desc{
+    font-size: 15.5px;
+    color: var(--ink-2);
+    line-height: 1.55;
+    margin: 0 0 22px;
+    max-width: 380px;
+  }
+  .info-features{
+    list-style: none; padding: 0; margin: 0 0 28px;
+    display: flex; flex-wrap: wrap; gap: 8px;
+  }
+  .info-features li{
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 7px 12px;
+    background: rgba(255,255,255,.65);
+    border: 1px solid rgba(184,135,47,.22);
+    border-radius: 999px;
+    font-size: 12.5px;
+    font-weight: 600;
+    color: var(--chocolate);
+  }
+  .info-features li::before{
+    content: "";
+    width: 5px; height: 5px;
+    border-radius: 50%;
+    background: var(--gold);
+  }
+  .info-cta{
+    display: inline-flex; align-items: center; gap: 10px;
+    padding: 14px 22px;
+    background: linear-gradient(180deg, var(--gold-soft) 0%, var(--gold) 100%);
+    color: var(--chocolate);
+    border-radius: 999px;
+    font-weight: 700;
+    font-size: 14px;
+    box-shadow: 0 6px 18px rgba(184,135,47,.28), inset 0 1px 0 rgba(255,255,255,.35);
+    transition: transform .35s ease, box-shadow .35s ease;
+    align-self: flex-start;
+  }
+  .info-cta:hover{
+    transform: translateY(-2px);
+    box-shadow: 0 14px 32px rgba(184,135,47,.36), inset 0 1px 0 rgba(255,255,255,.45);
+  }
+
+  /* progress bar */
+  .showcase-progress{
+    position: absolute;
+    left: 0; right: 0; bottom: 0;
+    height: 3px;
+    background: rgba(184,135,47,.10);
+    z-index: 5;
+  }
+  .showcase-progress span{
+    display: block; height: 100%;
+    background: linear-gradient(90deg, var(--gold) 0%, var(--gold-soft) 100%);
+    width: 0;
+    transition: width .12s linear;
+  }
+
+  /* nav row */
+  .showcase-nav{
+    margin-top: 28px;
+    display: flex; align-items: center; gap: 24px;
+    flex-wrap: wrap;
+  }
+  .showcase-tabs{
+    display: flex; gap: 6px;
+    flex: 1;
+    flex-wrap: wrap;
+  }
+  .tab{
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 10px 16px;
+    background: rgba(255,255,255,.45);
+    border: 1px solid rgba(184,135,47,.20);
+    border-radius: 999px;
+    font-size: 12.5px;
+    font-weight: 600;
+    color: var(--ink-2);
+    letter-spacing: -.005em;
+    transition: all .35s ease;
+    cursor: pointer;
+  }
+  .tab .tab-num{
+    font-family: var(--mono);
+    font-size: 10.5px;
+    color: var(--gold);
+    letter-spacing: .14em;
+  }
+  .tab:hover{
+    background: rgba(255,255,255,.85);
+    border-color: rgba(184,135,47,.40);
+  }
+  .tab.active{
+    background: var(--chocolate);
+    color: var(--cream);
+    border-color: var(--chocolate);
+  }
+  .tab.active .tab-num{ color: var(--gold-soft) }
+
+  .showcase-arrows{
+    display: flex; gap: 8px;
+  }
+  .arr{
+    width: 44px; height: 44px;
+    border-radius: 50%;
+    background: #fff;
+    border: 1px solid rgba(184,135,47,.30);
+    display: grid; place-items: center;
+    color: var(--chocolate);
+    cursor: pointer;
+    transition: background .25s ease, border-color .25s ease, transform .25s ease, color .25s ease;
+  }
+  .arr:hover{
+    background: var(--chocolate);
+    border-color: var(--chocolate);
+    color: var(--cream);
+  }
+  .arr:active{ transform: scale(.96) }
+  .arr svg{ width: 18px; height: 18px }
+
+  /* responsive */
+  @media (max-width: 880px){
+    .showcase-frame{
+      grid-template-columns: 1fr;
+      grid-template-rows: 260px auto;
+      height: auto;
+    }
+    .stage{ padding: 24px }
+    .stage-image{ inset: 14% 8% 18% }
+    .stage-watermark{ display:none }
+    .info{
+      padding: 28px 24px;
+      border-left: none;
+      border-top: 1px solid rgba(184,135,47,.18);
+      min-height: 360px;
+    }
+    .info-slide{ inset: 28px 24px }
+    .showcase-nav{ flex-direction: column-reverse; align-items: stretch; gap: 14px }
+    .showcase-arrows{ justify-content: center }
+    .showcase-tabs{ justify-content: center }
+  }
+
+  /* ---------- trust ---------- */
+  .trust{
+    background: var(--chocolate);
+    color: var(--cream);
+    position: relative;
+    overflow: hidden;
+  }
+  .trust::before{
+    content:"";
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(700px 400px at 90% 20%, rgba(216,174,85,.10), transparent 60%),
+      radial-gradient(700px 500px at 0% 90%, rgba(242,106,0,.07), transparent 60%);
+    pointer-events: none;
+  }
+  .trust .section-title{ color: var(--cream) }
+  .trust .section-sub{ color: rgba(255,244,234,.65) }
+  .trust .section-eyebrow{ color: var(--gold-soft) }
+
+  .trust-grid{
+    display:grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1px;
+    background: rgba(184,135,47,.18);
+    border: 1px solid rgba(184,135,47,.18);
+    border-radius: 24px;
+    overflow: hidden;
+    position: relative; z-index: 1;
+  }
+  .trust-cell{
+    background: var(--chocolate);
+    padding: 36px 30px;
+    transition: background .4s ease;
+  }
+  .trust-cell:hover{ background: #322319 }
+  .trust-cell .num{
+    font-family: var(--mono);
+    color: var(--gold-soft);
+    font-size: 11px;
+    letter-spacing: .18em;
+    margin-bottom: 14px;
+  }
+  .trust-cell h4{
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: 20px;
+    margin: 0 0 10px;
+    color: var(--cream);
+    letter-spacing: -.02em;
+  }
+  .trust-cell p{
+    margin: 0;
+    font-size: 14px;
+    color: rgba(255,244,234,.7);
+    line-height: 1.55;
+  }
+  @media (max-width: 960px){
+    .trust-grid{ grid-template-columns: repeat(2, 1fr) }
+  }
+  @media (max-width: 560px){
+    .trust-grid{ grid-template-columns: 1fr }
+  }
+
+  /* ---------- quote ---------- */
+  .quote{
+    background: linear-gradient(180deg, var(--cream) 0%, #FBEEDC 100%);
+  }
+  .quote-grid{
+    display:grid; grid-template-columns: 1fr 1.05fr; gap: 56px;
+    align-items: center;
+  }
+  .quote-form{
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: 28px;
+    padding: 36px;
+    box-shadow: 0 30px 60px rgba(45,31,24,.10);
+  }
+  .quote-form h3{
+    font-family: var(--display);
+    font-size: 24px;
+    font-weight: 700;
+    letter-spacing: -.02em;
+    margin: 0 0 4px;
+    color: var(--chocolate);
+  }
+  .quote-form p{
+    margin: 0 0 28px;
+    color: var(--ink-3); font-size: 14px;
+  }
+  .field{
+    display:flex; flex-direction:column; gap:6px;
+    margin-bottom: 16px;
+  }
+  .field label{
+    font-family: var(--mono);
+    font-size: 10.5px;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+  }
+  .field input, .field select{
+    appearance:none;
+    -webkit-appearance:none;
+    -moz-appearance:none;
+    border: 1px solid var(--line);
+    background: #FBEEDC;
+    border-radius: 12px;
+    padding: 14px 16px;
+    font: 500 15px/1.4 var(--sans);
+    color: var(--chocolate);
+    transition: border-color .25s ease, background .25s ease, box-shadow .25s ease;
+    width: 100%;
+  }
+  .field input:focus, .field select:focus{
+    outline: none;
+    border-color: var(--gold);
+    background: #fff;
+    box-shadow: 0 0 0 3px rgba(184,135,47,.14);
+  }
+  /* custom date input — replace default icon and align text */
+  .field input[type="date"]{
+    padding-right: 44px;
+    cursor: pointer;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23B8872F' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><rect x='3' y='5' width='18' height='16' rx='2'/><path d='M3 9h18M8 3v4M16 3v4'/></svg>");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+    background-size: 18px;
+    color-scheme: light;
+    font-family: inherit;
+  }
+  .field input[type="date"]::-webkit-calendar-picker-indicator{
+    opacity: 0;
+    cursor: pointer;
+    position: absolute;
+    right: 0;
+    width: 44px;
+    height: 100%;
+  }
+  .field input[type="date"]:hover{
+    border-color: rgba(184,135,47,.45);
+    background-color: #FFF4E2;
+  }
+  .field input[type="date"]::-webkit-datetime-edit{ color: var(--ink-2); padding: 0 }
+  .field input[type="date"]::-webkit-datetime-edit-fields-wrapper{ padding: 0 }
+  .field input[type="date"]:valid::-webkit-datetime-edit{ color: var(--chocolate) }
+  /* the field wrapper needs relative for the picker overlay */
+  .field{ position: relative }
+
+  /* hidden native select — kept for form submission */
+  .field select.native-hidden{
+    position: absolute; left: 0; top: 0;
+    width: 100%; height: 100%;
+    opacity: 0; pointer-events: none;
+  }
+
+  /* custom select component */
+  .cselect{
+    position: relative;
+    width: 100%;
+  }
+  .cselect-trigger{
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 12px;
+    width: 100%;
+    border: 1px solid var(--line);
+    background: #FBEEDC;
+    border-radius: 12px;
+    padding: 14px 16px;
+    font: 500 15px/1.4 var(--sans);
+    color: var(--chocolate);
+    cursor: pointer;
+    transition: border-color .25s ease, background .25s ease, box-shadow .25s ease;
+    text-align: left;
+  }
+  .cselect-trigger:hover{
+    border-color: rgba(184,135,47,.45);
+    background: #FFF4E2;
+  }
+  .cselect.open .cselect-trigger{
+    background: #fff;
+    border-color: var(--gold);
+    box-shadow: 0 0 0 3px rgba(184,135,47,.14);
+  }
+  .cselect-trigger .chev{
+    width: 16px; height: 16px;
+    color: var(--gold);
+    flex-shrink: 0;
+    transition: transform .3s cubic-bezier(.2,.7,.2,1);
+  }
+  .cselect.open .cselect-trigger .chev{
+    transform: rotate(180deg);
+  }
+  .cselect-menu{
+    position: absolute;
+    top: calc(100% + 6px); left: 0; right: 0;
+    background: #fff;
+    border: 1px solid rgba(184,135,47,.32);
+    border-radius: 14px;
+    padding: 6px;
+    box-shadow: 0 18px 40px rgba(45,31,24,.18), 0 4px 10px rgba(45,31,24,.08);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-6px) scale(.98);
+    transform-origin: top center;
+    transition: opacity .22s ease, transform .22s cubic-bezier(.2,.7,.2,1), visibility .22s;
+    z-index: 30;
+    max-height: 280px;
+    overflow-y: auto;
+  }
+  .cselect.open .cselect-menu{
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0) scale(1);
+  }
+  .cselect-menu::-webkit-scrollbar{ width: 6px }
+  .cselect-menu::-webkit-scrollbar-thumb{ background: rgba(184,135,47,.3); border-radius: 999px }
+  .cselect-option{
+    display: flex; align-items: center; gap: 10px;
+    padding: 11px 14px;
+    border-radius: 10px;
+    font: 500 14.5px/1.3 var(--sans);
+    color: var(--chocolate);
+    cursor: pointer;
+    transition: background .15s ease, color .15s ease, transform .15s ease;
+  }
+  .cselect-option:hover{
+    background: #FFF4E2;
+    color: var(--brown);
+  }
+  .cselect-option.selected{
+    background: linear-gradient(180deg, #FFF4E2 0%, #FBEEDC 100%);
+    color: var(--brown);
+    font-weight: 600;
+  }
+  .cselect-option.selected::before{
+    content: '';
+    width: 6px; height: 6px;
+    background: var(--gold);
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .field-row{
+    display:grid; grid-template-columns: 1fr 1fr; gap: 14px;
+  }
+  .quote-form .btn-primary{
+    width: 100%; justify-content: center;
+    padding: 16px 22px;
+    margin-top: 6px;
+  }
+  .quote-side h2{
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: clamp(34px, 4vw, 48px);
+    line-height: 1.05;
+    letter-spacing: -.03em;
+    color: var(--chocolate);
+    margin: 0 0 18px;
+    text-wrap: balance;
+  }
+  .quote-side h2 em{ font-style: normal; color: var(--gold) }
+  .quote-side p{
+    color: var(--ink-2);
+    font-size: 17px;
+    max-width: 460px;
+    margin: 0 0 28px;
+  }
+  .quote-bullets{
+    list-style: none; padding: 0; margin: 0;
+    display:flex; flex-direction: column; gap: 12px;
+  }
+  .quote-bullets li{
+    display:flex; align-items:flex-start; gap: 14px;
+    font-size: 15px;
+    color: var(--ink-2);
+  }
+  .quote-bullets li::before{
+    content: "";
+    width: 22px; height: 22px; flex-shrink:0;
+    border-radius: 50%;
+    background:
+      radial-gradient(closest-side, var(--gold-soft), var(--gold));
+    margin-top: 2px;
+    position: relative;
+  }
+  .quote-bullets li::after{
+    content: "✓";
+    position: absolute;
+    width: 22px;
+    line-height: 22px;
+    text-align: center;
+    color: var(--chocolate);
+    font-size: 13px;
+    font-weight: 700;
+    margin-left: -22px; margin-top: 2px;
+  }
+  @media (max-width: 900px){
+    .quote-grid{ grid-template-columns: 1fr; gap: 36px }
+  }
+
+  /* ---------- FAQ ---------- */
+  .faq{ background: var(--cream) }
+  .faq-grid{
+    display:grid; grid-template-columns: 1fr 1.4fr; gap: 56px;
+  }
+  .faq-list{
+    border-top: 1px solid var(--line);
+  }
+  .faq-item{
+    border-bottom: 1px solid var(--line);
+  }
+  .faq-q{
+    width: 100%; text-align: left;
+    padding: 22px 0;
+    display:flex; align-items:center; justify-content:space-between; gap: 24px;
+    font-family: var(--display);
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--chocolate);
+    transition: color .25s ease;
+    letter-spacing: -.015em;
+  }
+  .faq-q:hover{ color: var(--gold) }
+  .faq-q .plus{
+    flex-shrink: 0;
+    width: 36px; height: 36px; border-radius: 50%;
+    border: 1px solid var(--line-strong);
+    display:grid; place-items:center;
+    transition: transform .35s ease, background .35s ease;
+    color: var(--gold);
+  }
+  .faq-q .plus::before, .faq-q .plus::after{
+    content: ""; position:absolute; width: 12px; height: 1.5px;
+    background: currentColor;
+  }
+  .faq-q .plus::after{ transform: rotate(90deg); transition: transform .35s ease }
+  .faq-item.open .faq-q .plus{ background: var(--gold); color: var(--chocolate); transform: rotate(45deg) }
+  .faq-item.open .faq-q .plus::after{ transform: rotate(90deg) }
+  .faq-a{
+    max-height: 0; overflow: hidden;
+    transition: max-height .5s ease;
+  }
+  .faq-a-inner{
+    padding: 0 0 22px;
+    color: var(--ink-2);
+    max-width: 520px;
+    font-size: 15.5px;
+    line-height: 1.6;
+  }
+  .faq-item.open .faq-a{ max-height: 280px }
+  @media (max-width: 880px){
+    .faq-grid{ grid-template-columns: 1fr }
+  }
+
+  /* ---------- footer ---------- */
+  .footer{
+    background: var(--black-coal);
+    color: rgba(255,244,234,.7);
+    padding: 80px 0 40px;
+    position: relative;
+    overflow: hidden;
+  }
+  .footer::before{
+    content:""; position:absolute; inset: 0;
+    background:
+      radial-gradient(700px 400px at 80% 0%, rgba(184,135,47,.10), transparent 60%);
+    pointer-events: none;
+  }
+  .footer-grid{
+    position: relative;
+    display:grid; grid-template-columns: 1.4fr 1fr 1fr 1fr; gap: 40px;
+    margin-bottom: 60px;
+  }
+  .footer h5{
+    font-family: var(--mono);
+    font-size: 11px; letter-spacing: .18em;
+    text-transform: uppercase;
+    color: var(--gold-soft);
+    margin: 0 0 18px;
+  }
+  .footer ul{ list-style: none; padding:0; margin:0; display:flex; flex-direction:column; gap: 10px }
+  .footer ul a{ font-size: 14px; transition: color .25s ease }
+  .footer ul a:hover{ color: var(--cream) }
+  .footer .brand-name{ color: var(--cream) }
+  .footer .brand-name em{ color: var(--gold-soft) }
+  .footer .brand-tag{
+    margin-top: 14px; max-width: 320px;
+    font-size: 14px; line-height: 1.55;
+    color: rgba(255,244,234,.55);
+  }
+  .footer-bot{
+    position: relative;
+    border-top: 1px solid rgba(184,135,47,.18);
+    padding-top: 28px;
+    display:flex; align-items:center; justify-content: space-between; gap: 24px;
+    font-size: 12.5px; color: rgba(255,244,234,.45);
+  }
+  .footer-bot a{ transition: color .25s ease }
+  .footer-bot a:hover{ color: var(--cream) }
+  .foot-credit{ color: rgba(255,244,234,.55); font-size: 12.5px; letter-spacing: .01em }
+  .foot-credit a{ color: var(--gold-soft); font-weight: 600 }
+  .foot-credit a:hover{ color: var(--gold-pale); text-decoration: underline }
+  @media (max-width: 880px){
+    .footer-grid{ grid-template-columns: 1fr 1fr; gap: 32px }
+    .footer-bot{flex-direction:column; align-items:flex-start}
+  }
+
+  /* ---------- floating WA on mobile ---------- */
+  .wa-fab{
+    position: fixed; right: 18px; bottom: 18px;
+    z-index: 80;
+    width: 56px; height: 56px; border-radius: 50%;
+    background: #25D366;
+    color: #fff;
+    display:none;
+    align-items:center; justify-content:center;
+    box-shadow: 0 14px 30px rgba(37,211,102,.45);
+    transition: transform .35s ease;
+  }
+  .wa-fab:hover{ transform: scale(1.06) }
+  .wa-fab .icon-wa{ width: 26px; height: 26px }
+  @media (max-width: 760px){
+    .wa-fab{ display:flex }
+  }
+
+  /* ---------- reveal animations ---------- */
+  .reveal{
+    opacity: 0; transform: translateY(20px);
+    transition: opacity .9s cubic-bezier(.2,.7,.2,1), transform .9s cubic-bezier(.2,.7,.2,1);
+  }
+  .reveal.in{ opacity: 1; transform: translateY(0) }
+
+  /* ---------- language switcher ---------- */
+  .lang-switch{
+    display:flex; align-items:center; gap:6px;
+    padding:4px;
+    border:1px solid rgba(184,135,47,.32);
+    border-radius:999px;
+    background: rgba(255,244,234,.5);
+    margin-right: 6px;
+  }
+  .lang-btn{
+    display:flex; align-items:center; justify-content:center;
+    width:26px; height:26px;
+    border-radius:50%; overflow:hidden;
+    cursor:pointer;
+    opacity:.4;
+    transition: opacity .2s, transform .15s, box-shadow .2s;
+    border:1px solid transparent;
+    padding:0; background:none;
+    flex-shrink:0;
+  }
+  .lang-btn:hover{ opacity:.85; transform:scale(1.05) }
+  .lang-btn.active{
+    opacity:1;
+    border-color: var(--gold);
+    box-shadow: 0 0 0 1px rgba(184,135,47,.35);
+  }
+  .lang-btn svg{ width:100%; height:100%; display:block }
+  @media (max-width: 920px){
+    .lang-switch{ margin-right: 8px }
+  }
+</style>
+</head>
+<body>
+
+  <!-- ============== HEADER ============== -->
+  <header class="header">
+    <div class="container header-inner">
+      <a href="#" class="brand">
+        <div class="brand-logo" aria-hidden="true"></div>
+        <div class="brand-name">Transfers <em>Tatá</em></div>
+      </a>
+      <nav class="nav">
+        <a href="#experiencia" data-i18n="nav.experience">Experiencia</a>
+        <a href="#flota" data-i18n="nav.fleet">Flota</a>
+        <a href="#cotizar" data-i18n="nav.quote">Cotizar</a>
+        <a href="#servicios" data-i18n="nav.services">Servicios</a>
+        <a href="#faq" data-i18n="nav.faq">FAQ</a>
+      </nav>
+      <div class="cta-row">
+        <div class="lang-switch" role="group" aria-label="Idioma">
+          <button class="lang-btn active" data-lang="es" aria-label="Español" title="Español">
+            <svg viewBox="0 0 60 40" preserveAspectRatio="xMidYMid slice">
+              <rect width="60" height="40" fill="#AA151B"/>
+              <rect y="10" width="60" height="20" fill="#F1BF00"/>
+            </svg>
+          </button>
+          <button class="lang-btn" data-lang="en" aria-label="English" title="English">
+            <svg viewBox="0 0 60 40" preserveAspectRatio="xMidYMid slice">
+              <rect width="60" height="40" fill="#012169"/>
+              <path d="M0 0 L60 40 M60 0 L0 40" stroke="#FFF" stroke-width="6"/>
+              <path d="M0 0 L60 40 M60 0 L0 40" stroke="#C8102E" stroke-width="3"/>
+              <path d="M30 0 V40 M0 20 H60" stroke="#FFF" stroke-width="10"/>
+              <path d="M30 0 V40 M0 20 H60" stroke="#C8102E" stroke-width="6"/>
+            </svg>
+          </button>
+        </div>
+        <a class="btn-ghost" href="tel:+595" aria-label="Llamar">+595 981 000 000</a>
+        <a class="btn btn-primary" href="#cotizar">
+          <span class="icon-wa" aria-hidden="true"></span>
+          <span data-i18n="nav.cta">Cotizar</span>
+        </a>
+        <button class="hamburger" id="hamburger" aria-label="Menu" aria-expanded="false">
+          <span></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ============== MOBILE DRAWER ============== -->
+  <div class="mobile-drawer" id="mobileDrawer" aria-hidden="true">
+    <a href="#experiencia"><span data-i18n="nav.experience">Experiencia</span><span class="num">01</span></a>
+    <a href="#flota"><span data-i18n="nav.fleet">Flota</span><span class="num">02</span></a>
+    <a href="#cotizar"><span data-i18n="nav.quote">Cotizar</span><span class="num">03</span></a>
+    <a href="#servicios"><span data-i18n="nav.services">Servicios</span><span class="num">04</span></a>
+    <a href="#faq"><span data-i18n="nav.faq">FAQ</span><span class="num">05</span></a>
+    <a class="drawer-cta" href="#cotizar" data-i18n="nav.cta">Cotizar</a>
+  </div>
+
+  <!-- ============== HERO ============== -->
+  <section class="hero">
+    <div class="container">
+      <div class="hero-grid">
+        <div class="hero-copy reveal in">
+          <div class="eyebrow"><span class="dot"></span><span data-i18n="hero.eyebrow">Traslados privados · Asunción · Paraguay</span><span class="line"></span></div>
+          <h1 class="hero-title" data-i18n-html="hero.title">
+            Traslados privados y ejecutivos, <em>cómodos y puntuales.</em>
+          </h1>
+          <p class="hero-sub" data-i18n="hero.sub">
+            Viajá dentro y fuera del país con seguridad, comodidad y atención personalizada. Una flota cuidada y un equipo que llega antes que vos.
+          </p>
+
+          <div class="badges">
+            <span class="badge" data-i18n="hero.b1">Aeropuerto</span>
+            <span class="badge" data-i18n="hero.b2">Eventos</span>
+            <span class="badge" data-i18n="hero.b3">Viajes nacionales e internacionales</span>
+            <span class="badge" data-i18n="hero.b4">Mascotas</span>
+            <span class="badge" data-i18n="hero.b5">Empresas</span>
+          </div>
+
+          <div class="cta-row">
+            <a class="btn btn-primary" href="https://wa.me/595981000000" target="_blank" rel="noopener">
+              <span class="icon-wa" aria-hidden="true"></span>
+              <span data-i18n="hero.ctaWa">Cotizar por WhatsApp</span>
+            </a>
+            <a class="btn btn-secondary" href="#servicios"><span data-i18n="hero.ctaServices">Ver servicios →</span></a>
+          </div>
+
+          <div class="cta-meta">
+            <div class="avatars" aria-hidden="true"><span></span><span></span><span></span></div>
+            <span data-i18n-html="hero.meta"><strong>+1,200 traslados</strong> coordinados este año · respuesta en 5 min</span>
+          </div>
+        </div>
+
+        <div class="hero-art reveal in">
+          <div class="halo"></div>
+          <div class="halo-gold"></div>
+          <div class="ring"></div>
+          <div class="ring ring-2"></div>
+
+          <div class="logo-wrap">
+            <img class="logo-img" src="assets/logo.png" alt="Transfers Tatá" />
+          </div>
+        </div>
+      </div>
+
+      <div class="hero-stats">
+        <div class="stat reveal in">
+          <div class="n"><span class="num-target" data-target="12">0</span><span class="suffix">+</span></div>
+          <div class="l" data-i18n="stat1">Años acompañando viajes y eventos</div>
+        </div>
+        <div class="stat reveal in">
+          <div class="n"><span class="num-target" data-target="98">0</span><span class="suffix">%</span></div>
+          <div class="l" data-i18n="stat2">Clientes que vuelven a contratarnos</div>
+        </div>
+        <div class="stat reveal in">
+          <div class="n"><span class="num-target" data-target="6">0</span></div>
+          <div class="l" data-i18n="stat3">Vehículos en flota — del privado al bus</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="experiencia" class="experience">
+    <div class="container">
+      <div class="section-head">
+        <div class="left reveal">
+          <div class="section-eyebrow" data-i18n="exp.eyebrow">— Experiencia comprobada</div>
+          <h2 class="section-title" data-i18n-html="exp.title">De delegaciones y bodas a viajes con tu <em>familia y mascotas</em>.</h2>
+          <p class="section-sub" data-i18n="exp.sub">Acompañamos comitivas, organizadores y familias en jornadas exigentes — donde el detalle importa tanto como el destino.</p>
+        </div>
+      </div>
+
+      <div class="chips reveal">
+        <span class="chip"><span class="chip-num">01</span><span data-i18n="chip.bid">BID</span></span>
+        <span class="chip"><span class="chip-num">02</span><span data-i18n="chip.asu">ASU</span></span>
+        <span class="chip"><span class="chip-num">03</span><span data-i18n="chip.olimp">Olimpiadas Especiales</span></span>
+        <span class="chip"><span class="chip-num">04</span><span data-i18n="chip.conciertos">Conciertos</span></span>
+        <span class="chip"><span class="chip-num">05</span><span data-i18n="chip.bodas">Bodas</span></span>
+        <span class="chip"><span class="chip-num">06</span><span data-i18n="chip.empresas">Eventos empresariales</span></span>
+        <span class="chip"><span class="chip-num">07</span><span data-i18n="chip.mascotas">Viajes con mascotas</span></span>
+        <span class="chip"><span class="chip-num">08</span><span data-i18n="chip.turismo">Turismo</span></span>
+      </div>
+
+      <div class="marquee-wrap">
+        <div class="marquee">
+          <span data-i18n="mq.1">Puntualidad</span>
+          <span data-i18n="mq.2">Discreción ejecutiva</span>
+          <span data-i18n="mq.3">Confort</span>
+          <span data-i18n="mq.4">Seguridad</span>
+          <span data-i18n="mq.5">Atención humana</span>
+          <span data-i18n="mq.1">Puntualidad</span>
+          <span data-i18n="mq.2">Discreción ejecutiva</span>
+          <span data-i18n="mq.3">Confort</span>
+          <span data-i18n="mq.4">Seguridad</span>
+          <span data-i18n="mq.5">Atención humana</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="flota" class="fleet">
+    <div class="container">
+      <div class="section-head">
+        <div class="left reveal">
+          <div class="section-eyebrow" data-i18n="flota.eyebrow">— Flota destacada</div>
+          <h2 class="section-title" data-i18n-html="flota.title">Una flota cuidada, <em>para cada tamaño de viaje</em>.</h2>
+          <p class="section-sub" data-i18n="flota.sub">Del privado ejecutivo al bus completo. Todos los vehículos con mantenimiento riguroso, climatización y choferes profesionales.</p>
+        </div>
+        <div class="right reveal">
+          <a class="btn btn-secondary" href="#cotizar" data-i18n="flota.btn">Consultar disponibilidad →</a>
+        </div>
+      </div>
+
+      <div class="showcase reveal" id="showcase">
+        <div class="showcase-frame">
+          <!-- STAGE / IMAGE -->
+          <div class="stage">
+            <div class="stage-index"><span class="now">01</span><span class="of">/ 06</span></div>
+            <div class="stage-watermark" id="stageWatermark">Picanto</div>
+            <div class="stage-image-wrap" id="stageImages">
+              <div class="stage-image active" data-i="0">
+                <img src="uploads/kia.png" alt="Kia Picanto" loading="eager" />
+              </div>
+              <div class="stage-image" data-i="1">
+                <img src="uploads/tucson.png" alt="Hyundai Tucson" loading="lazy" />
+              </div>
+              <div class="stage-image" data-i="2">
+                <img src="uploads/changan.png" alt="Changan Hunter" loading="lazy" />
+              </div>
+              <div class="stage-image" data-i="3">
+                <img src="uploads/h1.png" alt="Hyundai H1" loading="lazy" />
+              </div>
+              <div class="stage-image" data-i="4">
+                <img src="uploads/minibus.png" alt="Mini bus" loading="lazy" />
+              </div>
+              <div class="stage-image" data-i="5">
+                <img src="uploads/bus.png" alt="Bus" loading="lazy" />
+              </div>
+            </div>
+          </div>
+
+          <!-- INFO -->
+          <div class="info" id="showcaseInfo">
+            <div class="info-slide active" data-i="0">
+              <div class="info-cat"><span class="pill" data-i18n="veh.0.pill">Compacto</span> <span data-i18n="veh.0.cat">Económico</span></div>
+              <h3 class="info-name">Kia Picanto</h3>
+              <div class="info-cap" data-i18n-html="veh.0.cap"><strong>1 pasajero</strong> · city</div>
+              <p class="info-desc" data-i18n="veh.0.desc">Ideal para traslados individuales rápidos dentro de la ciudad. Ágil, climatizado y siempre puntual.</p>
+              <ul class="info-features">
+                <li data-i18n="veh.0.f1">Aire acondicionado</li>
+                <li data-i18n="veh.0.f2">Tarifa económica</li>
+                <li data-i18n="veh.0.f3">Tráficos urbanos</li>
+              </ul>
+              <a class="info-cta" target="_blank" rel="noopener" data-wa-vehicle="Kia Picanto" data-i18n="veh.cta">Consultar disponibilidad →</a>
+            </div>
+            <div class="info-slide" data-i="1">
+              <div class="info-cat"><span class="pill" data-i18n="veh.1.pill">SUV</span> <span data-i18n="veh.1.cat">Familia</span></div>
+              <h3 class="info-name">Hyundai Tucson</h3>
+              <div class="info-cap" data-i18n-html="veh.1.cap"><strong>Hasta 3 pasajeros</strong> · equipaje amplio</div>
+              <p class="info-desc" data-i18n="veh.1.desc">Una SUV cómoda y ejecutiva, ideal para familias o viajes con equipaje. Asientos amplios y suspensión suave.</p>
+              <ul class="info-features">
+                <li data-i18n="veh.1.f1">Equipaje XL</li>
+                <li data-i18n="veh.1.f2">SUV ejecutiva</li>
+                <li data-i18n="veh.1.f3">Familias</li>
+              </ul>
+              <a class="info-cta" target="_blank" rel="noopener" data-wa-vehicle="Hyundai Tucson" data-i18n="veh.cta">Consultar disponibilidad →</a>
+            </div>
+            <div class="info-slide" data-i="2">
+              <div class="info-cat"><span class="pill" data-i18n="veh.2.pill">Pick-up</span> <span data-i18n="veh.2.cat">Carga</span></div>
+              <h3 class="info-name">Changan Hunter</h3>
+              <div class="info-cap" data-i18n-html="veh.2.cap"><strong>Hasta 4 pasajeros</strong> · carga especial</div>
+              <p class="info-desc" data-i18n="veh.2.desc">Robusta y versátil. Pensada para equipaje pesado, cargas especiales o trayectos más exigentes fuera de la ciudad.</p>
+              <ul class="info-features">
+                <li data-i18n="veh.2.f1">Carga adicional</li>
+                <li data-i18n="veh.2.f2">Largas distancias</li>
+                <li data-i18n="veh.2.f3">Tracción</li>
+              </ul>
+              <a class="info-cta" target="_blank" rel="noopener" data-wa-vehicle="Changan Hunter" data-i18n="veh.cta">Consultar disponibilidad →</a>
+            </div>
+            <div class="info-slide" data-i="3">
+              <div class="info-cat"><span class="pill" data-i18n="veh.3.pill">Van</span> <span data-i18n="veh.3.cat">Grupos</span></div>
+              <h3 class="info-name">Hyundai H1</h3>
+              <div class="info-cap" data-i18n-html="veh.3.cap"><strong>10 pasajeros</strong> · contamos con 2 unidades</div>
+              <p class="info-desc" data-i18n="veh.3.desc">La van preferida para comitivas chicas, aeropuerto y traslados corporativos. Espacio para todos sin sacrificar confort.</p>
+              <ul class="info-features">
+                <li data-i18n="veh.3.f1">2 unidades disponibles</li>
+                <li data-i18n="veh.3.f2">Aeropuerto</li>
+                <li data-i18n="veh.3.f3">10 pax</li>
+              </ul>
+              <a class="info-cta" target="_blank" rel="noopener" data-wa-vehicle="Hyundai H1" data-i18n="veh.cta">Consultar disponibilidad →</a>
+            </div>
+            <div class="info-slide" data-i="4">
+              <div class="info-cat"><span class="pill" data-i18n="veh.4.pill">Minibus</span> <span data-i18n="veh.4.cat">Eventos</span></div>
+              <h3 class="info-name">Mini bus</h3>
+              <div class="info-cap" data-i18n-html="veh.4.cap"><strong>19 pasajeros</strong> · bodega amplia</div>
+              <p class="info-desc" data-i18n="veh.4.desc">Ideal para grupos medianos, excursiones, eventos corporativos y traslados a interior del país con equipaje completo.</p>
+              <ul class="info-features">
+                <li data-i18n="veh.4.f1">Eventos</li>
+                <li data-i18n="veh.4.f2">Excursiones</li>
+                <li data-i18n="veh.4.f3">19 pax</li>
+              </ul>
+              <a class="info-cta" target="_blank" rel="noopener" data-wa-vehicle="Mini bus 19 pax" data-i18n="veh.cta">Consultar disponibilidad →</a>
+            </div>
+            <div class="info-slide" data-i="5">
+              <div class="info-cat"><span class="pill" data-i18n="veh.5.pill">Bus</span> <span data-i18n="veh.5.cat">Comitivas</span></div>
+              <h3 class="info-name">Bus</h3>
+              <div class="info-cap" data-i18n-html="veh.5.cap"><strong>+30 pasajeros</strong> · butacas reclinables</div>
+              <p class="info-desc" data-i18n="veh.5.desc">Pensado para grupos grandes y traslados masivos: delegaciones, congresos y viajes de larga distancia con confort total.</p>
+              <ul class="info-features">
+                <li data-i18n="veh.5.f1">Larga distancia</li>
+                <li data-i18n="veh.5.f2">Delegaciones</li>
+                <li data-i18n="veh.5.f3">+30 pax</li>
+              </ul>
+              <a class="info-cta" target="_blank" rel="noopener" data-wa-vehicle="Bus" data-i18n="veh.cta">Consultar disponibilidad →</a>
+            </div>
+          </div>
+
+          <div class="showcase-progress"><span id="showcaseProgress"></span></div>
+        </div>
+
+        <div class="showcase-nav">
+          <div class="showcase-tabs" id="showcaseTabs">
+            <button class="tab active" data-i="0"><span class="tab-num">01</span>Picanto</button>
+            <button class="tab" data-i="1"><span class="tab-num">02</span>Tucson</button>
+            <button class="tab" data-i="2"><span class="tab-num">03</span>Hunter</button>
+            <button class="tab" data-i="3"><span class="tab-num">04</span>H1</button>
+            <button class="tab" data-i="4"><span class="tab-num">05</span>Mini bus</button>
+            <button class="tab" data-i="5"><span class="tab-num">06</span>Bus</button>
+          </div>
+          <div class="showcase-arrows">
+            <button class="arr" id="arrPrev" aria-label="Anterior">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+            </button>
+            <button class="arr" id="arrNext" aria-label="Siguiente">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="cotizar" class="quote">
+    <div class="container">
+      <div class="quote-grid">
+        <div class="quote-side reveal">
+          <div class="section-eyebrow" data-i18n="quote.eyebrow">— Cotización rápida</div>
+          <h2 data-i18n-html="quote.title">Contanos tu viaje y te <em>respondemos en minutos</em>.</h2>
+          <p data-i18n="quote.desc">Llevamos +12 años coordinando traslados privados. Cargá los datos esenciales y un asesor te confirma disponibilidad y tarifa final.</p>
+          <ul class="quote-bullets">
+            <li data-i18n="quote.b1">Respuesta en menos de 5 minutos hábiles.</li>
+            <li data-i18n="quote.b2">Sin recargos sorpresa: tarifa cerrada por escrito.</li>
+            <li data-i18n="quote.b3">Factura legal y cuentas para empresas.</li>
+            <li data-i18n="quote.b4">Reservás reservando, no comprometiéndote.</li>
+          </ul>
+        </div>
+
+        <form class="quote-form reveal" onsubmit="event.preventDefault(); this.querySelector('button').textContent='Enviando…'; setTimeout(()=>this.querySelector('button').textContent='✓ Recibido — te contactamos',900)">
+          <h3 data-i18n="quote.fTitle">Pedí tu cotización</h3>
+          <p data-i18n="quote.fSub">Te respondemos por WhatsApp en minutos.</p>
+
+          <div class="field">
+            <label for="qn" data-i18n="quote.lName">Nombre</label>
+            <input id="qn" type="text" placeholder="Tu nombre completo" data-i18n-ph="quote.phName" required />
+          </div>
+          <div class="field-row">
+            <div class="field">
+              <label for="qf" data-i18n="quote.lDate">Fecha del viaje</label>
+              <input id="qf" type="date" required />
+            </div>
+            <div class="field">
+              <label for="qs" data-i18n="quote.lService">Servicio</label>
+              <div class="cselect" id="qs-cselect">
+                <button type="button" class="cselect-trigger" aria-haspopup="listbox" aria-expanded="false">
+                  <span class="cselect-value" data-i18n="quote.s1">Aeropuerto</span>
+                  <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+                </button>
+                <ul class="cselect-menu" role="listbox">
+                  <li class="cselect-option selected" role="option" data-value="Aeropuerto" data-i18n="quote.s1">Aeropuerto</li>
+                  <li class="cselect-option" role="option" data-value="Corporativo" data-i18n="quote.s2">Corporativo</li>
+                  <li class="cselect-option" role="option" data-value="Eventos / Bodas" data-i18n="quote.s3">Eventos / Bodas</li>
+                  <li class="cselect-option" role="option" data-value="Nacional / Internacional" data-i18n="quote.s4">Nacional / Internacional</li>
+                  <li class="cselect-option" role="option" data-value="Turístico" data-i18n="quote.s5">Turístico</li>
+                  <li class="cselect-option" role="option" data-value="Con mascotas" data-i18n="quote.s6">Con mascotas</li>
+                </ul>
+                <select id="qs" class="native-hidden" tabindex="-1" aria-hidden="true">
+                  <option data-i18n="quote.s1">Aeropuerto</option>
+                  <option data-i18n="quote.s2">Corporativo</option>
+                  <option data-i18n="quote.s3">Eventos / Bodas</option>
+                  <option data-i18n="quote.s4">Nacional / Internacional</option>
+                  <option data-i18n="quote.s5">Turístico</option>
+                  <option data-i18n="quote.s6">Con mascotas</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="field-row">
+            <div class="field">
+              <label for="qo" data-i18n="quote.lOrigin">Origen</label>
+              <input id="qo" type="text" placeholder="Asunción, hotel, dirección…" data-i18n-ph="quote.phOrigin" />
+            </div>
+            <div class="field">
+              <label for="qd" data-i18n="quote.lDest">Destino</label>
+              <input id="qd" type="text" placeholder="Aeropuerto, ciudad, etc." data-i18n-ph="quote.phDest" />
+            </div>
+          </div>
+          <div class="field">
+            <label for="qw" data-i18n="quote.lWa">WhatsApp</label>
+            <input id="qw" type="tel" placeholder="+595 ..." required />
+          </div>
+
+          <button type="submit" class="btn btn-primary">
+            <span class="icon-wa" aria-hidden="true"></span>
+            <span data-i18n="quote.submit">Cotizar por WhatsApp</span>
+          </button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <section id="servicios" class="services">
+    <div class="container">
+      <div class="section-head">
+        <div class="left reveal">
+          <div class="section-eyebrow" data-i18n="svc.eyebrow">— Servicios principales</div>
+          <h2 class="section-title" data-i18n-html="svc.title">Cada traslado, <em>diseñado a la medida</em> del viaje.</h2>
+          <p class="section-sub" data-i18n="svc.sub">Desde una llegada puntual al aeropuerto hasta logística completa para eventos y comitivas. Trabajamos sobre detalles: horarios, equipaje, contacto y discreción.</p>
+        </div>
+        <div class="right reveal">
+          <a class="btn btn-secondary" href="#cotizar" data-i18n="svc.btn">Hablar con un asesor →</a>
+        </div>
+      </div>
+
+      <div class="services-grid">
+        <article class="svc reveal">
+          <span class="svc-tag">01</span>
+          <div class="svc-ic">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z"/></svg>
+          </div>
+          <h3 data-i18n="svc1.t">Traslados al aeropuerto</h3>
+          <p data-i18n="svc1.d">Llegadas, salidas y conexiones con seguimiento de vuelo. Esperamos por vos cuando hay demoras.</p>
+          <a class="svc-link" href="#cotizar"><span data-i18n="svc1.cta">Reservar</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+          </a>
+        </article>
+
+        <article class="svc dark reveal">
+          <span class="svc-tag">02</span>
+          <div class="svc-ic">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15 15 0 0 1 0 20"/><path d="M12 2a15 15 0 0 0 0 20"/></svg>
+          </div>
+          <h3 data-i18n="svc2.t">Viajes nacionales e internacionales</h3>
+          <p data-i18n="svc2.d">Cruces por Argentina, Brasil y Paraguay. Documentación al día, paradas planificadas y descanso de chofer.</p>
+          <a class="svc-link" href="#cotizar"><span data-i18n="svc2.cta">Itinerarios</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+          </a>
+        </article>
+
+        <article class="svc reveal">
+          <span class="svc-tag">03</span>
+          <div class="svc-ic">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9 12 3l9 6v12H3z"/><path d="M9 21V12h6v9"/></svg>
+          </div>
+          <h3 data-i18n="svc3.t">Traslados turísticos</h3>
+          <p data-i18n="svc3.d">Hoteles, city tours, Cataratas, Yacyretá. Choferes que conocen los caminos y los tiempos.</p>
+          <a class="svc-link" href="#cotizar"><span data-i18n="svc3.cta">Armar ruta</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+          </a>
+        </article>
+
+        <article class="svc reveal">
+          <span class="svc-tag">04</span>
+          <div class="svc-ic">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2"/><circle cx="9.5" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          </div>
+          <h3 data-i18n="svc4.t">Traslados corporativos</h3>
+          <p data-i18n="svc4.d">Cuentas mensuales para empresas, facturación clara, choferes asignados y discreción ejecutiva.</p>
+          <a class="svc-link" href="#cotizar"><span data-i18n="svc4.cta">Cuenta empresa</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+          </a>
+        </article>
+
+        <article class="svc dark reveal">
+          <span class="svc-tag">05</span>
+          <div class="svc-ic">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+          </div>
+          <h3 data-i18n="svc5.t">Servicios para eventos</h3>
+          <p data-i18n="svc5.d">Bodas, conciertos, congresos. Coordinamos flota, choferes uniformados y horarios al detalle.</p>
+          <a class="svc-link" href="#cotizar"><span data-i18n="svc5.cta">Solicitar logística</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+          </a>
+        </article>
+
+        <article class="svc reveal">
+          <span class="svc-tag">06</span>
+          <div class="svc-ic">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="4" r="2"/><circle cx="18" cy="8" r="2"/><circle cx="20" cy="16" r="2"/><path d="M9 10a5 5 0 0 1 5 5v3.5a3.5 3.5 0 1 1-6.84 1.045Q6.52 17.48 4.46 16.84A3.5 3.5 0 1 1 5.5 10z"/></svg>
+          </div>
+          <h3 data-i18n="svc6.t">Traslado con mascotas</h3>
+          <p data-i18n="svc6.d">Vehículos preparados para llevar a tu mascota cómoda y segura. Pet-friendly de verdad.</p>
+          <a class="svc-link" href="#cotizar"><span data-i18n="svc6.cta">Coordinar</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+          </a>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="trust">
+    <div class="container">
+      <div class="section-head">
+        <div class="left reveal">
+          <div class="section-eyebrow" data-i18n="trust.eyebrow">— Seguridad y confianza</div>
+          <h2 class="section-title" data-i18n-html="trust.title">La tranquilidad <em>se nota</em> antes de subir al auto.</h2>
+          <p class="section-sub" data-i18n="trust.sub">Procesos claros, choferes formales, vehículos al día. Lo invisible que hace que el viaje sea simple.</p>
+        </div>
+      </div>
+
+      <div class="trust-grid">
+        <div class="trust-cell reveal">
+          <div class="num">01 / 04</div>
+          <h4 data-i18n="trust1.t">Choferes formales</h4>
+          <p data-i18n="trust1.d">Contratos en regla, cursos de manejo defensivo y verificación de antecedentes. Profesionales que cuidan tu tiempo.</p>
+        </div>
+        <div class="trust-cell reveal">
+          <div class="num">02 / 04</div>
+          <h4 data-i18n="trust2.t">Flota al día</h4>
+          <p data-i18n="trust2.d">Mantenimientos preventivos cada 10.000 km, seguros vigentes y revisiones técnicas auditadas mes a mes.</p>
+        </div>
+        <div class="trust-cell reveal">
+          <div class="num">03 / 04</div>
+          <h4 data-i18n="trust3.t">Seguimiento en vivo</h4>
+          <p data-i18n="trust3.d">Compartimos la ubicación del vehículo con vos o con tu empresa hasta que finaliza el traslado.</p>
+        </div>
+        <div class="trust-cell reveal">
+          <div class="num">04 / 04</div>
+          <h4 data-i18n="trust4.t">Soporte 24/7</h4>
+          <p data-i18n="trust4.d">WhatsApp directo a coordinación, no a un bot. Cambios de última hora, sin drama.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="faq" class="faq">
+    <div class="container">
+      <div class="faq-grid">
+        <div class="reveal">
+          <div class="section-eyebrow" data-i18n="faq.eyebrow">— Preguntas frecuentes</div>
+          <h2 class="section-title" data-i18n-html="faq.title">Lo que <em>todos preguntan</em> antes de reservar.</h2>
+          <p class="section-sub" data-i18n="faq.sub">Si no encontrás tu respuesta, escribinos por WhatsApp — coordinación contesta en minutos.</p>
+        </div>
+        <div class="faq-list reveal">
+          <div class="faq-item open">
+            <button class="faq-q" type="button"><span data-i18n="faq1.q">¿Operan dentro y fuera del país?</span><span class="plus"></span></button>
+            <div class="faq-a"><div class="faq-a-inner" data-i18n="faq1.a">Sí. Hacemos traslados nacionales en todo Paraguay e internacionales a Argentina y Brasil, con documentación al día y planificación de ruta.</div></div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-q" type="button"><span data-i18n="faq2.q">¿Tienen vehículos para mascotas?</span><span class="plus"></span></button>
+            <div class="faq-a"><div class="faq-a-inner" data-i18n="faq2.a">Sí, contamos con vehículos adaptados y choferes con experiencia para que tu mascota viaje cómoda y segura.</div></div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-q" type="button"><span data-i18n="faq3.q">¿Cómo manejan demoras de vuelo?</span><span class="plus"></span></button>
+            <div class="faq-a"><div class="faq-a-inner" data-i18n="faq3.a">Hacemos seguimiento del vuelo en tiempo real. Si tu llegada se atrasa, ajustamos el horario sin costo adicional.</div></div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-q" type="button"><span data-i18n="faq4.q">¿Aceptan cuentas empresariales con facturación mensual?</span><span class="plus"></span></button>
+            <div class="faq-a"><div class="faq-a-inner" data-i18n="faq4.a">Sí, abrimos cuentas para empresas con consolidado mensual, factura legal y choferes asignados. Te asesoramos en el armado del servicio.</div></div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-q" type="button"><span data-i18n="faq5.q">¿Cómo cotizan? ¿Hay recargos sorpresa?</span><span class="plus"></span></button>
+            <div class="faq-a"><div class="faq-a-inner" data-i18n="faq5.a">Cotizamos por escrito con tarifa cerrada. Sin recargos por equipaje ni esperas razonables. Lo que firmás es lo que pagás.</div></div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-q" type="button"><span data-i18n="faq6.q">¿Puedo cancelar o reprogramar?</span><span class="plus"></span></button>
+            <div class="faq-a"><div class="faq-a-inner" data-i18n="faq6.a">Sí. Hasta 12 hs antes del servicio podés reprogramar sin costo. Para cancelaciones consultá con coordinación.</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============== FOOTER ============== -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div>
+          <a href="#" class="brand">
+            <div class="brand-logo" aria-hidden="true"></div>
+            <div class="brand-name">Transfers <em>Tatá</em></div>
+          </a>
+          <p class="brand-tag" data-i18n="foot.tag">Traslados privados y ejecutivos en Paraguay. Cómodos, puntuales y a la medida de cada viaje.</p>
+        </div>
+        <div>
+          <h5 data-i18n="foot.h1">Servicios</h5>
+          <ul>
+            <li><a href="#servicios" data-i18n="foot.svc1">Aeropuerto</a></li>
+            <li><a href="#servicios" data-i18n="foot.svc2">Corporativos</a></li>
+            <li><a href="#servicios" data-i18n="foot.svc3">Eventos y bodas</a></li>
+            <li><a href="#servicios" data-i18n="foot.svc4">Turismo</a></li>
+            <li><a href="#servicios" data-i18n="foot.svc5">Con mascotas</a></li>
+          </ul>
+        </div>
+        <div>
+          <h5 data-i18n="foot.h2">Flota</h5>
+          <ul>
+            <li><a href="#flota">Kia Picanto</a></li>
+            <li><a href="#flota">Hyundai Tucson</a></li>
+            <li><a href="#flota">Changan Hunter</a></li>
+            <li><a href="#flota">Hyundai H1</a></li>
+            <li><a href="#flota" data-i18n="foot.flota5">Minibus & Bus</a></li>
+          </ul>
+        </div>
+        <div>
+          <h5 data-i18n="foot.h3">Contacto</h5>
+          <ul>
+            <li><a href="https://wa.me/595981000000">WhatsApp +595 981 000 000</a></li>
+            <li><a href="mailto:hola@transferstata.com">hola@transferstata.com</a></li>
+            <li data-i18n="foot.loc">Asunción · Paraguay</li>
+            <li data-i18n="foot.hours">24/7 · todos los días</li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bot">
+        <div data-i18n="foot.copy">© 2026 Transfers Tatá. Todos los derechos reservados.</div>
+        <div class="foot-credit" data-i18n-html="foot.credit">Desarrollado por <a href="https://neura.com.py" target="_blank" rel="noopener">Neura</a></div>
+        <div style="display:flex;gap:20px"><a href="#" data-i18n="foot.privacy">Privacidad</a><a href="#" data-i18n="foot.terms">Términos</a><a href="#" data-i18n="foot.legal">Aviso legal</a></div>
+      </div>
+    </div>
+  </footer>
+
+  <a class="wa-fab" href="https://wa.me/595981000000" target="_blank" rel="noopener" aria-label="WhatsApp">
+    <span class="icon-wa" aria-hidden="true"></span>
+  </a>
+
+<script>
+  // FAQ toggle
+  document.querySelectorAll('.faq-q').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const item = btn.closest('.faq-item');
+      const wasOpen = item.classList.contains('open');
+      document.querySelectorAll('.faq-item.open').forEach(i => i.classList.remove('open'));
+      if (!wasOpen) item.classList.add('open');
+    });
+  });
+
+  // Intersection-observer reveal + fleet stagger
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('in');
+        io.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+
+  document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+  // Fleet showcase carousel
+  (function(){
+    const showcase = document.getElementById('showcase');
+    if (!showcase) return;
+    const total = 6;
+    const stageImages = showcase.querySelectorAll('.stage-image');
+    const infoSlides = showcase.querySelectorAll('.info-slide');
+    const tabs = showcase.querySelectorAll('.tab');
+    const progress = document.getElementById('showcaseProgress');
+    const stageWatermark = document.getElementById('stageWatermark');
+    const stageIndexNow = showcase.querySelector('.stage-index .now');
+    const arrPrev = document.getElementById('arrPrev');
+    const arrNext = document.getElementById('arrNext');
+    const names = ['Picanto','Tucson','Hunter','H1','Mini bus','Bus'];
+
+    let current = 0;
+    let timer = null;
+    let progressStart = 0;
+    let progressRaf = null;
+    const DURATION = 5800; // ms per slide
+    let paused = false;
+
+    function setActive(i, dir){
+      if (i === current) return;
+      const prevEl = stageImages[current];
+      const nextEl = stageImages[i];
+      const prevInfo = infoSlides[current];
+      const nextInfo = infoSlides[i];
+
+      // image transition
+      prevEl.classList.remove('active');
+      prevEl.classList.add('exit');
+      setTimeout(()=>prevEl.classList.remove('exit'), 800);
+
+      nextEl.classList.add('active');
+
+      // info transition
+      prevInfo.classList.remove('active');
+      nextInfo.classList.add('active');
+
+      // tabs
+      tabs.forEach(t => t.classList.toggle('active', +t.dataset.i === i));
+
+      // index + watermark
+      stageIndexNow.textContent = String(i+1).padStart(2,'0');
+      stageWatermark.textContent = names[i];
+
+      current = i;
+      restartProgress();
+    }
+    function next(){ setActive((current+1) % total, 1) }
+    function prev(){ setActive((current-1+total) % total, -1) }
+
+    function restartProgress(){
+      if (progressRaf) cancelAnimationFrame(progressRaf);
+      progressStart = performance.now();
+      progress.style.width = '0%';
+      function tick(now){
+        if (paused){ progressRaf = requestAnimationFrame(tick); return; }
+        const elapsed = now - progressStart;
+        const pct = Math.min(100, (elapsed/DURATION)*100);
+        progress.style.width = pct + '%';
+        if (elapsed >= DURATION){
+          next();
+          return;
+        }
+        progressRaf = requestAnimationFrame(tick);
+      }
+      progressRaf = requestAnimationFrame(tick);
+    }
+
+    tabs.forEach(t => t.addEventListener('click', () => setActive(+t.dataset.i, +t.dataset.i > current ? 1 : -1)));
+    arrNext.addEventListener('click', next);
+    arrPrev.addEventListener('click', prev);
+
+    // Pause on hover for accessibility
+    const frame = showcase.querySelector('.showcase-frame');
+    frame.addEventListener('mouseenter', () => {
+      paused = true;
+      // freeze: shift progressStart so resume keeps elapsed
+      progressStart = performance.now() - (parseFloat(progress.style.width||'0')/100)*DURATION;
+    });
+    frame.addEventListener('mouseleave', () => {
+      paused = false;
+      progressStart = performance.now() - (parseFloat(progress.style.width||'0')/100)*DURATION;
+    });
+
+    // Start when in view
+    const startIo = new IntersectionObserver((entries, obs)=>{
+      entries.forEach(e=>{
+        if (e.isIntersecting){
+          restartProgress();
+          obs.disconnect();
+        }
+      });
+    }, { threshold: 0.3 });
+    startIo.observe(showcase);
+  })();
+
+  // ===== Mobile drawer (hamburger) =====
+  (function(){
+    const burger = document.getElementById('hamburger');
+    const drawer = document.getElementById('mobileDrawer');
+    if (!burger || !drawer) return;
+    const toggle = (open) => {
+      const willOpen = open === undefined ? !drawer.classList.contains('open') : open;
+      drawer.classList.toggle('open', willOpen);
+      burger.classList.toggle('open', willOpen);
+      burger.setAttribute('aria-expanded', willOpen ? 'true' : 'false');
+      drawer.setAttribute('aria-hidden', willOpen ? 'false' : 'true');
+      document.body.classList.toggle('drawer-open', willOpen);
+    };
+    burger.addEventListener('click', () => toggle());
+    drawer.querySelectorAll('a').forEach(a => a.addEventListener('click', () => toggle(false)));
+    // close on resize to desktop
+    window.addEventListener('resize', () => {
+      if (window.innerWidth > 920) toggle(false);
+    });
+  })();
+
+  // ===== Custom select dropdown =====
+  document.querySelectorAll('.cselect').forEach(cs => {
+    const trigger = cs.querySelector('.cselect-trigger');
+    const valEl = cs.querySelector('.cselect-value');
+    const options = cs.querySelectorAll('.cselect-option');
+    const native = cs.querySelector('select');
+
+    trigger.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const willOpen = !cs.classList.contains('open');
+      // close all others
+      document.querySelectorAll('.cselect.open').forEach(o => o.classList.remove('open'));
+      cs.classList.toggle('open', willOpen);
+      trigger.setAttribute('aria-expanded', willOpen ? 'true' : 'false');
+    });
+
+    options.forEach(opt => {
+      opt.addEventListener('click', (e) => {
+        e.stopPropagation();
+        options.forEach(o => o.classList.remove('selected'));
+        opt.classList.add('selected');
+        // copy current visible text (respects translation)
+        valEl.textContent = opt.textContent;
+        // sync hidden native select for form submission
+        if (native){
+          const val = opt.getAttribute('data-value');
+          for (const nOpt of native.options){
+            if (nOpt.value === val || nOpt.textContent === val){ nOpt.selected = true; break; }
+          }
+        }
+        cs.classList.remove('open');
+        trigger.setAttribute('aria-expanded', 'false');
+      });
+    });
+  });
+  // close on outside click
+  document.addEventListener('click', () => {
+    document.querySelectorAll('.cselect.open').forEach(o => {
+      o.classList.remove('open');
+      const t = o.querySelector('.cselect-trigger');
+      if (t) t.setAttribute('aria-expanded', 'false');
+    });
+  });
+  // close on Escape
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape'){
+      document.querySelectorAll('.cselect.open').forEach(o => {
+        o.classList.remove('open');
+        const t = o.querySelector('.cselect-trigger');
+        if (t) t.setAttribute('aria-expanded', 'false');
+      });
+    }
+  });
+
+  // ===== Hero stats counter animation =====
+  (function(){
+    const counters = document.querySelectorAll('.num-target');
+    if (!counters.length) return;
+    const counterIo = new IntersectionObserver((entries, obs) => {
+      entries.forEach(e => {
+        if (!e.isIntersecting) return;
+        const node = e.target;
+        const target = parseFloat(node.dataset.target);
+        const isDec = target % 1 !== 0;
+        const dur = 1400;
+        const start = performance.now();
+        function step(now){
+          const p = Math.min(1, (now - start) / dur);
+          const eased = 1 - Math.pow(1 - p, 3);
+          const val = isDec ? (target * eased).toFixed(1) : Math.floor(target * eased);
+          node.textContent = val;
+          if (p < 1) requestAnimationFrame(step);
+          else node.textContent = isDec ? target.toFixed(1) : target;
+        }
+        requestAnimationFrame(step);
+        obs.unobserve(node);
+      });
+    }, { threshold: 0.4 });
+    counters.forEach(c => counterIo.observe(c));
+  })();
+
+  // ===== i18n (ES/EN switcher) =====
+  (function(){
+    const I18N = {
+      es: {
+        'nav.experience':'Experiencia','nav.fleet':'Flota','nav.quote':'Cotizar','nav.services':'Servicios','nav.faq':'FAQ','nav.cta':'Cotizar',
+        'hero.eyebrow':'Traslados privados · Asunción · Paraguay',
+        'hero.title':'Traslados privados y ejecutivos, <em>cómodos y puntuales.</em>',
+        'hero.sub':'Viajá dentro y fuera del país con seguridad, comodidad y atención personalizada. Una flota cuidada y un equipo que llega antes que vos.',
+        'hero.b1':'Aeropuerto','hero.b2':'Eventos','hero.b3':'Viajes nacionales e internacionales','hero.b4':'Mascotas','hero.b5':'Empresas',
+        'hero.ctaWa':'Cotizar por WhatsApp','hero.ctaServices':'Ver servicios →',
+        'hero.meta':'<strong>+1,200 traslados</strong> coordinados este año · respuesta en 5 min',
+        'stat1':'Años acompañando viajes y eventos',
+        'stat2':'Clientes que vuelven a contratarnos',
+        'stat3':'Vehículos en flota — del privado al bus',
+        'exp.eyebrow':'— Experiencia comprobada',
+        'exp.title':'De delegaciones y bodas a viajes con tu <em>familia y mascotas</em>.',
+        'exp.sub':'Acompañamos comitivas, organizadores y familias en jornadas exigentes — donde el detalle importa tanto como el destino.',
+        'chip.bid':'BID','chip.asu':'ASU','chip.olimp':'Olimpiadas Especiales','chip.conciertos':'Conciertos','chip.bodas':'Bodas','chip.empresas':'Eventos empresariales','chip.mascotas':'Viajes con mascotas','chip.turismo':'Turismo',
+        'mq.1':'Puntualidad','mq.2':'Discreción ejecutiva','mq.3':'Confort','mq.4':'Seguridad','mq.5':'Atención humana',
+        'flota.eyebrow':'— Flota destacada',
+        'flota.title':'Una flota cuidada, <em>para cada tamaño de viaje</em>.',
+        'flota.sub':'Del privado ejecutivo al bus completo. Todos los vehículos con mantenimiento riguroso, climatización y choferes profesionales.',
+        'flota.btn':'Consultar disponibilidad →',
+        'veh.cta':'Consultar disponibilidad →',
+        'veh.0.pill':'Compacto','veh.0.cat':'Económico','veh.0.cap':'<strong>1 pasajero</strong> · ciudad','veh.0.desc':'Ideal para traslados individuales rápidos dentro de la ciudad. Ágil, climatizado y siempre puntual.','veh.0.f1':'Aire acondicionado','veh.0.f2':'Tarifa económica','veh.0.f3':'Tráfico urbano',
+        'veh.1.pill':'SUV','veh.1.cat':'Familia','veh.1.cap':'<strong>Hasta 3 pasajeros</strong> · equipaje amplio','veh.1.desc':'Una SUV cómoda y ejecutiva, ideal para familias o viajes con equipaje. Asientos amplios y suspensión suave.','veh.1.f1':'Equipaje XL','veh.1.f2':'SUV ejecutiva','veh.1.f3':'Familias',
+        'veh.2.pill':'Pick-up','veh.2.cat':'Carga','veh.2.cap':'<strong>Hasta 4 pasajeros</strong> · carga especial','veh.2.desc':'Robusta y versátil. Pensada para equipaje pesado, cargas especiales o trayectos más exigentes fuera de la ciudad.','veh.2.f1':'Carga adicional','veh.2.f2':'Largas distancias','veh.2.f3':'Tracción',
+        'veh.3.pill':'Van','veh.3.cat':'Grupos','veh.3.cap':'<strong>10 pasajeros</strong> · contamos con 2 unidades','veh.3.desc':'La van preferida para comitivas chicas, aeropuerto y traslados corporativos. Espacio para todos sin sacrificar confort.','veh.3.f1':'2 unidades disponibles','veh.3.f2':'Aeropuerto','veh.3.f3':'10 pax',
+        'veh.4.pill':'Minibus','veh.4.cat':'Eventos','veh.4.cap':'<strong>19 pasajeros</strong> · bodega amplia','veh.4.desc':'Ideal para grupos medianos, excursiones, eventos corporativos y traslados a interior del país con equipaje completo.','veh.4.f1':'Eventos','veh.4.f2':'Excursiones','veh.4.f3':'19 pax',
+        'veh.5.pill':'Bus','veh.5.cat':'Comitivas','veh.5.cap':'<strong>+30 pasajeros</strong> · butacas reclinables','veh.5.desc':'Pensado para grupos grandes y traslados masivos: delegaciones, congresos y viajes de larga distancia con confort total.','veh.5.f1':'Larga distancia','veh.5.f2':'Delegaciones','veh.5.f3':'+30 pax',
+        'quote.eyebrow':'— Cotización rápida',
+        'quote.title':'Contanos tu viaje y te <em>respondemos en minutos</em>.',
+        'quote.desc':'Llevamos +12 años coordinando traslados privados. Cargá los datos esenciales y un asesor te confirma disponibilidad y tarifa final.',
+        'quote.b1':'Respuesta en menos de 5 minutos hábiles.','quote.b2':'Sin recargos sorpresa: tarifa cerrada por escrito.','quote.b3':'Factura legal y cuentas para empresas.','quote.b4':'Reservás reservando, no comprometiéndote.',
+        'quote.fTitle':'Pedí tu cotización','quote.fSub':'Te respondemos por WhatsApp en minutos.',
+        'quote.lName':'Nombre','quote.phName':'Tu nombre completo','quote.lDate':'Fecha del viaje','quote.lService':'Servicio',
+        'quote.s1':'Aeropuerto','quote.s2':'Corporativo','quote.s3':'Eventos / Bodas','quote.s4':'Nacional / Internacional','quote.s5':'Turístico','quote.s6':'Con mascotas',
+        'quote.lOrigin':'Origen','quote.phOrigin':'Asunción, hotel, dirección…','quote.lDest':'Destino','quote.phDest':'Aeropuerto, ciudad, etc.','quote.lWa':'WhatsApp','quote.submit':'Cotizar por WhatsApp',
+        'svc.eyebrow':'— Servicios principales',
+        'svc.title':'Cada traslado, <em>diseñado a la medida</em> del viaje.',
+        'svc.sub':'Desde una llegada puntual al aeropuerto hasta logística completa para eventos y comitivas. Trabajamos sobre detalles: horarios, equipaje, contacto y discreción.',
+        'svc.btn':'Hablar con un asesor →',
+        'svc1.t':'Traslados al aeropuerto','svc1.d':'Llegadas, salidas y conexiones con seguimiento de vuelo. Esperamos por vos cuando hay demoras.','svc1.cta':'Reservar',
+        'svc2.t':'Viajes nacionales e internacionales','svc2.d':'Cruces por Argentina, Brasil y Paraguay. Documentación al día, paradas planificadas y descanso de chofer.','svc2.cta':'Itinerarios',
+        'svc3.t':'Traslados turísticos','svc3.d':'Hoteles, city tours, Cataratas, Yacyretá. Choferes que conocen los caminos y los tiempos.','svc3.cta':'Armar ruta',
+        'svc4.t':'Traslados corporativos','svc4.d':'Cuentas mensuales para empresas, facturación clara, choferes asignados y discreción ejecutiva.','svc4.cta':'Cuenta empresa',
+        'svc5.t':'Servicios para eventos','svc5.d':'Bodas, conciertos, congresos. Coordinamos flota, choferes uniformados y horarios al detalle.','svc5.cta':'Solicitar logística',
+        'svc6.t':'Traslado con mascotas','svc6.d':'Vehículos preparados para llevar a tu mascota cómoda y segura. Pet-friendly de verdad.','svc6.cta':'Coordinar',
+        'trust.eyebrow':'— Seguridad y confianza',
+        'trust.title':'La tranquilidad <em>se nota</em> antes de subir al auto.',
+        'trust.sub':'Procesos claros, choferes formales, vehículos al día. Lo invisible que hace que el viaje sea simple.',
+        'trust1.t':'Choferes formales','trust1.d':'Contratos en regla, cursos de manejo defensivo y verificación de antecedentes. Profesionales que cuidan tu tiempo.',
+        'trust2.t':'Flota al día','trust2.d':'Mantenimientos preventivos cada 10.000 km, seguros vigentes y revisiones técnicas auditadas mes a mes.',
+        'trust3.t':'Seguimiento en vivo','trust3.d':'Compartimos la ubicación del vehículo con vos o con tu empresa hasta que finaliza el traslado.',
+        'trust4.t':'Soporte 24/7','trust4.d':'WhatsApp directo a coordinación, no a un bot. Cambios de última hora, sin drama.',
+        'faq.eyebrow':'— Preguntas frecuentes',
+        'faq.title':'Lo que <em>todos preguntan</em> antes de reservar.',
+        'faq.sub':'Si no encontrás tu respuesta, escribinos por WhatsApp — coordinación contesta en minutos.',
+        'faq1.q':'¿Operan dentro y fuera del país?','faq1.a':'Sí. Hacemos traslados nacionales en todo Paraguay e internacionales a Argentina y Brasil, con documentación al día y planificación de ruta.',
+        'faq2.q':'¿Tienen vehículos para mascotas?','faq2.a':'Sí, contamos con vehículos adaptados y choferes con experiencia para que tu mascota viaje cómoda y segura.',
+        'faq3.q':'¿Cómo manejan demoras de vuelo?','faq3.a':'Hacemos seguimiento del vuelo en tiempo real. Si tu llegada se atrasa, ajustamos el horario sin costo adicional.',
+        'faq4.q':'¿Aceptan cuentas empresariales con facturación mensual?','faq4.a':'Sí, abrimos cuentas para empresas con consolidado mensual, factura legal y choferes asignados. Te asesoramos en el armado del servicio.',
+        'faq5.q':'¿Cómo cotizan? ¿Hay recargos sorpresa?','faq5.a':'Cotizamos por escrito con tarifa cerrada. Sin recargos por equipaje ni esperas razonables. Lo que firmás es lo que pagás.',
+        'faq6.q':'¿Puedo cancelar o reprogramar?','faq6.a':'Sí. Hasta 12 hs antes del servicio podés reprogramar sin costo. Para cancelaciones consultá con coordinación.',
+        'foot.tag':'Traslados privados y ejecutivos en Paraguay. Cómodos, puntuales y a la medida de cada viaje.',
+        'foot.h1':'Servicios','foot.svc1':'Aeropuerto','foot.svc2':'Corporativos','foot.svc3':'Eventos y bodas','foot.svc4':'Turismo','foot.svc5':'Con mascotas',
+        'foot.h2':'Flota','foot.flota5':'Minibus & Bus',
+        'foot.h3':'Contacto','foot.loc':'Asunción · Paraguay','foot.hours':'24/7 · todos los días',
+        'foot.copy':'© 2026 Transfers Tatá. Todos los derechos reservados.','foot.privacy':'Privacidad','foot.terms':'Términos','foot.legal':'Aviso legal',
+        'foot.credit':'Desarrollado por <a href="https://neura.com.py" target="_blank" rel="noopener">Neura</a>',
+        'wa.fleetConsult':'Hola! Quisiera consultar disponibilidad para {vehicle}.'
+      },
+      en: {
+        'nav.experience':'Experience','nav.fleet':'Fleet','nav.quote':'Quote','nav.services':'Services','nav.faq':'FAQ','nav.cta':'Quote',
+        'hero.eyebrow':'Private transfers · Asunción · Paraguay',
+        'hero.title':'Private and executive transfers, <em>comfortable and punctual.</em>',
+        'hero.sub':'Travel inside and outside the country with safety, comfort and personalized attention. A well-kept fleet and a team that arrives before you do.',
+        'hero.b1':'Airport','hero.b2':'Events','hero.b3':'National & international trips','hero.b4':'Pets','hero.b5':'Business',
+        'hero.ctaWa':'Get a WhatsApp quote','hero.ctaServices':'See services →',
+        'hero.meta':'<strong>+1,200 transfers</strong> coordinated this year · reply in 5 min',
+        'stat1':'Years accompanying trips and events',
+        'stat2':'Clients who come back to hire us',
+        'stat3':'Vehicles in fleet — from private to bus',
+        'exp.eyebrow':'— Proven experience',
+        'exp.title':'From delegations and weddings to trips with your <em>family and pets</em>.',
+        'exp.sub':'We accompany delegations, organizers and families on demanding days — where the detail matters as much as the destination.',
+        'chip.bid':'IDB','chip.asu':'ASU','chip.olimp':'Special Olympics','chip.conciertos':'Concerts','chip.bodas':'Weddings','chip.empresas':'Corporate events','chip.mascotas':'Trips with pets','chip.turismo':'Tourism',
+        'mq.1':'Punctuality','mq.2':'Executive discretion','mq.3':'Comfort','mq.4':'Safety','mq.5':'Human service',
+        'flota.eyebrow':'— Featured fleet',
+        'flota.title':'A well-kept fleet, <em>for every size of trip</em>.',
+        'flota.sub':'From the executive private to a full bus. All vehicles with rigorous maintenance, climate control and professional drivers.',
+        'flota.btn':'Check availability →',
+        'veh.cta':'Check availability →',
+        'veh.0.pill':'Compact','veh.0.cat':'Economy','veh.0.cap':'<strong>1 passenger</strong> · city','veh.0.desc':'Ideal for quick individual transfers in the city. Agile, climate-controlled and always punctual.','veh.0.f1':'Air conditioning','veh.0.f2':'Economy fare','veh.0.f3':'Urban traffic',
+        'veh.1.pill':'SUV','veh.1.cat':'Family','veh.1.cap':'<strong>Up to 3 passengers</strong> · spacious luggage','veh.1.desc':'A comfortable executive SUV, ideal for families or trips with luggage. Roomy seats and smooth suspension.','veh.1.f1':'XL luggage','veh.1.f2':'Executive SUV','veh.1.f3':'Families',
+        'veh.2.pill':'Pick-up','veh.2.cat':'Cargo','veh.2.cap':'<strong>Up to 4 passengers</strong> · special cargo','veh.2.desc':'Robust and versatile. Designed for heavy luggage, special loads or demanding routes outside the city.','veh.2.f1':'Extra cargo','veh.2.f2':'Long distances','veh.2.f3':'Traction',
+        'veh.3.pill':'Van','veh.3.cat':'Groups','veh.3.cap':'<strong>10 passengers</strong> · 2 units available','veh.3.desc':'The preferred van for small delegations, airport and corporate transfers. Space for everyone without sacrificing comfort.','veh.3.f1':'2 units available','veh.3.f2':'Airport','veh.3.f3':'10 pax',
+        'veh.4.pill':'Minibus','veh.4.cat':'Events','veh.4.cap':'<strong>19 passengers</strong> · ample storage','veh.4.desc':'Ideal for medium groups, excursions, corporate events and trips to the countryside with full luggage.','veh.4.f1':'Events','veh.4.f2':'Excursions','veh.4.f3':'19 pax',
+        'veh.5.pill':'Bus','veh.5.cat':'Delegations','veh.5.cap':'<strong>+30 passengers</strong> · reclining seats','veh.5.desc':'Designed for large groups and mass transfers: delegations, conferences and long-distance trips with full comfort.','veh.5.f1':'Long distance','veh.5.f2':'Delegations','veh.5.f3':'+30 pax',
+        'quote.eyebrow':'— Quick quote',
+        'quote.title':'Tell us about your trip and we will <em>reply in minutes</em>.',
+        'quote.desc':'We have +12 years coordinating private transfers. Submit the essentials and an advisor will confirm availability and final rate.',
+        'quote.b1':'Reply within 5 business minutes.','quote.b2':'No surprise charges: closed rate in writing.','quote.b3':'Legal invoice and corporate accounts.','quote.b4':'You book by booking, not by committing.',
+        'quote.fTitle':'Request your quote','quote.fSub':'We reply via WhatsApp in minutes.',
+        'quote.lName':'Name','quote.phName':'Your full name','quote.lDate':'Trip date','quote.lService':'Service',
+        'quote.s1':'Airport','quote.s2':'Corporate','quote.s3':'Events / Weddings','quote.s4':'National / International','quote.s5':'Tourism','quote.s6':'With pets',
+        'quote.lOrigin':'Origin','quote.phOrigin':'Asunción, hotel, address…','quote.lDest':'Destination','quote.phDest':'Airport, city, etc.','quote.lWa':'WhatsApp','quote.submit':'Get a WhatsApp quote',
+        'svc.eyebrow':'— Main services',
+        'svc.title':'Every transfer, <em>designed to fit</em> the trip.',
+        'svc.sub':'From a punctual airport arrival to full logistics for events and delegations. We work on the details: schedules, luggage, contact and discretion.',
+        'svc.btn':'Talk to an advisor →',
+        'svc1.t':'Airport transfers','svc1.d':'Arrivals, departures and connections with flight tracking. We wait for you when there are delays.','svc1.cta':'Book',
+        'svc2.t':'National & international trips','svc2.d':'Crossings through Argentina, Brazil and Paraguay. Up-to-date paperwork, planned stops and driver rest.','svc2.cta':'Itineraries',
+        'svc3.t':'Tourist transfers','svc3.d':'Hotels, city tours, Iguazú Falls, Yacyretá. Drivers who know the roads and the timing.','svc3.cta':'Plan route',
+        'svc4.t':'Corporate transfers','svc4.d':'Monthly accounts for companies, clear invoicing, assigned drivers and executive discretion.','svc4.cta':'Business account',
+        'svc5.t':'Event services','svc5.d':'Weddings, concerts, conferences. We coordinate fleet, uniformed drivers and schedules to the detail.','svc5.cta':'Request logistics',
+        'svc6.t':'Pet-friendly transfers','svc6.d':'Vehicles prepared to carry your pet comfortably and safely. Really pet-friendly.','svc6.cta':'Coordinate',
+        'trust.eyebrow':'— Safety & trust',
+        'trust.title':'Peace of mind <em>is felt</em> before getting in the car.',
+        'trust.sub':'Clear processes, formal drivers, vehicles up to date. The invisible part that makes the trip simple.',
+        'trust1.t':'Formal drivers','trust1.d':'Proper contracts, defensive driving courses and background checks. Professionals who care about your time.',
+        'trust2.t':'Fleet up to date','trust2.d':'Preventive maintenance every 10,000 km, valid insurance and audited technical reviews month by month.',
+        'trust3.t':'Live tracking','trust3.d':'We share the vehicle location with you or your company until the transfer is complete.',
+        'trust4.t':'24/7 support','trust4.d':'Direct WhatsApp to coordination, not a bot. Last-minute changes, no drama.',
+        'faq.eyebrow':'— Frequently asked questions',
+        'faq.title':'What <em>everyone asks</em> before booking.',
+        'faq.sub':'If you don\'t find your answer, message us on WhatsApp — coordination replies in minutes.',
+        'faq1.q':'Do you operate inside and outside the country?','faq1.a':'Yes. We do national transfers throughout Paraguay and international to Argentina and Brazil, with up-to-date paperwork and route planning.',
+        'faq2.q':'Do you have pet-friendly vehicles?','faq2.a':'Yes, we have adapted vehicles and experienced drivers so your pet travels comfortably and safely.',
+        'faq3.q':'How do you handle flight delays?','faq3.a':'We track the flight in real time. If your arrival is late, we adjust the schedule at no additional cost.',
+        'faq4.q':'Do you accept business accounts with monthly billing?','faq4.a':'Yes, we open accounts for companies with monthly consolidation, legal invoice and assigned drivers. We advise you on the service setup.',
+        'faq5.q':'How do you quote? Are there surprise charges?','faq5.a':'We quote in writing with a closed rate. No charges for luggage or reasonable waits. What you sign is what you pay.',
+        'faq6.q':'Can I cancel or reschedule?','faq6.a':'Yes. Up to 12 hs before the service you can reschedule at no cost. For cancellations check with coordination.',
+        'foot.tag':'Private and executive transfers in Paraguay. Comfortable, punctual and tailored to every trip.',
+        'foot.h1':'Services','foot.svc1':'Airport','foot.svc2':'Corporate','foot.svc3':'Events & weddings','foot.svc4':'Tourism','foot.svc5':'With pets',
+        'foot.h2':'Fleet','foot.flota5':'Minibus & Bus',
+        'foot.h3':'Contact','foot.loc':'Asunción · Paraguay','foot.hours':'24/7 · every day',
+        'foot.copy':'© 2026 Transfers Tatá. All rights reserved.','foot.privacy':'Privacy','foot.terms':'Terms','foot.legal':'Legal notice',
+        'foot.credit':'Developed by <a href="https://neura.com.py" target="_blank" rel="noopener">Neura</a>',
+        'wa.fleetConsult':"Hi! I'd like to check availability for {vehicle}."
+      }
+    };
+
+    const WA_PHONE = '595981000000'; // ← cambiar por el número real de Tatá
+
+    function applyI18n(lang){
+      const dict = I18N[lang] || I18N.es;
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const k = el.getAttribute('data-i18n');
+        if (dict[k] != null) el.textContent = dict[k];
+      });
+      document.querySelectorAll('[data-i18n-html]').forEach(el => {
+        const k = el.getAttribute('data-i18n-html');
+        if (dict[k] != null) el.innerHTML = dict[k];
+      });
+      document.querySelectorAll('[data-i18n-ph]').forEach(el => {
+        const k = el.getAttribute('data-i18n-ph');
+        if (dict[k] != null) el.setAttribute('placeholder', dict[k]);
+      });
+      // Build WhatsApp links with translated message + vehicle name
+      document.querySelectorAll('[data-wa-vehicle]').forEach(el => {
+        const vehicle = el.getAttribute('data-wa-vehicle');
+        const tpl = dict['wa.fleetConsult'] || '';
+        const msg = tpl.replace('{vehicle}', vehicle);
+        el.setAttribute('href', `https://wa.me/${WA_PHONE}?text=${encodeURIComponent(msg)}`);
+      });
+      document.documentElement.lang = lang;
+      document.querySelectorAll('.lang-btn').forEach(b => b.classList.toggle('active', b.dataset.lang === lang));
+      try { localStorage.setItem('lang', lang); } catch(e) {}
+    }
+
+    const saved = (()=>{ try { return localStorage.getItem('lang'); } catch(e) { return null; } })();
+    applyI18n(saved || 'es');
+
+    document.querySelectorAll('.lang-btn').forEach(btn => {
+      btn.addEventListener('click', () => applyI18n(btn.dataset.lang));
+    });
+  })();
+</script>
+</body>
+</html>
