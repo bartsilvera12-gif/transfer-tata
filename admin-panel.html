@@ -232,6 +232,10 @@
     <a class="nav-item" href="index.html" target="_blank" style="text-decoration:none">
       <span class="nav-label">Ver sitio</span>
     </a>
+    <button class="nav-item" onclick="backfillTranslations()" style="margin-top:4px">
+      <span class="nav-label">Traducir faltantes</span>
+      <span class="nav-tag" id="backfillTag">ES → EN</span>
+    </button>
     <button class="nav-item" onclick="logout()" style="margin-top:4px">
       <span class="nav-label">Cerrar sesión</span>
     </button>
@@ -415,6 +419,32 @@
 
   function init() { loadVehicles(); loadSvcs(); loadFaqs(); }
 
+  /* ── Auto-traducción ES → EN (MyMemory API, gratuita, sin key) ──
+     Rellena los pares { es: 'campoES', en: 'campoEN' } del objeto `data`
+     cuando el campo EN está vacío. Devuelve el mismo objeto mutado.
+     Si la API falla, deja el campo EN vacío (el sitio cae al ES). */
+  async function translateText(text) {
+    if (!text) return '';
+    try {
+      const url = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=es|en`;
+      const r = await fetch(url);
+      const j = await r.json();
+      const out = j && j.responseData && j.responseData.translatedText;
+      return out && j.responseStatus === 200 ? out : '';
+    } catch (e) { return ''; }
+  }
+
+  async function autoFillEn(data, pairs) {
+    const tasks = pairs
+      .filter(p => data[p.es] && !data[p.en])
+      .map(async p => { data[p.en] = await translateText(data[p.es]); });
+    if (tasks.length) {
+      toast('Traduciendo a inglés…');
+      await Promise.all(tasks);
+    }
+    return data;
+  }
+
   /* ── VEHICLES ── */
   let vehiclesData = [];
 
@@ -506,6 +536,12 @@
       image_alt:   document.getElementById('vm-alt').value.trim(),
     };
     if (!data.name) { alert('El nombre es obligatorio'); return; }
+    await autoFillEn(data, [
+      { es:'name', en:'name_en' }, { es:'pill', en:'pill_en' },
+      { es:'cat',  en:'cat_en'  }, { es:'cap',  en:'cap_en'  },
+      { es:'description', en:'description_en' },
+      { es:'f1', en:'f1_en' }, { es:'f2', en:'f2_en' }, { es:'f3', en:'f3_en' },
+    ]);
     let error;
     if (!id) {
       const maxOrd = vehiclesData.reduce((m, v) => Math.max(m, v.sort_order||0), -1);
@@ -596,6 +632,10 @@
       icon_svg:    document.getElementById('sm-svg').value.trim(),
     };
     if (!data.title) { alert('El título es obligatorio'); return; }
+    await autoFillEn(data, [
+      { es:'title', en:'title_en' },
+      { es:'description', en:'description_en' },
+    ]);
     let error;
     if (!id) {
       const maxOrd = svcsData.reduce((m, s) => Math.max(m, s.sort_order||0), -1);
@@ -680,6 +720,10 @@
       answer_en:   document.getElementById('fm-a-en').value.trim(),
     };
     if (!data.question || !data.answer) { alert('Completá pregunta y respuesta'); return; }
+    await autoFillEn(data, [
+      { es:'question', en:'question_en' },
+      { es:'answer',   en:'answer_en'   },
+    ]);
     let error;
     if (!id) {
       const maxOrd = faqsData.reduce((m, f) => Math.max(m, f.sort_order||0), -1);
@@ -717,6 +761,49 @@
     t.textContent = msg;
     t.classList.add('show');
     setTimeout(() => t.classList.remove('show'), 2800);
+  }
+
+  async function backfillTranslations() {
+    const tag = document.getElementById('backfillTag');
+    const setTag = (t) => { if (tag) tag.textContent = t; };
+    const tables = [
+      { name:'vehicles', pairs:[
+        ['name','name_en'],['pill','pill_en'],['cat','cat_en'],['cap','cap_en'],
+        ['description','description_en'],['f1','f1_en'],['f2','f2_en'],['f3','f3_en'],
+      ]},
+      { name:'servicios', pairs:[['title','title_en'],['description','description_en']]},
+      { name:'faqs',      pairs:[['question','question_en'],['answer','answer_en']]},
+    ];
+    let total = 0, done = 0, failed = 0;
+    setTag('Calculando…');
+    const work = [];
+    for (const t of tables) {
+      const { data } = await sb.from(t.name).select('*');
+      for (const row of (data||[])) {
+        const patch = {};
+        for (const [es,en] of t.pairs) {
+          if (row[es] && !row[en]) { patch[en] = row[es]; total++; }
+        }
+        if (Object.keys(patch).length) work.push({ table:t.name, id:row.id, patch });
+      }
+    }
+    if (!total) { setTag('Todo traducido ✓'); toast('No hay campos faltantes'); setTimeout(()=>setTag('ES → EN'),3000); return; }
+    if (!confirm(`Traducir ${total} campos vacíos a inglés? Puede tardar ~${Math.ceil(total*0.6)}s.`)) { setTag('ES → EN'); return; }
+    for (const w of work) {
+      const patch = {};
+      for (const k of Object.keys(w.patch)) {
+        const tr = await translateText(w.patch[k]);
+        if (tr) { patch[k] = tr; done++; } else { failed++; }
+        setTag(`${done+failed}/${total}`);
+      }
+      if (Object.keys(patch).length) {
+        await sb.from(w.table).update(patch).eq('id', w.id);
+      }
+    }
+    setTag('Listo ✓');
+    toast(`Traducidos ${done} campos${failed?` (${failed} fallaron)`:''}`);
+    await Promise.all([loadVehicles(), loadSvcs(), loadFaqs()]);
+    setTimeout(()=>setTag('ES → EN'), 4000);
   }
 
   async function logout() {
