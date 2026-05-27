@@ -2043,6 +2043,72 @@
     window._rawServices = services;
     window._rawFaqs     = faqs;
 
+    // Auto-traducción ES → EN para contenido dinámico (vehículos, servicios, FAQ)
+    // Cachea en localStorage. Se ejecuta una sola vez por idioma cargado.
+    const TR_CACHE_KEY = 'tt_tr_cache_v1';
+    let trCache = {};
+    try { trCache = JSON.parse(localStorage.getItem(TR_CACHE_KEY) || '{}'); } catch(e){}
+    const saveCache = () => { try { localStorage.setItem(TR_CACHE_KEY, JSON.stringify(trCache)); } catch(e){} };
+    // Diccionario manual: traducciones de términos cortos/ambiguos que MyMemory
+    // no acierta sin contexto (ej. "Auto" → "Record" en vez de "Car").
+    const TR_OVERRIDES = {
+      'Auto':'Car', 'Pickup':'Pick-up', 'Minibus':'Minibus', 'Bus':'Bus', 'SUV':'SUV',
+      'Compacto':'Compact', 'Económico':'Economy', 'Familia':'Family',
+      'Carga':'Cargo', 'Grupos':'Groups', 'Comitivas':'Delegations',
+      'Van':'Van', 'Pick-up':'Pick-up',
+    };
+    async function translateOne(text){
+      if (!text) return '';
+      if (TR_OVERRIDES[text]) return TR_OVERRIDES[text];
+      if (trCache[text]) return trCache[text];
+      try {
+        const r = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=es|en`);
+        const j = await r.json();
+        const out = j && j.responseStatus === 200 && j.responseData && j.responseData.translatedText;
+        if (out) { trCache[text] = out; return out; }
+      } catch(e){}
+      return '';
+    }
+    let _autoFillPromise = null;
+    async function autoFillEnglish(){
+      if (_autoFillPromise) return _autoFillPromise;
+      _autoFillPromise = (async () => {
+      const pending = [];
+      const collect = (obj, pairs) => {
+        for (const [es, en] of pairs) {
+          if (obj[es] && !obj[en]) pending.push({ obj, en, src: obj[es] });
+        }
+      };
+      (window._rawVehicles || []).forEach(v => collect(v, [
+        ['name','name_en'],['pill','pill_en'],['cat','cat_en'],['cap','cap_en'],
+        ['desc','desc_en'],['f1','f1_en'],['f2','f2_en'],['f3','f3_en'],
+      ]));
+      (window._rawServices || []).forEach(s => collect(s, [
+        ['title','title_en'],['description','description_en'],
+      ]));
+      (window._rawFaqs || []).forEach(f => collect(f, [
+        ['q','q_en'],['a','a_en'],
+      ]));
+      if (!pending.length) { _autoFillPromise = null; return; }
+      // Traducción en paralelo limitado (3 a la vez) para no saturar la API
+      const concurrency = 3;
+      let idx = 0;
+      async function worker(){
+        while (idx < pending.length) {
+          const item = pending[idx++];
+          const tr = await translateOne(item.src);
+          if (tr) item.obj[item.en] = tr;
+        }
+      }
+      await Promise.all(Array.from({length: concurrency}, worker));
+      saveCache();
+      // Re-render con las traducciones llenas
+      if (window._currentLang === 'en') window.updateContentLang('en');
+      })();
+      return _autoFillPromise;
+    }
+    window._autoFillEnglish = autoFillEnglish;
+
     // Función de traducción de contenido dinámico
     window.updateContentLang = function(lang) {
       const isEn = lang === 'en';
@@ -2051,6 +2117,7 @@
         const v = isEn ? (obj[k+'_en'] || obj[k]) : obj[k];
         return v != null ? v : '';
       };
+      if (isEn) autoFillEnglish();
 
       // Servicios
       (window._rawServices || []).forEach((s, i) => {
