@@ -67,7 +67,7 @@
     display:flex; align-items:center; justify-content:space-between;
     padding: 14px 0;
   }
-  .brand{ display:flex; align-items:center; gap:12px }
+  .brand{ display:flex; align-items:center; gap:12px; margin-left: 48px; }
   .brand-full{
     height: 72px;
     width: auto;
@@ -1618,11 +1618,6 @@
           <div class="logo-wrap">
             <img class="logo-img" src="uploads/imagen.png" alt="Transfers Tatá" />
           </div>
-          <div class="photo-badge">
-            <span class="pb-dot"></span>
-            <span class="pb-text">Servicio activo</span>
-            <span class="pb-sub">· Disponible ahora</span>
-          </div>
         </div>
       </div>
 
@@ -2004,6 +1999,74 @@
       }
     } catch(e) { /* usa defaults */ }
 
+    // Guarda data globalmente ANTES de renderizar
+    window._rawVehicles = vehicles;
+    window._rawServices = services;
+    window._rawFaqs     = faqs;
+
+    // Función de traducción de contenido dinámico
+    window.updateContentLang = function(lang) {
+      const isEn = lang === 'en';
+      const t = (obj, k) => {
+        if (!obj) return '';
+        const v = isEn ? (obj[k+'_en'] || obj[k]) : obj[k];
+        return v != null ? v : '';
+      };
+
+      // Servicios
+      (window._rawServices || []).forEach((s, i) => {
+        const el = document.querySelector(`.svc[data-svc-i="${i}"]`);
+        if (!el) return;
+        const h3 = el.querySelector('h3'); if (h3) h3.textContent = t(s,'title');
+        const p  = el.querySelector('p');  if (p)  p.textContent  = t(s,'description');
+      });
+
+      // Vehículos
+      (window._rawVehicles || []).forEach((v, i) => {
+        const slide = document.querySelector(`.info-slide[data-i="${i}"]`);
+        if (slide) {
+          const pill = slide.querySelector('.pill');
+          if (pill) pill.textContent = t(v,'pill');
+          const catSpans = slide.querySelectorAll('.info-cat span');
+          if (catSpans[1]) catSpans[1].textContent = t(v,'cat');
+          const nm   = slide.querySelector('.info-name'); if (nm)   nm.textContent   = t(v,'name');
+          const cap  = slide.querySelector('.info-cap');  if (cap)  cap.innerHTML    = isEn ? (v.cap_en || v.cap) : v.cap;
+          const desc = slide.querySelector('.info-desc'); if (desc) desc.textContent = t(v,'desc');
+          const lis  = slide.querySelectorAll('.info-features li');
+          if (lis[0]) lis[0].textContent = t(v,'f1');
+          if (lis[1]) lis[1].textContent = t(v,'f2');
+          if (lis[2]) lis[2].textContent = t(v,'f3');
+          const cta = slide.querySelector('[data-wa-vehicle]');
+          if (cta) cta.setAttribute('data-wa-vehicle', t(v,'name'));
+        }
+        const tab = document.querySelector(`.tab[data-i="${i}"]`);
+        if (tab) {
+          const numSpan = tab.querySelector('.tab-num');
+          const cloned  = numSpan ? numSpan.cloneNode(true) : null;
+          tab.innerHTML = '';
+          if (cloned) tab.appendChild(cloned);
+          tab.appendChild(document.createTextNode(t(v,'name')));
+        }
+      });
+      const wm = document.getElementById('stageWatermark');
+      if (wm) {
+        const activeTab = document.querySelector('.tab.active');
+        const idx = activeTab ? parseInt(activeTab.dataset.i) : 0;
+        const v = (window._rawVehicles || [])[idx];
+        if (v) wm.textContent = t(v,'name');
+      }
+
+      // FAQ
+      (window._rawFaqs || []).forEach((f, i) => {
+        const el = document.querySelector(`.faq-item[data-faq-i="${i}"]`);
+        if (!el) return;
+        const spans = el.querySelectorAll('.faq-q span');
+        if (spans[0]) spans[0].textContent = t(f,'q');
+        const aInner = el.querySelector('.faq-a-inner');
+        if (aInner) aInner.textContent = t(f,'a');
+      });
+    };
+
     // Render services
     const servicesGrid = document.getElementById('servicesGrid');
     if (servicesGrid) {
@@ -2055,76 +2118,6 @@
         showcaseTabs.appendChild(tab);
       });
       if (stageWatermark) stageWatermark.textContent = vehicles[0].name;
-
-      // Guarda data globalmente para traducciones dinámicas
-      window._rawVehicles = vehicles;
-      window._rawServices = services;
-      window._rawFaqs     = faqs;
-
-      window.updateContentLang = function(lang) {
-        const isEn = lang === 'en';
-        const t  = (obj, k) => (isEn && obj[k+'_en']) ? obj[k+'_en'] : obj[k];
-        const th = (obj, k) => (isEn && obj[k+'_en']) ? obj[k+'_en'] : obj[k]; // para innerHTML
-
-        // Vehículos
-        (window._rawVehicles || []).forEach((v, i) => {
-          const slide = document.querySelector(`.info-slide[data-i="${i}"]`);
-          if (slide) {
-            const pill = slide.querySelector('.pill');
-            if (pill) pill.textContent = t(v,'pill');
-            const catSpans = slide.querySelectorAll('.info-cat span');
-            if (catSpans[1]) catSpans[1].textContent = t(v,'cat');
-            const nm = slide.querySelector('.info-name');
-            if (nm) nm.textContent = t(v,'name');
-            const cap = slide.querySelector('.info-cap');
-            if (cap) cap.innerHTML = th(v,'cap');
-            const desc = slide.querySelector('.info-desc');
-            if (desc) desc.textContent = t(v,'desc');
-            const lis = slide.querySelectorAll('.info-features li');
-            if (lis[0]) lis[0].textContent = t(v,'f1');
-            if (lis[1]) lis[1].textContent = t(v,'f2');
-            if (lis[2]) lis[2].textContent = t(v,'f3');
-            const cta = slide.querySelector('[data-wa-vehicle]');
-            if (cta) cta.setAttribute('data-wa-vehicle', t(v,'name'));
-          }
-          const tab = document.querySelector(`.tab[data-i="${i}"]`);
-          if (tab) {
-            const numSpan = tab.querySelector('.tab-num');
-            tab.textContent = '';
-            if (numSpan) tab.appendChild(numSpan);
-            tab.appendChild(document.createTextNode(t(v,'name')));
-          }
-        });
-        const wm = document.getElementById('stageWatermark');
-        if (wm) {
-          const activeTab = document.querySelector('.tab.active');
-          const idx = activeTab ? parseInt(activeTab.dataset.i) : 0;
-          const v = (window._rawVehicles || [])[idx];
-          if (v) wm.textContent = t(v,'name');
-        }
-
-        // Servicios
-        (window._rawServices || []).forEach((s, i) => {
-          const el = document.querySelector(`.svc[data-svc-i="${i}"]`);
-          if (!el) return;
-          const h3 = el.querySelector('h3');
-          if (h3) h3.textContent = t(s,'title');
-          const p = el.querySelector('p');
-          if (p) p.textContent = t(s,'description');
-        });
-
-        // FAQ
-        (window._rawFaqs || []).forEach((f, i) => {
-          const el = document.querySelector(`.faq-item[data-faq-i="${i}"]`);
-          if (!el) return;
-          const qSpan = el.querySelector('.faq-q span');
-          if (qSpan) qSpan.textContent = t(f,'q');
-          const aInner = el.querySelector('.faq-a-inner');
-          if (aInner) aInner.textContent = t(f,'a');
-        });
-      };
-
-      if (window.applyI18n) window.applyI18n(window._currentLang || 'es');
       const ofEl = document.querySelector('.stage-index .of');
       if (ofEl) ofEl.textContent = '/ ' + String(vehicles.length).padStart(2,'0');
     }
@@ -2142,6 +2135,9 @@
         faqList.appendChild(item);
       });
     }
+
+    // Aplica idioma guardado DESPUÉS de que todo está renderizado
+    if (window.applyI18n) window.applyI18n(window._currentLang || 'es');
 
     // Fleet showcase carousel
     const showcase = document.getElementById('showcase');
