@@ -933,6 +933,10 @@
     transform: translateX(-40px) scale(.96);
   }
   .stage-image svg, .stage-image img{ width: 100%; height: auto; max-height: 100%; object-fit: contain; }
+  /* Premium: PNGs vienen con whitespace, los anclamos al fondo para que las ruedas
+     coincidan con la línea del suelo de los standard. */
+  .stage-image[data-tier="premium"]{ align-items: end; }
+  .stage-image[data-tier="premium"] img{ object-position: center bottom; }
   /* ground shadow under active vehicle */
   .stage-image::after{
     content:"";
@@ -2336,6 +2340,7 @@
         const imgDiv = document.createElement('div');
         imgDiv.className = 'stage-image' + (i === 0 ? ' active' : '');
         imgDiv.dataset.i = i;
+        imgDiv.dataset.tier = v.tier || 'standard';
         imgDiv.innerHTML = `<img src="${v.image}" alt="${v.imageAlt||''}" loading="${i===0?'eager':'lazy'}" />`;
         stageImagesWrap.appendChild(imgDiv);
 
