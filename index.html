@@ -2038,17 +2038,30 @@
       }
     } catch(e) { /* usa defaults */ }
 
-    // Formatea el campo "Capacidad" — acepta texto plano y autoenriquece:
-    // si NO contiene HTML, escapa y pone en negrita la parte antes del primer "·".
-    // Si ya contiene <tags>, lo deja como está (compatibilidad con datos viejos).
+    // Formatea el campo "Capacidad":
+    // - Si contiene **texto** → lo convierte a negrita (estilo Markdown).
+    // - Si ya contiene HTML (<strong>, etc.) → lo respeta tal cual (datos viejos).
+    // - Si no hay marcas, lo muestra como texto plano sin negrita.
     function formatCap(raw) {
       if (!raw) return '';
       const s = String(raw);
-      if (/<[a-z][^>]*>/i.test(s)) return s; // ya viene con HTML
+      if (/<[a-z][^>]*>/i.test(s)) return s; // legacy HTML
       const esc = t => t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-      const idx = s.indexOf('·');
-      if (idx === -1) return `<strong>${esc(s.trim())}</strong>`;
-      return `<strong>${esc(s.slice(0, idx).trim())}</strong> · ${esc(s.slice(idx + 1).trim())}`;
+      if (s.includes('**')) {
+        // Convierte **...** a <strong>...</strong>, escapando todo lo demás.
+        let out = '', i = 0, bold = false;
+        while (i < s.length) {
+          if (s[i] === '*' && s[i+1] === '*') {
+            out += bold ? '</strong>' : '<strong>';
+            bold = !bold; i += 2;
+          } else {
+            out += esc(s[i]); i++;
+          }
+        }
+        if (bold) out += '</strong>';
+        return out;
+      }
+      return esc(s);
     }
 
     // Guarda data globalmente ANTES de renderizar
