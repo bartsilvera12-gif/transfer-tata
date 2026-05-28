@@ -335,6 +335,16 @@
         <h1>Flota</h1>
         <button class="btn-add" onclick="openVehicleModal()">+ Agregar vehículo</button>
       </div>
+      <div class="tier-filter" style="display:flex;gap:8px;margin:0 0 18px;flex-wrap:wrap">
+        <button class="tier-filter-btn active" data-tier="standard" onclick="setAdminTier('standard')"
+                style="appearance:none;background:#1E1713;color:#FFF4EA;border:1px solid #1E1713;border-radius:999px;padding:8px 18px;font-weight:700;font-size:12px;letter-spacing:.05em;text-transform:uppercase;cursor:pointer">
+          Estándar
+        </button>
+        <button class="tier-filter-btn" data-tier="premium" onclick="setAdminTier('premium')"
+                style="appearance:none;background:#FFFBF4;color:#1E1713;border:1px solid #E0D4C0;border-radius:999px;padding:8px 18px;font-weight:700;font-size:12px;letter-spacing:.05em;text-transform:uppercase;cursor:pointer">
+          Premium
+        </button>
+      </div>
       <div id="vehicleList"><div class="loading">Cargando…</div></div>
     </div>
 
@@ -386,6 +396,17 @@
       <button class="btn-close" onclick="closeModal('vehicleModal')">×</button>
     </div>
     <input type="hidden" id="vm-id" />
+    <div class="field">
+      <label>Categoría de flota</label>
+      <div style="display:flex;gap:8px;margin-top:4px">
+        <label style="display:flex;align-items:center;gap:6px;padding:8px 14px;border:1px solid #E0D4C0;border-radius:8px;cursor:pointer;font-weight:600;font-size:13px;color:#1E1713">
+          <input type="radio" name="vm-tier" value="standard" checked style="accent-color:#B8872F" /> Estándar
+        </label>
+        <label style="display:flex;align-items:center;gap:6px;padding:8px 14px;border:1px solid #E0D4C0;border-radius:8px;cursor:pointer;font-weight:600;font-size:13px;color:#1E1713">
+          <input type="radio" name="vm-tier" value="premium" style="accent-color:#B8872F" /> Premium
+        </label>
+      </div>
+    </div>
     <div class="lang-sep">ES · Español</div>
     <div class="field"><label>Nombre</label><input type="text" id="vm-name" placeholder="Ej: SUV" /></div>
     <div class="g2">
@@ -824,7 +845,8 @@
   }
 
   /* ── VEHICLES ── */
-  let vehiclesData = [];
+  let vehiclesData = [];          // todos los vehículos
+  window._currentAdminTier = 'standard';
 
   async function loadVehicles() {
     const { data, error } = await sb.from('vehicles').select('*').order('sort_order');
@@ -833,32 +855,68 @@
     renderVehicles();
   }
 
+  function getTieredVehicles() {
+    const tier = window._currentAdminTier || 'standard';
+    return vehiclesData
+      .map((v, idx) => ({ v, idx }))
+      .filter(x => (x.v.tier || 'standard') === tier);
+  }
+
+  window.setAdminTier = function(tier) {
+    window._currentAdminTier = tier;
+    document.querySelectorAll('.tier-filter-btn').forEach(b => {
+      const active = b.dataset.tier === tier;
+      b.classList.toggle('active', active);
+      b.style.background = active ? '#1E1713' : '#FFFBF4';
+      b.style.color      = active ? '#FFF4EA' : '#1E1713';
+      b.style.borderColor= active ? '#1E1713' : '#E0D4C0';
+    });
+    renderVehicles();
+  };
+
   function renderVehicles() {
-    const list = document.getElementById('vehicleList');
-    if (!vehiclesData.length) { list.innerHTML = '<div class="loading">No hay vehículos todavía</div>'; return; }
-    list.innerHTML = vehiclesData.map((v, i) => `
+    const listEl = document.getElementById('vehicleList');
+    const filtered = getTieredVehicles();
+    if (!filtered.length) {
+      const tierLabel = (window._currentAdminTier === 'premium') ? 'premium' : 'estándar';
+      listEl.innerHTML = `<div class="loading">No hay vehículos ${tierLabel} todavía</div>`;
+      return;
+    }
+    listEl.innerHTML = filtered.map((x, k) => {
+      const v = x.v;
+      const isPremium = (v.tier || 'standard') === 'premium';
+      const badge = isPremium
+        ? '<span style="display:inline-block;padding:2px 8px;border-radius:999px;background:#B8872F;color:#FFF;font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;margin-left:8px;vertical-align:middle">Premium</span>'
+        : '';
+      return `
       <div class="item-card">
         <img class="item-thumb" src="${v.image}" alt="${v.image_alt||''}" onerror="this.style.opacity='.15'" />
         <div class="item-body">
-          <div class="item-name">${v.name}</div>
-          <div class="item-meta">${v.pill} · ${v.cat} · ${v.f1}, ${v.f2}, ${v.f3}</div>
+          <div class="item-name">${v.name}${badge}</div>
+          <div class="item-meta">${v.pill||''} · ${v.cat||''} · ${v.f1||''}, ${v.f2||''}, ${v.f3||''}</div>
         </div>
         <div class="item-actions">
-          ${i > 0 ? `<button class="btn-sm btn-order" onclick="moveVehicle(${i},-1)">↑</button>` : ''}
-          ${i < vehiclesData.length-1 ? `<button class="btn-sm btn-order" onclick="moveVehicle(${i},1)">↓</button>` : ''}
-          <button class="btn-sm btn-edit" onclick="openVehicleModal(${i})">Editar</button>
+          ${k > 0 ? `<button class="btn-sm btn-order" onclick="moveVehicle(${k},-1)">↑</button>` : ''}
+          ${k < filtered.length-1 ? `<button class="btn-sm btn-order" onclick="moveVehicle(${k},1)">↓</button>` : ''}
+          <button class="btn-sm btn-edit" onclick="openVehicleModal(${x.idx})">Editar</button>
         </div>
-      </div>`).join('');
+      </div>`;
+    }).join('');
   }
 
-  async function moveVehicle(i, dir) {
-    const j = i + dir;
-    const [a, b] = [vehiclesData[i], vehiclesData[j]];
+  async function moveVehicle(k, dir) {
+    // k es el índice dentro del listado filtrado por tier actual
+    const filtered = getTieredVehicles();
+    const a = filtered[k].v;
+    const b = filtered[k + dir].v;
     await Promise.all([
       sb.from('vehicles').update({ sort_order: b.sort_order }).eq('id', a.id),
       sb.from('vehicles').update({ sort_order: a.sort_order }).eq('id', b.id),
     ]);
-    [vehiclesData[i], vehiclesData[j]] = [vehiclesData[j], vehiclesData[i]];
+    // intercambia sort_order localmente
+    const tmp = a.sort_order; a.sort_order = b.sort_order; b.sort_order = tmp;
+    // re-ordena vehiclesData por sort_order
+    vehiclesData.sort((x, y) => (x.sort_order||0) - (y.sort_order||0));
     renderVehicles();
     toast('Orden actualizado');
   }
@@ -868,6 +926,9 @@
     const v = isNew ? {} : vehiclesData[idx];
     document.getElementById('vm-title').textContent  = isNew ? 'Nuevo vehículo' : 'Editar vehículo';
     document.getElementById('vm-id').value           = isNew ? '' : v.id;
+    // Tier (estándar/premium) — por defecto usa el tier del filtro actual
+    const initialTier = (v.tier) || (window._currentAdminTier || 'standard');
+    document.querySelectorAll('input[name="vm-tier"]').forEach(r => { r.checked = (r.value === initialTier); });
     document.getElementById('vm-name').value         = v.name || '';
     document.getElementById('vm-cap').value          = v.cap || '';
     document.getElementById('vm-desc').value         = v.description || '';
@@ -912,7 +973,9 @@
 
   async function saveVehicle() {
     const id   = document.getElementById('vm-id').value;
+    const tierEl = document.querySelector('input[name="vm-tier"]:checked');
     const data = {
+      tier:           tierEl ? tierEl.value : 'standard',
       name:           document.getElementById('vm-name').value.trim(),
       pill:           document.getElementById('vm-pill').value.trim(),
       cat:            document.getElementById('vm-cat').value.trim(),

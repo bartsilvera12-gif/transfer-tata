@@ -790,6 +790,55 @@
     border-color: var(--gold);
     color: var(--brown);
   }
+  /* Tier switch (Estándar / Premium) */
+  .fleet-tier-switch{
+    display: inline-flex;
+    align-items: center;
+    gap: 0;
+    padding: 4px;
+    margin: 0 auto 28px;
+    background: rgba(255,244,234,.06);
+    border: 1px solid rgba(216,174,85,.32);
+    border-radius: 999px;
+    backdrop-filter: blur(8px);
+  }
+  .fleet-tier-switch-wrap{
+    display: flex;
+    justify-content: center;
+    margin-bottom: 8px;
+  }
+  .tier-btn{
+    appearance: none;
+    background: transparent;
+    border: 0;
+    color: rgba(255,244,234,.75);
+    font-family: inherit;
+    font-weight: 700;
+    font-size: 13px;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+    padding: 10px 22px;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: background .25s ease, color .25s ease, transform .2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .tier-btn:hover{ color: var(--cream) }
+  .tier-btn.active{
+    background: var(--gold);
+    color: var(--brown);
+    box-shadow: 0 6px 18px rgba(184,135,47,.32);
+  }
+  .tier-btn .tier-dot{
+    width: 6px; height: 6px; border-radius: 50%;
+    background: currentColor; opacity: .75;
+  }
+  .tier-btn.active .tier-dot{ opacity: 1 }
+  @media (max-width: 640px){
+    .tier-btn{ padding: 9px 16px; font-size: 12px }
+  }
   .showcase{
     position: relative;
     max-width: 1180px;
@@ -1728,6 +1777,17 @@
         </div>
       </div>
 
+      <div class="fleet-tier-switch-wrap reveal">
+        <div class="fleet-tier-switch" role="group" aria-label="Categoría de flota">
+          <button class="tier-btn active" data-tier="standard" type="button">
+            <span class="tier-dot"></span><span data-i18n="tier.standard">Estándar</span>
+          </button>
+          <button class="tier-btn" data-tier="premium" type="button">
+            <span class="tier-dot"></span><span data-i18n="tier.premium">Premium</span>
+          </button>
+        </div>
+      </div>
+
       <div class="showcase reveal" id="showcase">
         <div class="showcase-frame">
           <!-- STAGE / IMAGE -->
@@ -1957,11 +2017,14 @@
 <script src="admin-config.js"></script>
 <script>
   const DEFAULT_VEHICLES = [
-    { name:'Auto',    name_en:'Car',     image:'uploads/kia.png',     imageAlt:'Kia Picanto',    pill:'Compacto', pill_en:'Compact',  cat:'Económico', cat_en:'Economy',  cap:'<strong>1 pasajero</strong> · ciudad',                       cap_en:'<strong>1 passenger</strong> · city',                       desc:'Ideal para traslados individuales rápidos dentro de la ciudad. Ágil, climatizado y siempre puntual.',                                               desc_en:'Ideal for quick individual transfers within the city. Agile, air-conditioned and always punctual.',                                              f1:'Aire acondicionado',     f1_en:'Air conditioning',    f2:'Tarifa económica',   f2_en:'Economy rate',      f3:'Tráficos urbanos',  f3_en:'Urban traffic' },
-    { name:'SUV',     name_en:'SUV',     image:'uploads/tucson.png',   imageAlt:'Hyundai Tucson', pill:'SUV',      pill_en:'SUV',      cat:'Familia',   cat_en:'Family',   cap:'<strong>Hasta 3 pasajeros</strong> · equipaje amplio',        cap_en:'<strong>Up to 3 passengers</strong> · ample luggage',       desc:'Una SUV cómoda y ejecutiva, ideal para familias o viajes con equipaje. Asientos amplios y suspensión suave.',                                          desc_en:'A comfortable executive SUV, ideal for families or trips with luggage. Spacious seats and smooth suspension.',                                      f1:'Equipaje XL',            f1_en:'XL Luggage',           f2:'SUV ejecutiva',      f2_en:'Executive SUV',     f3:'Familias',          f3_en:'Families' },
-    { name:'Pickup',  name_en:'Pickup',  image:'uploads/changan.png',  imageAlt:'Changan Hunter', pill:'Pick-up',  pill_en:'Pick-up',  cat:'Carga',     cat_en:'Cargo',    cap:'<strong>Hasta 4 pasajeros</strong> · carga especial',         cap_en:'<strong>Up to 4 passengers</strong> · special cargo',       desc:'Robusta y versátil. Pensada para equipaje pesado, cargas especiales o trayectos más exigentes fuera de la ciudad.',                                    desc_en:'Robust and versatile. Designed for heavy luggage, special cargo or more demanding trips outside the city.',                                         f1:'Carga adicional',        f1_en:'Additional cargo',     f2:'Largas distancias',  f2_en:'Long distances',    f3:'Tracción',          f3_en:'4WD' },
-    { name:'Minibus', name_en:'Minibus', image:'uploads/h1.png',       imageAlt:'Hyundai H1',     pill:'Van',      pill_en:'Van',      cat:'Grupos',    cat_en:'Groups',   cap:'<strong>10 pasajeros</strong> · contamos con 2 unidades',     cap_en:'<strong>10 passengers</strong> · 2 units available',        desc:'La van preferida para comitivas chicas, aeropuerto y traslados corporativos. Espacio para todos sin sacrificar confort.',                              desc_en:'The preferred van for small groups, airport and corporate transfers. Room for everyone without sacrificing comfort.',                                f1:'2 unidades disponibles', f1_en:'2 units available',    f2:'Aeropuerto',         f2_en:'Airport',           f3:'10 pax',            f3_en:'10 pax' },
-    { name:'Bus',     name_en:'Bus',     image:'uploads/bus.png',      imageAlt:'Bus',            pill:'Bus',      pill_en:'Bus',      cat:'Comitivas', cat_en:'Groups',   cap:'<strong>+30 pasajeros</strong> · butacas reclinables',        cap_en:'<strong>+30 passengers</strong> · reclining seats',         desc:'Pensado para grupos grandes y traslados masivos: delegaciones, congresos y viajes de larga distancia con confort total.',                             desc_en:'Designed for large groups and mass transfers: delegations, congresses and long-distance trips with full comfort.',                                  f1:'Larga distancia',        f1_en:'Long distance',        f2:'Delegaciones',       f2_en:'Delegations',       f3:'+30 pax',           f3_en:'+30 pax' },
+    { tier:'standard', name:'Auto',    name_en:'Car',     image:'uploads/kia.png',     imageAlt:'Kia Picanto',    pill:'Compacto', pill_en:'Compact',  cat:'Económico', cat_en:'Economy',  cap:'<strong>1 pasajero</strong> · ciudad',                       cap_en:'<strong>1 passenger</strong> · city',                       desc:'Ideal para traslados individuales rápidos dentro de la ciudad. Ágil, climatizado y siempre puntual.',                                               desc_en:'Ideal for quick individual transfers within the city. Agile, air-conditioned and always punctual.',                                              f1:'Aire acondicionado',     f1_en:'Air conditioning',    f2:'Tarifa económica',   f2_en:'Economy rate',      f3:'Tráficos urbanos',  f3_en:'Urban traffic' },
+    { tier:'standard', name:'SUV',     name_en:'SUV',     image:'uploads/tucson.png',   imageAlt:'Hyundai Tucson', pill:'SUV',      pill_en:'SUV',      cat:'Familia',   cat_en:'Family',   cap:'<strong>Hasta 3 pasajeros</strong> · equipaje amplio',        cap_en:'<strong>Up to 3 passengers</strong> · ample luggage',       desc:'Una SUV cómoda y ejecutiva, ideal para familias o viajes con equipaje. Asientos amplios y suspensión suave.',                                          desc_en:'A comfortable executive SUV, ideal for families or trips with luggage. Spacious seats and smooth suspension.',                                      f1:'Equipaje XL',            f1_en:'XL Luggage',           f2:'SUV ejecutiva',      f2_en:'Executive SUV',     f3:'Familias',          f3_en:'Families' },
+    { tier:'standard', name:'Pickup',  name_en:'Pickup',  image:'uploads/changan.png',  imageAlt:'Changan Hunter', pill:'Pick-up',  pill_en:'Pick-up',  cat:'Carga',     cat_en:'Cargo',    cap:'<strong>Hasta 4 pasajeros</strong> · carga especial',         cap_en:'<strong>Up to 4 passengers</strong> · special cargo',       desc:'Robusta y versátil. Pensada para equipaje pesado, cargas especiales o trayectos más exigentes fuera de la ciudad.',                                    desc_en:'Robust and versatile. Designed for heavy luggage, special cargo or more demanding trips outside the city.',                                         f1:'Carga adicional',        f1_en:'Additional cargo',     f2:'Largas distancias',  f2_en:'Long distances',    f3:'Tracción',          f3_en:'4WD' },
+    { tier:'standard', name:'Minibus', name_en:'Minibus', image:'uploads/h1.png',       imageAlt:'Hyundai H1',     pill:'Van',      pill_en:'Van',      cat:'Grupos',    cat_en:'Groups',   cap:'<strong>10 pasajeros</strong> · contamos con 2 unidades',     cap_en:'<strong>10 passengers</strong> · 2 units available',        desc:'La van preferida para comitivas chicas, aeropuerto y traslados corporativos. Espacio para todos sin sacrificar confort.',                              desc_en:'The preferred van for small groups, airport and corporate transfers. Room for everyone without sacrificing comfort.',                                f1:'2 unidades disponibles', f1_en:'2 units available',    f2:'Aeropuerto',         f2_en:'Airport',           f3:'10 pax',            f3_en:'10 pax' },
+    { tier:'standard', name:'Bus',     name_en:'Bus',     image:'uploads/bus.png',      imageAlt:'Bus',            pill:'Bus',      pill_en:'Bus',      cat:'Comitivas', cat_en:'Groups',   cap:'<strong>+30 pasajeros</strong> · butacas reclinables',        cap_en:'<strong>+30 passengers</strong> · reclining seats',         desc:'Pensado para grupos grandes y traslados masivos: delegaciones, congresos y viajes de larga distancia con confort total.',                             desc_en:'Designed for large groups and mass transfers: delegations, congresses and long-distance trips with full comfort.',                                  f1:'Larga distancia',        f1_en:'Long distance',        f2:'Delegaciones',       f2_en:'Delegations',       f3:'+30 pax',           f3_en:'+30 pax' },
+    // Gama Premium
+    { tier:'premium',  name:'Montero', name_en:'Montero', image:'uploads/imagen.png',   imageAlt:'Mitsubishi Montero', pill:'SUV Premium', pill_en:'Premium SUV', cat:'Alta gama', cat_en:'High-end', cap:'<strong>Hasta 5 pasajeros</strong> · confort superior',     cap_en:'<strong>Up to 5 passengers</strong> · superior comfort',     desc:'SUV ejecutiva de alta gama, ideal para comitivas VIP, ejecutivos y traslados de larga distancia con máximo confort.',                                desc_en:'High-end executive SUV, ideal for VIP delegations, executives and long-distance transfers with maximum comfort.',                                  f1:'Tapizado premium',       f1_en:'Premium upholstery',  f2:'Tracción 4×4',       f2_en:'4×4 traction',      f3:'Confort superior',  f3_en:'Superior comfort' },
+    { tier:'premium',  name:'Honda',   name_en:'Honda',   image:'uploads/imagen.png',   imageAlt:'Honda',              pill:'Sedán Premium', pill_en:'Premium Sedan', cat:'Ejecutivo', cat_en:'Executive', cap:'<strong>Hasta 4 pasajeros</strong> · sedán ejecutivo',   cap_en:'<strong>Up to 4 passengers</strong> · executive sedan',     desc:'Sedán ejecutivo Honda, pensado para traslados corporativos y ejecutivos. Discreción, silencio de marcha y elegancia.',                              desc_en:'Honda executive sedan, designed for corporate and executive transfers. Discretion, quiet ride and elegance.',                                       f1:'Sedán ejecutivo',        f1_en:'Executive sedan',     f2:'Discreción',          f2_en:'Discretion',        f3:'Confort premium',   f3_en:'Premium comfort' },
   ];
   const SVG_ARROW = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>`;
   const DEFAULT_SERVICES = [
@@ -2016,6 +2079,7 @@
           sb.from('servicios').select('*').order('sort_order'),
         ]);
         if (vData && vData.length) vehicles = vData.map(r => ({
+          tier: r.tier || 'standard',
           name: r.name, name_en: r.name_en,
           image: r.image, imageAlt: r.image_alt,
           pill: r.pill, pill_en: r.pill_en,
@@ -2231,17 +2295,39 @@
       });
     }
 
-    // Render vehicles
+    // Render vehicles (filtrados por tier actual)
     const stageImagesWrap = document.getElementById('stageImages');
     const showcaseInfo    = document.getElementById('showcaseInfo');
     const showcaseTabs    = document.getElementById('showcaseTabs');
     const stageWatermark  = document.getElementById('stageWatermark');
-    if (stageImagesWrap) {
-      vehicles.forEach((v, i) => {
+
+    window._allVehicles = vehicles;
+    const savedTier = (()=>{ try { return localStorage.getItem('fleet_tier'); } catch(e){ return null; } })();
+    window._currentTier = (savedTier === 'premium') ? 'premium' : 'standard';
+
+    function renderVehiclesByTier(tier) {
+      if (!stageImagesWrap) return;
+      const list = (window._allVehicles || []).filter(v => (v.tier || 'standard') === tier);
+      window._rawVehicles = list;
+      stageImagesWrap.innerHTML = '';
+      showcaseInfo.innerHTML = '';
+      showcaseTabs.innerHTML = '';
+      if (!list.length) {
+        showcaseInfo.innerHTML = '<div style="padding:40px;color:#FFF4EA;opacity:.7;font-weight:600">Sin vehículos en esta categoría todavía.</div>';
+        const ofEl0 = document.querySelector('.stage-index .of');
+        if (ofEl0) ofEl0.textContent = '/ 00';
+        const nowEl0 = document.querySelector('.stage-index .now');
+        if (nowEl0) nowEl0.textContent = '00';
+        if (stageWatermark) stageWatermark.textContent = '';
+        const prog = document.getElementById('showcaseProgress');
+        if (prog) prog.style.width = '0%';
+        return;
+      }
+      list.forEach((v, i) => {
         const imgDiv = document.createElement('div');
         imgDiv.className = 'stage-image' + (i === 0 ? ' active' : '');
         imgDiv.dataset.i = i;
-        imgDiv.innerHTML = `<img src="${v.image}" alt="${v.imageAlt}" loading="${i===0?'eager':'lazy'}" />`;
+        imgDiv.innerHTML = `<img src="${v.image}" alt="${v.imageAlt||''}" loading="${i===0?'eager':'lazy'}" />`;
         stageImagesWrap.appendChild(imgDiv);
 
         const infoDiv = document.createElement('div');
@@ -2262,10 +2348,14 @@
         tab.innerHTML = `<span class="tab-num">${String(i+1).padStart(2,'0')}</span>${v.name}`;
         showcaseTabs.appendChild(tab);
       });
-      if (stageWatermark) stageWatermark.textContent = vehicles[0].name;
+      if (stageWatermark) stageWatermark.textContent = list[0].name;
       const ofEl = document.querySelector('.stage-index .of');
-      if (ofEl) ofEl.textContent = '/ ' + String(vehicles.length).padStart(2,'0');
+      if (ofEl) ofEl.textContent = '/ ' + String(list.length).padStart(2,'0');
+      const nowEl = document.querySelector('.stage-index .now');
+      if (nowEl) nowEl.textContent = '01';
     }
+    window._renderVehiclesByTier = renderVehiclesByTier;
+    renderVehiclesByTier(window._currentTier);
 
     // Render FAQ
     const faqList = document.getElementById('faqList');
@@ -2284,97 +2374,116 @@
     // Aplica idioma guardado DESPUÉS de que todo está renderizado
     if (window.applyI18n) window.applyI18n(window._currentLang || 'es');
 
-    // Fleet showcase carousel
+    // Fleet showcase carousel (re-inicializable al cambiar de tier)
     const showcase = document.getElementById('showcase');
     if (!showcase) return;
-    const total = vehicles.length;
-    const stageImages = showcase.querySelectorAll('.stage-image');
-    const infoSlides = showcase.querySelectorAll('.info-slide');
-    const tabs = showcase.querySelectorAll('.tab');
-    const progress = document.getElementById('showcaseProgress');
-    const stageWm = document.getElementById('stageWatermark');
+    const progress      = document.getElementById('showcaseProgress');
+    const stageWm       = document.getElementById('stageWatermark');
     const stageIndexNow = showcase.querySelector('.stage-index .now');
-    const arrPrev = document.getElementById('arrPrev');
-    const arrNext = document.getElementById('arrNext');
-    const names = vehicles.map(v => v.name);
+    const arrPrev       = document.getElementById('arrPrev');
+    const arrNext       = document.getElementById('arrNext');
+    const frame         = showcase.querySelector('.showcase-frame');
+    const DURATION = 3200;
 
-    let current = 0;
-    let timer = null;
-    let progressStart = 0;
-    let progressRaf = null;
-    const DURATION = 3200; // ms per slide
-    let paused = false;
+    // Estado mutable del carrusel (se reasigna en cada init)
+    let stageImages = [], infoSlides = [], tabs = [], names = [];
+    let total = 0, current = 0, progressStart = 0, progressRaf = null, paused = false;
+    let tabHandlers = [];
 
-    function setActive(i, dir){
-      if (i === current) return;
+    function setActive(i){
+      if (i === current || i >= total) return;
       const prevEl = stageImages[current];
       const nextEl = stageImages[i];
       const prevInfo = infoSlides[current];
       const nextInfo = infoSlides[i];
-
-      // image transition
-      prevEl.classList.remove('active');
-      prevEl.classList.add('exit');
-      setTimeout(()=>prevEl.classList.remove('exit'), 800);
-
-      nextEl.classList.add('active');
-
-      // info transition
-      prevInfo.classList.remove('active');
-      nextInfo.classList.add('active');
-
-      // tabs
+      if (prevEl){ prevEl.classList.remove('active'); prevEl.classList.add('exit'); setTimeout(()=>prevEl.classList.remove('exit'), 800); }
+      if (nextEl) nextEl.classList.add('active');
+      if (prevInfo) prevInfo.classList.remove('active');
+      if (nextInfo) nextInfo.classList.add('active');
       tabs.forEach(t => t.classList.toggle('active', +t.dataset.i === i));
-
-      // index + watermark
-      stageIndexNow.textContent = String(i+1).padStart(2,'0');
-      if (stageWm) stageWm.textContent = names[i];
-
+      if (stageIndexNow) stageIndexNow.textContent = String(i+1).padStart(2,'0');
+      if (stageWm) stageWm.textContent = names[i] || '';
       current = i;
       restartProgress();
     }
-    function next(){ setActive((current+1) % total, 1) }
-    function prev(){ setActive((current-1+total) % total, -1) }
+    function next(){ if (total > 0) setActive((current+1) % total) }
+    function prev(){ if (total > 0) setActive((current-1+total) % total) }
 
     function restartProgress(){
       if (progressRaf) cancelAnimationFrame(progressRaf);
       progressStart = performance.now();
-      progress.style.width = '0%';
+      if (progress) progress.style.width = '0%';
+      if (total <= 1) return;
       function tick(now){
         if (paused){ progressRaf = requestAnimationFrame(tick); return; }
         const elapsed = now - progressStart;
         const pct = Math.min(100, (elapsed/DURATION)*100);
-        progress.style.width = pct + '%';
-        if (elapsed >= DURATION){
-          next();
-          return;
-        }
+        if (progress) progress.style.width = pct + '%';
+        if (elapsed >= DURATION){ next(); return; }
         progressRaf = requestAnimationFrame(tick);
       }
       progressRaf = requestAnimationFrame(tick);
     }
 
-    tabs.forEach(t => t.addEventListener('click', () => setActive(+t.dataset.i, +t.dataset.i > current ? 1 : -1)));
+    function bindTabs(){
+      // limpia handlers viejos
+      tabHandlers.forEach(([t,h]) => t.removeEventListener('click', h));
+      tabHandlers = [];
+      tabs.forEach(t => {
+        const h = () => setActive(+t.dataset.i);
+        t.addEventListener('click', h);
+        tabHandlers.push([t, h]);
+      });
+    }
+
+    function initCarousel(){
+      if (progressRaf) cancelAnimationFrame(progressRaf);
+      stageImages = showcase.querySelectorAll('.stage-image');
+      infoSlides  = showcase.querySelectorAll('.info-slide');
+      tabs        = showcase.querySelectorAll('.tab');
+      total       = stageImages.length;
+      current     = 0;
+      names       = (window._rawVehicles || []).map(v => v.name);
+      bindTabs();
+      restartProgress();
+    }
+    window._initFleetCarousel = initCarousel;
+
     arrNext.addEventListener('click', next);
     arrPrev.addEventListener('click', prev);
+    if (frame){
+      frame.addEventListener('mouseenter', () => {
+        paused = true;
+        progressStart = performance.now() - (parseFloat(progress.style.width||'0')/100)*DURATION;
+      });
+      frame.addEventListener('mouseleave', () => {
+        paused = false;
+        progressStart = performance.now() - (parseFloat(progress.style.width||'0')/100)*DURATION;
+      });
+    }
 
-    // Pause on hover for accessibility
-    const frame = showcase.querySelector('.showcase-frame');
-    frame.addEventListener('mouseenter', () => {
-      paused = true;
-      // freeze: shift progressStart so resume keeps elapsed
-      progressStart = performance.now() - (parseFloat(progress.style.width||'0')/100)*DURATION;
+    // Tier switch: cambia categoría y re-renderiza
+    document.querySelectorAll('.tier-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const tier = btn.dataset.tier;
+        if (tier === window._currentTier) return;
+        window._currentTier = tier;
+        try { localStorage.setItem('fleet_tier', tier); } catch(e){}
+        document.querySelectorAll('.tier-btn').forEach(b => b.classList.toggle('active', b.dataset.tier === tier));
+        renderVehiclesByTier(tier);
+        // Re-aplica idioma a los nuevos nodos
+        if (window.applyI18n) window.applyI18n(window._currentLang || 'es');
+        initCarousel();
+      });
     });
-    frame.addEventListener('mouseleave', () => {
-      paused = false;
-      progressStart = performance.now() - (parseFloat(progress.style.width||'0')/100)*DURATION;
-    });
+    // Marca el botón activo según el tier guardado
+    document.querySelectorAll('.tier-btn').forEach(b => b.classList.toggle('active', b.dataset.tier === window._currentTier));
 
-    // Start when in view
+    // Inicio cuando entra en viewport
     const startIo = new IntersectionObserver((entries, obs)=>{
       entries.forEach(e=>{
         if (e.isIntersecting){
-          restartProgress();
+          initCarousel();
           obs.disconnect();
         }
       });
@@ -2489,6 +2598,7 @@
     const I18N = {
       es: {
         'nav.experience':'Experiencia','nav.fleet':'Flota','nav.quote':'Cotizar','nav.services':'Servicios','nav.faq':'FAQ','nav.cta':'Cotizar',
+        'tier.standard':'Estándar','tier.premium':'Premium',
         'hero.eyebrow':'Traslados privados · Asunción · Paraguay',
         'hero.title':'Traslados privados y ejecutivos, <em>cómodos y puntuales.</em>',
         'hero.sub':'Viajá dentro y fuera del país con seguridad, comodidad y atención personalizada. Una flota cuidada y un equipo que llega antes que vos.',
@@ -2559,6 +2669,7 @@
       },
       en: {
         'nav.experience':'Experience','nav.fleet':'Fleet','nav.quote':'Quote','nav.services':'Services','nav.faq':'FAQ','nav.cta':'Quote',
+        'tier.standard':'Standard','tier.premium':'Premium',
         'hero.eyebrow':'Private transfers · Asunción · Paraguay',
         'hero.title':'Private and executive transfers, <em>comfortable and punctual.</em>',
         'hero.sub':'Travel inside and outside the country with safety, comfort and personalized attention. A well-kept fleet and a team that arrives before you do.',
