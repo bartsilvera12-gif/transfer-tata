@@ -2038,6 +2038,19 @@
       }
     } catch(e) { /* usa defaults */ }
 
+    // Formatea el campo "Capacidad" — acepta texto plano y autoenriquece:
+    // si NO contiene HTML, escapa y pone en negrita la parte antes del primer "·".
+    // Si ya contiene <tags>, lo deja como está (compatibilidad con datos viejos).
+    function formatCap(raw) {
+      if (!raw) return '';
+      const s = String(raw);
+      if (/<[a-z][^>]*>/i.test(s)) return s; // ya viene con HTML
+      const esc = t => t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+      const idx = s.indexOf('·');
+      if (idx === -1) return `<strong>${esc(s.trim())}</strong>`;
+      return `<strong>${esc(s.slice(0, idx).trim())}</strong> · ${esc(s.slice(idx + 1).trim())}`;
+    }
+
     // Guarda data globalmente ANTES de renderizar
     window._rawVehicles = vehicles;
     window._rawServices = services;
@@ -2136,7 +2149,7 @@
           const catSpans = slide.querySelectorAll('.info-cat span');
           if (catSpans[1]) catSpans[1].textContent = t(v,'cat');
           const nm   = slide.querySelector('.info-name'); if (nm)   nm.textContent   = t(v,'name');
-          const cap  = slide.querySelector('.info-cap');  if (cap)  cap.innerHTML    = isEn ? (v.cap_en || v.cap) : v.cap;
+          const cap  = slide.querySelector('.info-cap');  if (cap)  cap.innerHTML    = formatCap(isEn ? (v.cap_en || v.cap) : v.cap);
           const desc = slide.querySelector('.info-desc'); if (desc) desc.textContent = t(v,'desc');
           const lis  = slide.querySelectorAll('.info-features li');
           if (lis[0]) lis[0].textContent = t(v,'f1');
@@ -2211,7 +2224,7 @@
         infoDiv.innerHTML = `
           <div class="info-cat"><span class="pill">${v.pill}</span> <span>${v.cat}</span></div>
           <h3 class="info-name">${v.name}</h3>
-          <div class="info-cap">${v.cap}</div>
+          <div class="info-cap">${formatCap(v.cap)}</div>
           <p class="info-desc">${v.desc}</p>
           <ul class="info-features"><li>${v.f1}</li><li>${v.f2}</li><li>${v.f3}</li></ul>
           <a class="info-cta" target="_blank" rel="noopener" data-wa-vehicle="${v.name}">Consultar disponibilidad →</a>`;
