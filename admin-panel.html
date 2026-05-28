@@ -168,8 +168,19 @@
     font-size: 10px; font-weight: 700; letter-spacing: .12em;
     color: #9A8070; text-transform: uppercase;
     padding: 10px 0 4px; border-top: 1px solid rgba(184,135,47,.18);
-    margin: 4px 0 2px; display: flex; align-items: center; gap: 6px;
+    margin: 4px 0 2px; display: flex; align-items: center; gap: 10px;
   }
+  .btn-translate {
+    margin-left: auto;
+    background: rgba(184,135,47,.12); color: #B8872F;
+    border: 1px solid rgba(184,135,47,.3);
+    padding: 5px 12px; border-radius: 999px;
+    font: 700 10px 'Manrope', sans-serif; letter-spacing: .06em;
+    text-transform: uppercase; cursor: pointer;
+    transition: background .18s, color .18s;
+  }
+  .btn-translate:hover { background: #B8872F; color: #fff; }
+  .btn-translate:disabled { opacity: .55; cursor: progress; }
   .preview-img {
     width: 100%; height: 100px; object-fit: contain;
     background: #FFF4EA; border-radius: 10px; margin-top: 8px;
@@ -302,7 +313,7 @@
       <div class="field"><label>Característica 2</label><input type="text" id="vm-f2" /></div>
       <div class="field"><label>Característica 3</label><input type="text" id="vm-f3" /></div>
     </div>
-    <div class="lang-sep">EN · English</div>
+    <div class="lang-sep">EN · English<button type="button" class="btn-translate" onclick="translateModalEn('vehicle')">Auto-traducir desde ES</button></div>
     <div class="field"><label>Name (EN)</label><input type="text" id="vm-name-en" placeholder="Eg: SUV" /></div>
     <div class="g2">
       <div class="field"><label>Pill (EN)</label><input type="text" id="vm-pill-en" placeholder="Compact" /></div>
@@ -342,7 +353,7 @@
     <div class="lang-sep">ES · Español</div>
     <div class="field"><label>Título</label><input type="text" id="sm-title-input" placeholder="Ej: Traslados al aeropuerto" /></div>
     <div class="field"><label>Descripción</label><textarea id="sm-desc"></textarea></div>
-    <div class="lang-sep">EN · English</div>
+    <div class="lang-sep">EN · English<button type="button" class="btn-translate" onclick="translateModalEn('svc')">Auto-traducir desde ES</button></div>
     <div class="field"><label>Title (EN)</label><input type="text" id="sm-title-en" placeholder="Eg: Airport Transfers" /></div>
     <div class="field"><label>Description (EN)</label><textarea id="sm-desc-en"></textarea></div>
     <div class="g2">
@@ -377,7 +388,7 @@
     <div class="lang-sep">ES · Español</div>
     <div class="field"><label>Pregunta</label><input type="text" id="fm-q" placeholder="¿...?" /></div>
     <div class="field"><label>Respuesta</label><textarea id="fm-a" style="min-height:90px"></textarea></div>
-    <div class="lang-sep">EN · English</div>
+    <div class="lang-sep">EN · English<button type="button" class="btn-translate" onclick="translateModalEn('faq')">Auto-traducir desde ES</button></div>
     <div class="field"><label>Question (EN)</label><input type="text" id="fm-q-en" placeholder="Do you...?" /></div>
     <div class="field"><label>Answer (EN)</label><textarea id="fm-a-en" style="min-height:90px"></textarea></div>
     <div class="modal-footer">
@@ -432,6 +443,57 @@
       const out = j && j.responseData && j.responseData.translatedText;
       return out && j.responseStatus === 200 ? out : '';
     } catch (e) { return ''; }
+  }
+
+  /* Rellena los inputs *_en del modal abierto leyendo los ES, mediante traducción.
+     Solo escribe en campos EN vacíos — no pisa lo que ya editaste. */
+  const MODAL_FIELDS = {
+    vehicle: [
+      { es:'vm-name', en:'vm-name-en' }, { es:'vm-pill', en:'vm-pill-en' },
+      { es:'vm-cat',  en:'vm-cat-en'  }, { es:'vm-cap',  en:'vm-cap-en'  },
+      { es:'vm-desc', en:'vm-desc-en' },
+      { es:'vm-f1', en:'vm-f1-en' }, { es:'vm-f2', en:'vm-f2-en' }, { es:'vm-f3', en:'vm-f3-en' },
+    ],
+    svc: [
+      { es:'sm-title-input', en:'sm-title-en' },
+      { es:'sm-desc',        en:'sm-desc-en'  },
+    ],
+    faq: [
+      { es:'fm-q', en:'fm-q-en' },
+      { es:'fm-a', en:'fm-a-en' },
+    ],
+  };
+  // Diccionario manual para términos cortos/ambiguos
+  const ADMIN_TR_OVERRIDES = {
+    'Auto':'Car', 'Pickup':'Pick-up', 'Minibus':'Minibus', 'Bus':'Bus', 'SUV':'SUV',
+    'Compacto':'Compact', 'Económico':'Economy', 'Familia':'Family',
+    'Carga':'Cargo', 'Grupos':'Groups', 'Comitivas':'Delegations',
+    'Van':'Van', 'Pick-up':'Pick-up',
+  };
+  async function translateOverride(text) {
+    if (!text) return '';
+    if (ADMIN_TR_OVERRIDES[text]) return ADMIN_TR_OVERRIDES[text];
+    return await translateText(text);
+  }
+  async function translateModalEn(kind) {
+    const pairs = MODAL_FIELDS[kind] || [];
+    const btn = event && event.target;
+    if (btn) { btn.disabled = true; btn.textContent = 'Traduciendo…'; }
+    try {
+      const tasks = pairs.map(async p => {
+        const esEl = document.getElementById(p.es);
+        const enEl = document.getElementById(p.en);
+        if (!esEl || !enEl) return;
+        const src = (esEl.value || '').trim();
+        if (!src || (enEl.value || '').trim()) return; // no pisa lo ya escrito
+        const tr = await translateOverride(src);
+        if (tr) enEl.value = tr;
+      });
+      await Promise.all(tasks);
+      toast('Traducido ✓');
+    } finally {
+      if (btn) { btn.disabled = false; btn.textContent = 'Auto-traducir desde ES'; }
+    }
   }
 
   async function autoFillEn(data, pairs) {
