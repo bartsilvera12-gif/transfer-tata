@@ -438,12 +438,9 @@
     <div class="lang-sep">EN · English<button type="button" class="btn-translate" onclick="translateModalEn('svc')">Auto-traducir desde ES</button></div>
     <div class="field"><label>Title (EN)</label><input type="text" id="sm-title-en" placeholder="Eg: Airport Transfers" /></div>
     <div class="field"><label>Description (EN)</label><textarea id="sm-desc-en"></textarea></div>
-    <div class="g2">
-      <div class="field"><label>Texto del botón CTA</label><input type="text" id="sm-cta" placeholder="Ej: Reservar" /></div>
-      <div class="field" style="display:flex;align-items:center;gap:10px;padding-top:22px">
-        <input type="checkbox" id="sm-dark" style="width:18px;height:18px;accent-color:#B8872F" />
-        <label for="sm-dark" style="text-transform:none;font-size:13px;font-weight:600;color:#1E1713;margin:0">Estilo oscuro (dark)</label>
-      </div>
+    <div class="field" style="display:flex;align-items:center;gap:10px">
+      <input type="checkbox" id="sm-dark" style="width:18px;height:18px;accent-color:#B8872F" />
+      <label for="sm-dark" style="text-transform:none;font-size:13px;font-weight:600;color:#1E1713;margin:0">Estilo oscuro (fondo chocolate)</label>
     </div>
     <div class="field">
       <label>Ícono</label>
@@ -998,7 +995,6 @@
     document.getElementById('sm-desc').value               = s.description || '';
     document.getElementById('sm-title-en').value           = s.title_en || '';
     document.getElementById('sm-desc-en').value            = s.description_en || '';
-    document.getElementById('sm-cta').value                = s.cta || '';
     document.getElementById('sm-dark').checked             = s.dark || false;
     document.getElementById('sm-svg').value                = s.icon_svg || '';
     // Galería de íconos: marca el actual si coincide; si no, abre el editor SVG.
@@ -1017,7 +1013,6 @@
       description:    document.getElementById('sm-desc').value.trim(),
       title_en:       document.getElementById('sm-title-en').value.trim(),
       description_en: document.getElementById('sm-desc-en').value.trim(),
-      cta:            document.getElementById('sm-cta').value.trim(),
       dark:        document.getElementById('sm-dark').checked,
       icon_svg:    document.getElementById('sm-svg').value.trim(),
     };
