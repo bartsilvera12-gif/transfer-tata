@@ -335,7 +335,7 @@
         <h1>Flota</h1>
         <button class="btn-add" onclick="openVehicleModal()">+ Agregar vehículo</button>
       </div>
-      <div class="tier-filter" style="display:flex;gap:8px;margin:0 0 18px;flex-wrap:wrap">
+      <div class="tier-filter" style="display:flex;gap:8px;margin:0 0 18px;flex-wrap:wrap;align-items:center">
         <button class="tier-filter-btn active" data-tier="standard" onclick="setAdminTier('standard')"
                 style="appearance:none;background:#1E1713;color:#FFF4EA;border:1px solid #1E1713;border-radius:999px;padding:8px 18px;font-weight:700;font-size:12px;letter-spacing:.05em;text-transform:uppercase;cursor:pointer">
           Estándar
@@ -343,6 +343,9 @@
         <button class="tier-filter-btn" data-tier="premium" onclick="setAdminTier('premium')"
                 style="appearance:none;background:#FFFBF4;color:#1E1713;border:1px solid #E0D4C0;border-radius:999px;padding:8px 18px;font-weight:700;font-size:12px;letter-spacing:.05em;text-transform:uppercase;cursor:pointer">
           Premium
+        </button>
+        <button id="btn-seed-premium" onclick="seedPremiumDefaults()" style="display:none;appearance:none;background:#B8872F;color:#FFF;border:0;border-radius:999px;padding:8px 16px;font-weight:700;font-size:12px;letter-spacing:.05em;text-transform:uppercase;cursor:pointer;margin-left:auto">
+          Cargar premium por defecto
         </button>
       </div>
       <div id="vehicleList"><div class="loading">Cargando…</div></div>
@@ -877,8 +880,11 @@
   function renderVehicles() {
     const listEl = document.getElementById('vehicleList');
     const filtered = getTieredVehicles();
+    const isPremium = window._currentAdminTier === 'premium';
+    const seedBtn = document.getElementById('btn-seed-premium');
+    if (seedBtn) seedBtn.style.display = (isPremium && !filtered.length) ? 'inline-block' : 'none';
     if (!filtered.length) {
-      const tierLabel = (window._currentAdminTier === 'premium') ? 'premium' : 'estándar';
+      const tierLabel = isPremium ? 'premium' : 'estándar';
       listEl.innerHTML = `<div class="loading">No hay vehículos ${tierLabel} todavía</div>`;
       return;
     }
@@ -1026,6 +1032,49 @@
     await loadVehicles();
     toast('Vehículo eliminado');
   }
+
+  // Semilla: inserta los dos vehículos premium por defecto (Honda CR-V y Montero)
+  window.seedPremiumDefaults = async function() {
+    const ok = await confirmDialog({ title:'Cargar premium por defecto', msg:'¿Insertar Honda CR-V y Mitsubishi Montero en la base como vehículos premium? Después podés editarlos o eliminarlos como cualquier otro.', okLabel:'Insertar' });
+    if (!ok) return;
+    const maxOrd = vehiclesData.reduce((m, v) => Math.max(m, v.sort_order||0), -1);
+    const defaults = [
+      {
+        tier:'premium',
+        name:'Honda CR-V', name_en:'Honda CR-V',
+        pill:'SUV Premium', pill_en:'Premium SUV',
+        cat:'Ejecutivo', cat_en:'Executive',
+        cap:'**Hasta 5 pasajeros** · equipaje amplio',
+        cap_en:'**Up to 5 passengers** · ample luggage',
+        description:'SUV ejecutiva con acabados premium, climatización tri-zona y marcha silenciosa. Ideal para traslados ejecutivos, parejas y familias que buscan máximo confort.',
+        description_en:'Executive SUV with premium finishes, tri-zone climate control and quiet ride. Ideal for executive transfers, couples and families looking for top comfort.',
+        f1:'Tapizado de cuero',     f1_en:'Leather upholstery',
+        f2:'Climatización premium', f2_en:'Premium climate',
+        f3:'Marcha silenciosa',     f3_en:'Quiet ride',
+        image:'uploads/honda.png',  image_alt:'Honda CR-V',
+        sort_order: maxOrd + 1,
+      },
+      {
+        tier:'premium',
+        name:'Mitsubishi Montero', name_en:'Mitsubishi Montero',
+        pill:'SUV 4×4', pill_en:'4×4 SUV',
+        cat:'Alta gama', cat_en:'High-end',
+        cap:'**Hasta 7 pasajeros** · 3 filas de asientos',
+        cap_en:'**Up to 7 passengers** · 3 rows of seats',
+        description:'SUV 4×4 de alta gama, robusta y elegante. Perfecta para comitivas, viajes largos y rutas exigentes sin renunciar al lujo. Espacio para equipaje completo.',
+        description_en:'High-end 4×4 SUV, robust and elegant. Perfect for delegations, long trips and demanding routes without giving up luxury. Room for full luggage.',
+        f1:'Tracción 4×4',  f1_en:'4×4 traction',
+        f2:'7 pasajeros',   f2_en:'7 passengers',
+        f3:'Equipaje XL',   f3_en:'XL luggage',
+        image:'uploads/montero.png', image_alt:'Mitsubishi Montero',
+        sort_order: maxOrd + 2,
+      },
+    ];
+    const { error } = await sb.from('vehicles').insert(defaults);
+    if (error) { toast('Error: ' + error.message); return; }
+    await loadVehicles();
+    toast('Premium cargados ✓');
+  };
 
   /* ── SERVICIOS ── */
   let svcsData = [];
