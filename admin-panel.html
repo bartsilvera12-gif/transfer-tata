@@ -438,6 +438,24 @@
   </div>
 </div>
 
+<!-- Modal: Confirm (reemplaza window.confirm) -->
+<div class="modal-bg" id="confirmModal">
+  <div class="modal" style="max-width:420px">
+    <div class="modal-top">
+      <h2 id="cm-title">¿Confirmar?</h2>
+      <button class="btn-close" onclick="confirmRespond(false)">×</button>
+    </div>
+    <p id="cm-msg" style="font-size:14px;line-height:1.5;color:#1E1713;margin-bottom:6px"></p>
+    <div class="modal-footer" style="border-top:none;padding-top:8px;margin-top:14px">
+      <span></span>
+      <div class="modal-footer-right">
+        <button class="btn-sm btn-cancel" onclick="confirmRespond(false)">Cancelar</button>
+        <button class="btn-save" id="cm-ok" onclick="confirmRespond(true)">Aceptar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <div class="toast" id="toast"></div>
 
 <script>
@@ -699,7 +717,9 @@
 
   async function deleteVehicle() {
     const id = document.getElementById('vm-id').value;
-    if (!id || !confirm('¿Eliminar este vehículo?')) return;
+    if (!id) return;
+    const ok = await confirmDialog({ title:'Eliminar vehículo', msg:'¿Seguro que querés eliminar este vehículo? Esta acción no se puede deshacer.', okLabel:'Eliminar', danger:true });
+    if (!ok) return;
     const { error } = await sb.from('vehicles').delete().eq('id', id);
     if (error) { toast('Error al eliminar'); return; }
     closeModal('vehicleModal');
@@ -798,7 +818,9 @@
 
   async function deleteSvc() {
     const id = document.getElementById('sm-id').value;
-    if (!id || !confirm('¿Eliminar este servicio?')) return;
+    if (!id) return;
+    const ok = await confirmDialog({ title:'Eliminar servicio', msg:'¿Seguro que querés eliminar este servicio? Esta acción no se puede deshacer.', okLabel:'Eliminar', danger:true });
+    if (!ok) return;
     const { error } = await sb.from('servicios').delete().eq('id', id);
     if (error) { toast('Error al eliminar'); return; }
     closeModal('svcModal');
@@ -886,7 +908,9 @@
 
   async function deleteFaq() {
     const id = document.getElementById('fm-id').value;
-    if (!id || !confirm('¿Eliminar esta pregunta?')) return;
+    if (!id) return;
+    const ok = await confirmDialog({ title:'Eliminar pregunta', msg:'¿Seguro que querés eliminar esta pregunta? Esta acción no se puede deshacer.', okLabel:'Eliminar', danger:true });
+    if (!ok) return;
     const { error } = await sb.from('faqs').delete().eq('id', id);
     if (error) { toast('Error al eliminar'); return; }
     closeModal('faqModal');
@@ -901,6 +925,27 @@
     const img = document.getElementById(previewId);
     img.style.display = src ? 'block' : 'none';
     if (src) img.src = src;
+  }
+
+  /* Confirm modal estilizado — reemplaza window.confirm.
+     Uso: const ok = await confirmDialog({ title, msg, okLabel, danger:true }); */
+  let _confirmResolve = null;
+  function confirmDialog({ title='¿Confirmar?', msg='', okLabel='Aceptar', danger=false } = {}) {
+    document.getElementById('cm-title').textContent = title;
+    document.getElementById('cm-msg').textContent = msg;
+    const ok = document.getElementById('cm-ok');
+    ok.textContent = okLabel;
+    if (danger) {
+      ok.style.background = '#C0392B'; ok.style.color = '#fff';
+    } else {
+      ok.style.background = ''; ok.style.color = '';
+    }
+    document.getElementById('confirmModal').classList.add('open');
+    return new Promise(r => { _confirmResolve = r; });
+  }
+  function confirmRespond(value) {
+    document.getElementById('confirmModal').classList.remove('open');
+    if (_confirmResolve) { _confirmResolve(value); _confirmResolve = null; }
   }
 
   function toast(msg) {
@@ -935,7 +980,8 @@
       }
     }
     if (!total) { setTag('Todo traducido ✓'); toast('No hay campos faltantes'); setTimeout(()=>setTag('ES → EN'),3000); return; }
-    if (!confirm(`Traducir ${total} campos vacíos a inglés? Puede tardar ~${Math.ceil(total*0.6)}s.`)) { setTag('ES → EN'); return; }
+    const ok = await confirmDialog({ title:'Traducir contenido', msg:`Se traducirán ${total} campos vacíos al inglés. Puede tardar ~${Math.ceil(total*0.6)}s.`, okLabel:'Traducir' });
+    if (!ok) { setTag('ES → EN'); return; }
     for (const w of work) {
       const patch = {};
       for (const k of Object.keys(w.patch)) {
