@@ -2083,15 +2083,28 @@
       'Carga':'Cargo', 'Grupos':'Groups', 'Comitivas':'Delegations',
       'Van':'Van', 'Pick-up':'Pick-up',
     };
+    // Si una frase ES termina en "?" pero no empieza con "¿", la prefijamos
+    // para que MyMemory la detecte como pregunta. Limpiamos el "¿" del EN.
+    function normalizeEs(text) {
+      const t = (text || '').trim();
+      if (!t) return t;
+      if (/\?\s*$/.test(t) && !/^¿/.test(t)) return '¿' + t;
+      return t;
+    }
     async function translateOne(text){
       if (!text) return '';
       if (TR_OVERRIDES[text]) return TR_OVERRIDES[text];
       if (trCache[text]) return trCache[text];
       try {
-        const r = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=es|en`);
+        const normalized = normalizeEs(text);
+        const r = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(normalized)}&langpair=es|en`);
         const j = await r.json();
-        const out = j && j.responseStatus === 200 && j.responseData && j.responseData.translatedText;
-        if (out) { trCache[text] = out; return out; }
+        let out = j && j.responseStatus === 200 && j.responseData && j.responseData.translatedText;
+        if (out) {
+          out = out.replace(/^¿\s*/, '').replace(/\s*¡\s*/g, ' ').trim();
+          trCache[text] = out;
+          return out;
+        }
       } catch(e){}
       return '';
     }

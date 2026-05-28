@@ -733,14 +733,29 @@
      Rellena los pares { es: 'campoES', en: 'campoEN' } del objeto `data`
      cuando el campo EN está vacío. Devuelve el mismo objeto mutado.
      Si la API falla, deja el campo EN vacío (el sitio cae al ES). */
+  // Si la frase termina en "?" pero no empieza con "¿", la agregamos: MyMemory
+  // detecta mejor la interrogación y la traduce con estructura de pregunta.
+  // Después limpiamos el "¿" del resultado en inglés (en inglés no se usa).
+  function normalizeQuestionEs(text) {
+    const t = (text || '').trim();
+    if (!t) return t;
+    const endsQ = /\?\s*$/.test(t);
+    const startsQ = /^¿/.test(t);
+    if (endsQ && !startsQ) return '¿' + t;
+    return t;
+  }
+  function cleanQuestionEn(text) {
+    return (text || '').replace(/^¿\s*/, '').replace(/\s*¡\s*/g, ' ').trim();
+  }
   async function translateText(text) {
     if (!text) return '';
     try {
-      const url = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=es|en`;
+      const normalized = normalizeQuestionEs(text);
+      const url = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(normalized)}&langpair=es|en`;
       const r = await fetch(url);
       const j = await r.json();
       const out = j && j.responseData && j.responseData.translatedText;
-      return out && j.responseStatus === 200 ? out : '';
+      return out && j.responseStatus === 200 ? cleanQuestionEn(out) : '';
     } catch (e) { return ''; }
   }
 
