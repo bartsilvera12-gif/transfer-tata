@@ -212,6 +212,33 @@
     cursor: pointer; text-decoration: underline; text-underline-offset: 3px;
   }
   .btn-link-toggle:hover { color: #1E1713; }
+
+  /* ── Preset select ── */
+  select.preset-select {
+    width: 100%; padding: 11px 14px; border-radius: 14px;
+    border: 1.5px solid rgba(184,135,47,.2);
+    font: 500 14px 'Manrope', sans-serif;
+    color: #1E1713; background: #FFF4EA; outline: none;
+    appearance: none;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8' fill='none' stroke='%23B8872F' stroke-width='1.8' stroke-linecap='round'><path d='M1 1.5 6 6.5l5-5'/></svg>");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+    padding-right: 36px;
+    cursor: pointer;
+    transition: border-color .2s;
+  }
+  select.preset-select:focus { border-color: #B8872F; }
+
+  /* ── Preset list items ── */
+  .preset-item {
+    background: #fff; border: 1px solid rgba(184,135,47,.13);
+    border-radius: 12px; padding: 12px 14px;
+    margin-bottom: 8px;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .preset-item-body { flex: 1; min-width: 0; }
+  .preset-item-name { font-weight: 700; font-size: 13px; color: #1E1713; }
+  .preset-item-en { font-size: 11px; color: #9A8070; margin-top: 2px; }
   .preview-img {
     width: 100%; height: 100px; object-fit: contain;
     background: #FFF4EA; border-radius: 10px; margin-top: 8px;
@@ -269,6 +296,10 @@
       <span class="nav-label">FAQ</span>
       <span class="nav-tag">Preguntas</span>
     </button>
+    <button class="nav-item" onclick="switchSection('presets', this)">
+      <span class="nav-label">Categorías</span>
+      <span class="nav-tag">Etiquetas</span>
+    </button>
   </nav>
   <div class="sidebar-footer">
     <a class="nav-item" href="index.html" target="_blank" style="text-decoration:none">
@@ -320,6 +351,28 @@
       </div>
       <div id="faqList"><div class="loading">Cargando…</div></div>
     </div>
+
+    <div id="section-presets" class="section">
+      <div class="section-head">
+        <h1>Categorías y etiquetas</h1>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
+        <div>
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+            <h2 style="font-size:15px;font-weight:700;color:#1E1713">Categorías</h2>
+            <button class="btn-add" style="padding:7px 14px;font-size:11px" onclick="openPresetModal('cat')">+ Nueva</button>
+          </div>
+          <div id="catList"><div class="loading">Cargando…</div></div>
+        </div>
+        <div>
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+            <h2 style="font-size:15px;font-weight:700;color:#1E1713">Etiquetas (pills)</h2>
+            <button class="btn-add" style="padding:7px 14px;font-size:11px" onclick="openPresetModal('pill')">+ Nueva</button>
+          </div>
+          <div id="pillList"><div class="loading">Cargando…</div></div>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -334,8 +387,8 @@
     <div class="lang-sep">ES · Español</div>
     <div class="field"><label>Nombre</label><input type="text" id="vm-name" placeholder="Ej: SUV" /></div>
     <div class="g2">
-      <div class="field"><label>Etiqueta (pill)</label><input type="text" id="vm-pill" placeholder="Compacto" /></div>
-      <div class="field"><label>Categoría</label><input type="text" id="vm-cat" placeholder="Económico" /></div>
+      <div class="field"><label>Etiqueta (pill)</label><select id="vm-pill" class="preset-select"></select></div>
+      <div class="field"><label>Categoría</label><select id="vm-cat" class="preset-select"></select></div>
     </div>
     <div class="field"><label>Capacidad <small style="text-transform:none;font-weight:400;font-size:10px">(usá **texto** para negrita)</small></label><input type="text" id="vm-cap" placeholder="**4 pasajeros** · equipaje" /></div>
     <div class="field"><label>Descripción</label><textarea id="vm-desc"></textarea></div>
@@ -346,10 +399,8 @@
     </div>
     <div class="lang-sep">EN · English<button type="button" class="btn-translate" onclick="translateModalEn('vehicle')">Auto-traducir desde ES</button></div>
     <div class="field"><label>Name (EN)</label><input type="text" id="vm-name-en" placeholder="Eg: SUV" /></div>
-    <div class="g2">
-      <div class="field"><label>Pill (EN)</label><input type="text" id="vm-pill-en" placeholder="Compact" /></div>
-      <div class="field"><label>Category (EN)</label><input type="text" id="vm-cat-en" placeholder="Economy" /></div>
-    </div>
+    <input type="hidden" id="vm-pill-en" />
+    <input type="hidden" id="vm-cat-en" />
     <div class="field"><label>Capacity (EN)</label><input type="text" id="vm-cap-en" placeholder="**4 passengers** · luggage" /></div>
     <div class="field"><label>Description (EN)</label><textarea id="vm-desc-en"></textarea></div>
     <div class="g3">
@@ -439,6 +490,27 @@
   </div>
 </div>
 
+<!-- Modal: Preset (categoría / etiqueta) -->
+<div class="modal-bg" id="presetModal">
+  <div class="modal" style="max-width:440px">
+    <div class="modal-top">
+      <h2 id="pm-title">Categoría</h2>
+      <button class="btn-close" onclick="closeModal('presetModal')">×</button>
+    </div>
+    <input type="hidden" id="pm-id" />
+    <input type="hidden" id="pm-kind" />
+    <div class="field"><label>Valor (ES)</label><input type="text" id="pm-value" placeholder="Ej: Familia" /></div>
+    <div class="field"><label>Value (EN)</label><input type="text" id="pm-value-en" placeholder="Eg: Family" /></div>
+    <div class="modal-footer">
+      <button class="btn-sm btn-del" id="pm-delete" onclick="deletePreset()" style="display:none">Eliminar</button>
+      <div class="modal-footer-right">
+        <button class="btn-sm btn-cancel" onclick="closeModal('presetModal')">Cancelar</button>
+        <button class="btn-save" onclick="savePreset()">Guardar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- Modal: Confirm (reemplaza window.confirm) -->
 <div class="modal-bg" id="confirmModal">
   <div class="modal" style="max-width:420px">
@@ -479,12 +551,143 @@
     document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
     document.getElementById('section-' + name).classList.add('active');
     btn.classList.add('active');
-    const labels = { flota:['Flota','Vehículos'], servicios:['Servicios','Principales'], faq:['FAQ','Preguntas'] };
+    const labels = { flota:['Flota','Vehículos'], servicios:['Servicios','Principales'], faq:['FAQ','Preguntas'], presets:['Categorías','Etiquetas'] };
     document.getElementById('bc-section').textContent = labels[name][0];
     document.getElementById('bc-sub').textContent     = labels[name][1];
   }
 
-  function init() { loadVehicles(); loadSvcs(); loadFaqs(); }
+  function init() { loadPresets(); loadVehicles(); loadSvcs(); loadFaqs(); }
+
+  /* ── PRESETS (categorías y etiquetas) ── */
+  let presetsData = []; // todos los presets
+
+  async function loadPresets() {
+    const { data, error } = await sb.from('vehicle_presets').select('*').order('kind').order('sort_order');
+    if (error) { console.warn('presets load', error.message); presetsData = []; }
+    else presetsData = data || [];
+    renderPresets();
+    populatePresetSelects();
+  }
+
+  function renderPresets() {
+    const renderList = (kind, elId, emptyMsg) => {
+      const list = document.getElementById(elId);
+      if (!list) return;
+      const items = presetsData.filter(p => p.kind === kind);
+      if (!items.length) { list.innerHTML = `<div class="loading">${emptyMsg}</div>`; return; }
+      list.innerHTML = items.map((p, i) => `
+        <div class="preset-item">
+          <div class="preset-item-body">
+            <div class="preset-item-name">${p.value}</div>
+            <div class="preset-item-en">${p.value_en || '—'}</div>
+          </div>
+          <div class="item-actions">
+            ${i > 0 ? `<button class="btn-sm btn-order" onclick="movePreset('${p.id}','${kind}',-1)">↑</button>` : ''}
+            ${i < items.length-1 ? `<button class="btn-sm btn-order" onclick="movePreset('${p.id}','${kind}',1)">↓</button>` : ''}
+            <button class="btn-sm btn-edit" onclick="openPresetModal('${kind}','${p.id}')">Editar</button>
+          </div>
+        </div>`).join('');
+    };
+    renderList('cat',  'catList',  'No hay categorías todavía');
+    renderList('pill', 'pillList', 'No hay etiquetas todavía');
+  }
+
+  async function movePreset(id, kind, dir) {
+    const items = presetsData.filter(p => p.kind === kind);
+    const i = items.findIndex(p => p.id === id);
+    const j = i + dir;
+    if (j < 0 || j >= items.length) return;
+    const [a, b] = [items[i], items[j]];
+    await Promise.all([
+      sb.from('vehicle_presets').update({ sort_order: b.sort_order }).eq('id', a.id),
+      sb.from('vehicle_presets').update({ sort_order: a.sort_order }).eq('id', b.id),
+    ]);
+    await loadPresets();
+    toast('Orden actualizado');
+  }
+
+  function openPresetModal(kind, id) {
+    const isNew = !id;
+    const p = isNew ? { kind } : presetsData.find(x => x.id === id) || { kind };
+    const label = kind === 'cat' ? 'categoría' : 'etiqueta';
+    document.getElementById('pm-title').textContent = isNew ? `Nueva ${label}` : `Editar ${label}`;
+    document.getElementById('pm-id').value         = isNew ? '' : p.id;
+    document.getElementById('pm-kind').value       = kind;
+    document.getElementById('pm-value').value      = p.value || '';
+    document.getElementById('pm-value-en').value   = p.value_en || '';
+    document.getElementById('pm-delete').style.display = isNew ? 'none' : 'inline-block';
+    document.getElementById('presetModal').classList.add('open');
+  }
+
+  async function savePreset() {
+    const id   = document.getElementById('pm-id').value;
+    const kind = document.getElementById('pm-kind').value;
+    const data = {
+      kind,
+      value:    document.getElementById('pm-value').value.trim(),
+      value_en: document.getElementById('pm-value-en').value.trim(),
+    };
+    if (!data.value) { alert('El valor es obligatorio'); return; }
+    if (!data.value_en) {
+      data.value_en = (ADMIN_TR_OVERRIDES && ADMIN_TR_OVERRIDES[data.value]) || await translateText(data.value);
+    }
+    let error;
+    if (!id) {
+      const maxOrd = presetsData.filter(p=>p.kind===kind).reduce((m,p)=>Math.max(m,p.sort_order||0), 0);
+      ({ error } = await sb.from('vehicle_presets').insert({ ...data, sort_order: maxOrd + 1 }));
+    } else {
+      ({ error } = await sb.from('vehicle_presets').update(data).eq('id', id));
+    }
+    if (error) { toast('Error al guardar'); return; }
+    closeModal('presetModal');
+    await loadPresets();
+    toast(id ? 'Guardado ✓' : 'Agregado ✓');
+  }
+
+  async function deletePreset() {
+    const id = document.getElementById('pm-id').value;
+    if (!id) return;
+    const ok = await confirmDialog({ title:'Eliminar', msg:'¿Eliminar este preset? Los vehículos que lo usan conservan su valor actual.', okLabel:'Eliminar', danger:true });
+    if (!ok) return;
+    const { error } = await sb.from('vehicle_presets').delete().eq('id', id);
+    if (error) { toast('Error al eliminar'); return; }
+    closeModal('presetModal');
+    await loadPresets();
+    toast('Eliminado');
+  }
+
+  // Llena los <select> del modal de vehículo con los presets cargados.
+  function populatePresetSelects() {
+    const fill = (selectId, hiddenEnId, kind, currentValue, currentValueEn) => {
+      const sel = document.getElementById(selectId);
+      if (!sel) return;
+      const items = presetsData.filter(p => p.kind === kind);
+      let html = '<option value="">— Sin definir —</option>';
+      let found = false;
+      items.forEach(p => {
+        const selected = p.value === currentValue ? ' selected' : '';
+        if (selected) found = true;
+        html += `<option value="${p.value.replace(/"/g,'&quot;')}" data-en="${(p.value_en||'').replace(/"/g,'&quot;')}"${selected}>${p.value}</option>`;
+      });
+      // Si el vehículo tiene un valor antiguo que no está en los presets, lo incluimos para no perderlo
+      if (currentValue && !found) {
+        html += `<option value="${currentValue.replace(/"/g,'&quot;')}" data-en="${(currentValueEn||'').replace(/"/g,'&quot;')}" selected>${currentValue} (legacy)</option>`;
+      }
+      sel.innerHTML = html;
+      // Auto-actualiza el hidden EN al cambiar
+      sel.onchange = () => {
+        const opt = sel.options[sel.selectedIndex];
+        document.getElementById(hiddenEnId).value = opt ? (opt.getAttribute('data-en') || '') : '';
+      };
+      // Asegura sync inicial
+      sel.dispatchEvent(new Event('change'));
+    };
+    // Si el modal de vehículo no está abierto, simplemente repuebla por las dudas (sin valor actual)
+    const currentVehId = document.getElementById('vm-id')?.value;
+    const v = currentVehId ? vehiclesData.find(x => x.id === currentVehId) : null;
+    fill('vm-pill', 'vm-pill-en', 'pill', v?.pill || '', v?.pill_en || '');
+    fill('vm-cat',  'vm-cat-en',  'cat',  v?.cat  || '', v?.cat_en  || '');
+  }
 
   /* ── Galería de íconos (viewBox 0 0 24 24, stroke currentColor) ── */
   const SVC_ICONS = [
@@ -548,8 +751,8 @@
      Solo escribe en campos EN vacíos — no pisa lo que ya editaste. */
   const MODAL_FIELDS = {
     vehicle: [
-      { es:'vm-name', en:'vm-name-en' }, { es:'vm-pill', en:'vm-pill-en' },
-      { es:'vm-cat',  en:'vm-cat-en'  }, { es:'vm-cap',  en:'vm-cap-en'  },
+      { es:'vm-name', en:'vm-name-en' },
+      { es:'vm-cap',  en:'vm-cap-en'  },
       { es:'vm-desc', en:'vm-desc-en' },
       { es:'vm-f1', en:'vm-f1-en' }, { es:'vm-f2', en:'vm-f2-en' }, { es:'vm-f3', en:'vm-f3-en' },
     ],
@@ -652,17 +855,36 @@
     document.getElementById('vm-title').textContent  = isNew ? 'Nuevo vehículo' : 'Editar vehículo';
     document.getElementById('vm-id').value           = isNew ? '' : v.id;
     document.getElementById('vm-name').value         = v.name || '';
-    document.getElementById('vm-pill').value         = v.pill || '';
-    document.getElementById('vm-cat').value          = v.cat || '';
     document.getElementById('vm-cap').value          = v.cap || '';
     document.getElementById('vm-desc').value         = v.description || '';
     document.getElementById('vm-f1').value           = v.f1 || '';
     document.getElementById('vm-f2').value           = v.f2 || '';
     document.getElementById('vm-f3').value           = v.f3 || '';
     document.getElementById('vm-name-en').value      = v.name_en || '';
-    document.getElementById('vm-pill-en').value      = v.pill_en || '';
-    document.getElementById('vm-cat-en').value       = v.cat_en || '';
     document.getElementById('vm-cap-en').value       = v.cap_en || '';
+    // Pill y cat se llenan desde los presets (incluye el valor actual aunque no esté en la lista)
+    const fillSel = (selectId, hiddenEnId, kind, curVal, curEn) => {
+      const sel = document.getElementById(selectId);
+      const items = presetsData.filter(p => p.kind === kind);
+      let html = '<option value="">— Sin definir —</option>';
+      let found = false;
+      items.forEach(p => {
+        const selected = p.value === curVal ? ' selected' : '';
+        if (selected) found = true;
+        html += `<option value="${p.value.replace(/"/g,'&quot;')}" data-en="${(p.value_en||'').replace(/"/g,'&quot;')}"${selected}>${p.value}</option>`;
+      });
+      if (curVal && !found) {
+        html += `<option value="${curVal.replace(/"/g,'&quot;')}" data-en="${(curEn||'').replace(/"/g,'&quot;')}" selected>${curVal} (legacy)</option>`;
+      }
+      sel.innerHTML = html;
+      sel.onchange = () => {
+        const opt = sel.options[sel.selectedIndex];
+        document.getElementById(hiddenEnId).value = opt ? (opt.getAttribute('data-en') || '') : '';
+      };
+      sel.dispatchEvent(new Event('change'));
+    };
+    fillSel('vm-pill', 'vm-pill-en', 'pill', v.pill || '', v.pill_en || '');
+    fillSel('vm-cat',  'vm-cat-en',  'cat',  v.cat  || '', v.cat_en  || '');
     document.getElementById('vm-desc-en').value      = v.description_en || '';
     document.getElementById('vm-f1-en').value        = v.f1_en || '';
     document.getElementById('vm-f2-en').value        = v.f2_en || '';
