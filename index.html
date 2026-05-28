@@ -2078,18 +2078,26 @@
           sb.from('faqs').select('*').order('sort_order'),
           sb.from('servicios').select('*').order('sort_order'),
         ]);
-        if (vData && vData.length) vehicles = vData.map(r => ({
-          tier: r.tier || 'standard',
-          name: r.name, name_en: r.name_en,
-          image: r.image, imageAlt: r.image_alt,
-          pill: r.pill, pill_en: r.pill_en,
-          cat: r.cat, cat_en: r.cat_en,
-          cap: r.cap, cap_en: r.cap_en,
-          desc: r.description, desc_en: r.description_en,
-          f1: r.f1, f1_en: r.f1_en,
-          f2: r.f2, f2_en: r.f2_en,
-          f3: r.f3, f3_en: r.f3_en,
-        }));
+        if (vData && vData.length) {
+          vehicles = vData.map(r => ({
+            tier: r.tier || 'standard',
+            name: r.name, name_en: r.name_en,
+            image: r.image, imageAlt: r.image_alt,
+            pill: r.pill, pill_en: r.pill_en,
+            cat: r.cat, cat_en: r.cat_en,
+            cap: r.cap, cap_en: r.cap_en,
+            desc: r.description, desc_en: r.description_en,
+            f1: r.f1, f1_en: r.f1_en,
+            f2: r.f2, f2_en: r.f2_en,
+            f3: r.f3, f3_en: r.f3_en,
+          }));
+          // Si la DB todavía no tiene vehículos premium, completamos con los defaults
+          // para que la categoría Premium no aparezca vacía.
+          const hasPremium = vehicles.some(v => (v.tier || 'standard') === 'premium');
+          if (!hasPremium) {
+            vehicles = vehicles.concat(DEFAULT_VEHICLES.filter(v => v.tier === 'premium'));
+          }
+        }
         if (fData && fData.length) faqs = fData.map(r => ({
           q: r.question, q_en: r.question_en,
           a: r.answer, a_en: r.answer_en,
