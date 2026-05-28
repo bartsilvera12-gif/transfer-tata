@@ -32,12 +32,13 @@
     border-bottom: 1px solid rgba(184,135,47,.1);
   }
   .brand-avatar {
-    width: 38px; height: 38px; border-radius: 10px;
-    background: linear-gradient(135deg, #B8872F, #D8AE55);
+    width: 42px; height: 42px; border-radius: 10px;
+    background: #FFF4EA;
     display: grid; place-items: center;
-    font-weight: 800; font-size: 13px; color: #1E1713;
-    flex-shrink: 0; letter-spacing: .02em;
+    flex-shrink: 0; overflow: hidden;
+    box-shadow: 0 0 0 1px rgba(184,135,47,.25);
   }
+  .brand-avatar img { width: 100%; height: 100%; object-fit: contain; padding: 4px; }
   .brand-sub { font-size: 9px; font-weight: 700; letter-spacing: .14em; color: rgba(255,244,234,.3); }
   .brand-name { font-size: 13px; font-weight: 700; color: #D8AE55; margin-top: 2px; }
 
@@ -249,7 +250,7 @@
 <!-- Sidebar -->
 <aside class="sidebar">
   <div class="sidebar-brand">
-    <div class="brand-avatar">TT</div>
+    <div class="brand-avatar"><img src="uploads/logo2.png" alt="Transfers Tatá" /></div>
     <div>
       <div class="brand-sub">PANEL</div>
       <div class="brand-name">Administración</div>
