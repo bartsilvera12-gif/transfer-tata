@@ -184,6 +184,12 @@
   }
   .btn-translate:hover { background: #B8872F; color: #fff; }
   .btn-translate:disabled { opacity: .55; cursor: progress; }
+  .auto-tr-note {
+    font-size: 11.5px; line-height: 1.4; color: #8A6D2F;
+    background: rgba(184,135,47,.10);
+    border: 1px solid rgba(184,135,47,.22);
+    border-radius: 8px; padding: 8px 11px; margin: 2px 0 10px;
+  }
 
   /* ── Icon picker ── */
   .icon-grid {
@@ -307,10 +313,6 @@
     <a class="nav-item" href="index.html" target="_blank" style="text-decoration:none">
       <span class="nav-label">Ver sitio</span>
     </a>
-    <button class="nav-item" onclick="backfillTranslations()" style="margin-top:4px">
-      <span class="nav-label">Traducir faltantes</span>
-      <span class="nav-tag" id="backfillTag">ES → EN</span>
-    </button>
     <button class="nav-item" onclick="logout()" style="margin-top:4px">
       <span class="nav-label">Cerrar sesión</span>
     </button>
@@ -410,7 +412,7 @@
         </label>
       </div>
     </div>
-    <div class="lang-sep">ES · Español</div>
+    <div class="auto-tr-note">Escribí todo en español. El sitio traduce solo a 🇬🇧 inglés y 🇧🇷 portugués automáticamente.</div>
     <div class="field"><label>Nombre</label><input type="text" id="vm-name" placeholder="Ej: SUV" /></div>
     <div class="g2">
       <div class="field"><label>Etiqueta (pill)</label><select id="vm-pill" class="preset-select"></select></div>
@@ -422,17 +424,6 @@
       <div class="field"><label>Característica 1</label><input type="text" id="vm-f1" /></div>
       <div class="field"><label>Característica 2</label><input type="text" id="vm-f2" /></div>
       <div class="field"><label>Característica 3</label><input type="text" id="vm-f3" /></div>
-    </div>
-    <div class="lang-sep">EN · English<button type="button" class="btn-translate" onclick="translateModalEn('vehicle')">Auto-traducir desde ES</button></div>
-    <div class="field"><label>Name (EN)</label><input type="text" id="vm-name-en" placeholder="Eg: SUV" /></div>
-    <input type="hidden" id="vm-pill-en" />
-    <input type="hidden" id="vm-cat-en" />
-    <div class="field"><label>Capacity (EN)</label><input type="text" id="vm-cap-en" placeholder="**4 passengers** · luggage" /></div>
-    <div class="field"><label>Description (EN)</label><textarea id="vm-desc-en"></textarea></div>
-    <div class="g3">
-      <div class="field"><label>Feature 1 (EN)</label><input type="text" id="vm-f1-en" /></div>
-      <div class="field"><label>Feature 2 (EN)</label><input type="text" id="vm-f2-en" /></div>
-      <div class="field"><label>Feature 3 (EN)</label><input type="text" id="vm-f3-en" /></div>
     </div>
     <div class="field">
       <label>Ruta de imagen</label>
@@ -458,12 +449,9 @@
       <button class="btn-close" onclick="closeModal('svcModal')">×</button>
     </div>
     <input type="hidden" id="sm-id" />
-    <div class="lang-sep">ES · Español</div>
+    <div class="auto-tr-note">Escribí todo en español. El sitio traduce solo a 🇬🇧 inglés y 🇧🇷 portugués automáticamente.</div>
     <div class="field"><label>Título</label><input type="text" id="sm-title-input" placeholder="Ej: Traslados al aeropuerto" /></div>
     <div class="field"><label>Descripción</label><textarea id="sm-desc"></textarea></div>
-    <div class="lang-sep">EN · English<button type="button" class="btn-translate" onclick="translateModalEn('svc')">Auto-traducir desde ES</button></div>
-    <div class="field"><label>Title (EN)</label><input type="text" id="sm-title-en" placeholder="Eg: Airport Transfers" /></div>
-    <div class="field"><label>Description (EN)</label><textarea id="sm-desc-en"></textarea></div>
     <div class="field" style="display:flex;align-items:center;gap:10px">
       <input type="checkbox" id="sm-dark" style="width:18px;height:18px;accent-color:#B8872F" />
       <label for="sm-dark" style="text-transform:none;font-size:13px;font-weight:600;color:#1E1713;margin:0">Estilo oscuro (fondo chocolate)</label>
@@ -497,12 +485,9 @@
       <button class="btn-close" onclick="closeModal('faqModal')">×</button>
     </div>
     <input type="hidden" id="fm-id" />
-    <div class="lang-sep">ES · Español</div>
+    <div class="auto-tr-note">Escribí todo en español. El sitio traduce solo a 🇬🇧 inglés y 🇧🇷 portugués automáticamente.</div>
     <div class="field"><label>Pregunta</label><input type="text" id="fm-q" placeholder="¿...?" /></div>
     <div class="field"><label>Respuesta</label><textarea id="fm-a" style="min-height:90px"></textarea></div>
-    <div class="lang-sep">EN · English<button type="button" class="btn-translate" onclick="translateModalEn('faq')">Auto-traducir desde ES</button></div>
-    <div class="field"><label>Question (EN)</label><input type="text" id="fm-q-en" placeholder="Do you...?" /></div>
-    <div class="field"><label>Answer (EN)</label><textarea id="fm-a-en" style="min-height:90px"></textarea></div>
     <div class="modal-footer">
       <button class="btn-sm btn-del" id="fm-delete" onclick="deleteFaq()" style="display:none">Eliminar</button>
       <div class="modal-footer-right">
@@ -522,8 +507,8 @@
     </div>
     <input type="hidden" id="pm-id" />
     <input type="hidden" id="pm-kind" />
-    <div class="field"><label>Valor (ES)</label><input type="text" id="pm-value" placeholder="Ej: Familia" /></div>
-    <div class="field"><label>Value (EN)</label><input type="text" id="pm-value-en" placeholder="Eg: Family" /></div>
+    <div class="field"><label>Valor</label><input type="text" id="pm-value" placeholder="Ej: Familia" /></div>
+    <div class="auto-tr-note">Se traduce solo a inglés y portugués en el sitio.</div>
     <div class="modal-footer">
       <button class="btn-sm btn-del" id="pm-delete" onclick="deletePreset()" style="display:none">Eliminar</button>
       <div class="modal-footer-right">
@@ -602,7 +587,6 @@
         <div class="preset-item">
           <div class="preset-item-body">
             <div class="preset-item-name">${p.value}</div>
-            <div class="preset-item-en">${p.value_en || '—'}</div>
           </div>
           <div class="item-actions">
             ${i > 0 ? `<button class="btn-sm btn-order" onclick="movePreset('${p.id}','${kind}',-1)">↑</button>` : ''}
@@ -637,7 +621,6 @@
     document.getElementById('pm-id').value         = isNew ? '' : p.id;
     document.getElementById('pm-kind').value       = kind;
     document.getElementById('pm-value').value      = p.value || '';
-    document.getElementById('pm-value-en').value   = p.value_en || '';
     document.getElementById('pm-delete').style.display = isNew ? 'none' : 'inline-block';
     document.getElementById('presetModal').classList.add('open');
   }
@@ -648,12 +631,10 @@
     const data = {
       kind,
       value:    document.getElementById('pm-value').value.trim(),
-      value_en: document.getElementById('pm-value-en').value.trim(),
+      // Traducción automática en el sitio: limpiamos la EN guardada.
+      value_en: '',
     };
     if (!data.value) { alert('El valor es obligatorio'); return; }
-    if (!data.value_en) {
-      data.value_en = (ADMIN_TR_OVERRIDES && ADMIN_TR_OVERRIDES[data.value]) || await translateText(data.value);
-    }
     let error;
     if (!id) {
       const maxOrd = presetsData.filter(p=>p.kind===kind).reduce((m,p)=>Math.max(m,p.sort_order||0), 0);
@@ -681,7 +662,7 @@
 
   // Llena los <select> del modal de vehículo con los presets cargados.
   function populatePresetSelects() {
-    const fill = (selectId, hiddenEnId, kind, currentValue, currentValueEn) => {
+    const fill = (selectId, kind, currentValue) => {
       const sel = document.getElementById(selectId);
       if (!sel) return;
       const items = presetsData.filter(p => p.kind === kind);
@@ -690,26 +671,19 @@
       items.forEach(p => {
         const selected = p.value === currentValue ? ' selected' : '';
         if (selected) found = true;
-        html += `<option value="${p.value.replace(/"/g,'&quot;')}" data-en="${(p.value_en||'').replace(/"/g,'&quot;')}"${selected}>${p.value}</option>`;
+        html += `<option value="${p.value.replace(/"/g,'&quot;')}"${selected}>${p.value}</option>`;
       });
       // Si el vehículo tiene un valor antiguo que no está en los presets, lo incluimos para no perderlo
       if (currentValue && !found) {
-        html += `<option value="${currentValue.replace(/"/g,'&quot;')}" data-en="${(currentValueEn||'').replace(/"/g,'&quot;')}" selected>${currentValue} (legacy)</option>`;
+        html += `<option value="${currentValue.replace(/"/g,'&quot;')}" selected>${currentValue} (legacy)</option>`;
       }
       sel.innerHTML = html;
-      // Auto-actualiza el hidden EN al cambiar
-      sel.onchange = () => {
-        const opt = sel.options[sel.selectedIndex];
-        document.getElementById(hiddenEnId).value = opt ? (opt.getAttribute('data-en') || '') : '';
-      };
-      // Asegura sync inicial
-      sel.dispatchEvent(new Event('change'));
     };
     // Si el modal de vehículo no está abierto, simplemente repuebla por las dudas (sin valor actual)
     const currentVehId = document.getElementById('vm-id')?.value;
     const v = currentVehId ? vehiclesData.find(x => x.id === currentVehId) : null;
-    fill('vm-pill', 'vm-pill-en', 'pill', v?.pill || '', v?.pill_en || '');
-    fill('vm-cat',  'vm-cat-en',  'cat',  v?.cat  || '', v?.cat_en  || '');
+    fill('vm-pill', 'pill', v?.pill || '');
+    fill('vm-cat',  'cat',  v?.cat  || '');
   }
 
   /* ── Galería de íconos (viewBox 0 0 24 24, stroke currentColor) ── */
@@ -755,97 +729,9 @@
     lbl.textContent = open ? 'Ocultar SVG personalizado' : 'Usar SVG personalizado';
   }
 
-  /* ── Auto-traducción ES → EN (MyMemory API, gratuita, sin key) ──
-     Rellena los pares { es: 'campoES', en: 'campoEN' } del objeto `data`
-     cuando el campo EN está vacío. Devuelve el mismo objeto mutado.
-     Si la API falla, deja el campo EN vacío (el sitio cae al ES). */
-  // Si la frase termina en "?" pero no empieza con "¿", la agregamos: MyMemory
-  // detecta mejor la interrogación y la traduce con estructura de pregunta.
-  // Después limpiamos el "¿" del resultado en inglés (en inglés no se usa).
-  function normalizeQuestionEs(text) {
-    const t = (text || '').trim();
-    if (!t) return t;
-    const endsQ = /\?\s*$/.test(t);
-    const startsQ = /^¿/.test(t);
-    if (endsQ && !startsQ) return '¿' + t;
-    return t;
-  }
-  function cleanQuestionEn(text) {
-    return (text || '').replace(/^¿\s*/, '').replace(/\s*¡\s*/g, ' ').trim();
-  }
-  async function translateText(text) {
-    if (!text) return '';
-    try {
-      const normalized = normalizeQuestionEs(text);
-      const url = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(normalized)}&langpair=es|en`;
-      const r = await fetch(url);
-      const j = await r.json();
-      const out = j && j.responseData && j.responseData.translatedText;
-      return out && j.responseStatus === 200 ? cleanQuestionEn(out) : '';
-    } catch (e) { return ''; }
-  }
-
-  /* Rellena los inputs *_en del modal abierto leyendo los ES, mediante traducción.
-     Solo escribe en campos EN vacíos — no pisa lo que ya editaste. */
-  const MODAL_FIELDS = {
-    vehicle: [
-      { es:'vm-name', en:'vm-name-en' },
-      { es:'vm-cap',  en:'vm-cap-en'  },
-      { es:'vm-desc', en:'vm-desc-en' },
-      { es:'vm-f1', en:'vm-f1-en' }, { es:'vm-f2', en:'vm-f2-en' }, { es:'vm-f3', en:'vm-f3-en' },
-    ],
-    svc: [
-      { es:'sm-title-input', en:'sm-title-en' },
-      { es:'sm-desc',        en:'sm-desc-en'  },
-    ],
-    faq: [
-      { es:'fm-q', en:'fm-q-en' },
-      { es:'fm-a', en:'fm-a-en' },
-    ],
-  };
-  // Diccionario manual para términos cortos/ambiguos
-  const ADMIN_TR_OVERRIDES = {
-    'Auto':'Car', 'Pickup':'Pick-up', 'Minibus':'Minibus', 'Bus':'Bus', 'SUV':'SUV',
-    'Compacto':'Compact', 'Económico':'Economy', 'Familia':'Family',
-    'Carga':'Cargo', 'Grupos':'Groups', 'Comitivas':'Delegations',
-    'Van':'Van', 'Pick-up':'Pick-up',
-  };
-  async function translateOverride(text) {
-    if (!text) return '';
-    if (ADMIN_TR_OVERRIDES[text]) return ADMIN_TR_OVERRIDES[text];
-    return await translateText(text);
-  }
-  async function translateModalEn(kind) {
-    const pairs = MODAL_FIELDS[kind] || [];
-    const btn = event && event.target;
-    if (btn) { btn.disabled = true; btn.textContent = 'Traduciendo…'; }
-    try {
-      const tasks = pairs.map(async p => {
-        const esEl = document.getElementById(p.es);
-        const enEl = document.getElementById(p.en);
-        if (!esEl || !enEl) return;
-        const src = (esEl.value || '').trim();
-        if (!src || (enEl.value || '').trim()) return; // no pisa lo ya escrito
-        const tr = await translateOverride(src);
-        if (tr) enEl.value = tr;
-      });
-      await Promise.all(tasks);
-      toast('Traducido ✓');
-    } finally {
-      if (btn) { btn.disabled = false; btn.textContent = 'Auto-traducir desde ES'; }
-    }
-  }
-
-  async function autoFillEn(data, pairs) {
-    const tasks = pairs
-      .filter(p => data[p.es] && !data[p.en])
-      .map(async p => { data[p.en] = await translateText(data[p.es]); });
-    if (tasks.length) {
-      toast('Traduciendo a inglés…');
-      await Promise.all(tasks);
-    }
-    return data;
-  }
+  /* Las traducciones EN/PT se generan automáticamente en el sitio público
+     (index.html) a partir del español. El admin guarda solo español y deja
+     vacías las columnas *_en para que el sitio las regenere al instante. */
 
   /* ── VEHICLES ── */
   let vehiclesData = [];          // todos los vehículos
@@ -941,10 +827,8 @@
     document.getElementById('vm-f1').value           = v.f1 || '';
     document.getElementById('vm-f2').value           = v.f2 || '';
     document.getElementById('vm-f3').value           = v.f3 || '';
-    document.getElementById('vm-name-en').value      = v.name_en || '';
-    document.getElementById('vm-cap-en').value       = v.cap_en || '';
     // Pill y cat se llenan desde los presets (incluye el valor actual aunque no esté en la lista)
-    const fillSel = (selectId, hiddenEnId, kind, curVal, curEn) => {
+    const fillSel = (selectId, kind, curVal) => {
       const sel = document.getElementById(selectId);
       const items = presetsData.filter(p => p.kind === kind);
       let html = '<option value="">— Sin definir —</option>';
@@ -952,24 +836,16 @@
       items.forEach(p => {
         const selected = p.value === curVal ? ' selected' : '';
         if (selected) found = true;
-        html += `<option value="${p.value.replace(/"/g,'&quot;')}" data-en="${(p.value_en||'').replace(/"/g,'&quot;')}"${selected}>${p.value}</option>`;
+        html += `<option value="${p.value.replace(/"/g,'&quot;')}"${selected}>${p.value}</option>`;
       });
       if (curVal && !found) {
-        html += `<option value="${curVal.replace(/"/g,'&quot;')}" data-en="${(curEn||'').replace(/"/g,'&quot;')}" selected>${curVal} (legacy)</option>`;
+        html += `<option value="${curVal.replace(/"/g,'&quot;')}" selected>${curVal} (legacy)</option>`;
       }
       sel.innerHTML = html;
-      sel.onchange = () => {
-        const opt = sel.options[sel.selectedIndex];
-        document.getElementById(hiddenEnId).value = opt ? (opt.getAttribute('data-en') || '') : '';
-      };
-      sel.dispatchEvent(new Event('change'));
+      sel.onchange = null;
     };
-    fillSel('vm-pill', 'vm-pill-en', 'pill', v.pill || '', v.pill_en || '');
-    fillSel('vm-cat',  'vm-cat-en',  'cat',  v.cat  || '', v.cat_en  || '');
-    document.getElementById('vm-desc-en').value      = v.description_en || '';
-    document.getElementById('vm-f1-en').value        = v.f1_en || '';
-    document.getElementById('vm-f2-en').value        = v.f2_en || '';
-    document.getElementById('vm-f3-en').value        = v.f3_en || '';
+    fillSel('vm-pill', 'pill', v.pill || '');
+    fillSel('vm-cat',  'cat',  v.cat  || '');
     document.getElementById('vm-image').value        = v.image || '';
     document.getElementById('vm-alt').value          = v.image_alt || '';
     previewImg(v.image || '', 'vm-preview');
@@ -990,24 +866,13 @@
       f1:             document.getElementById('vm-f1').value.trim(),
       f2:             document.getElementById('vm-f2').value.trim(),
       f3:             document.getElementById('vm-f3').value.trim(),
-      name_en:        document.getElementById('vm-name-en').value.trim(),
-      pill_en:        document.getElementById('vm-pill-en').value.trim(),
-      cat_en:         document.getElementById('vm-cat-en').value.trim(),
-      cap_en:         document.getElementById('vm-cap-en').value.trim(),
-      description_en: document.getElementById('vm-desc-en').value.trim(),
-      f1_en:          document.getElementById('vm-f1-en').value.trim(),
-      f2_en:          document.getElementById('vm-f2-en').value.trim(),
-      f3_en:          document.getElementById('vm-f3-en').value.trim(),
+      // Traducciones automáticas en el sitio: limpiamos las EN guardadas para que
+      // se regeneren desde el español actual (EN y PT se traducen en vivo).
+      name_en:'', pill_en:'', cat_en:'', cap_en:'', description_en:'', f1_en:'', f2_en:'', f3_en:'',
       image:          document.getElementById('vm-image').value.trim(),
       image_alt:   document.getElementById('vm-alt').value.trim(),
     };
     if (!data.name) { alert('El nombre es obligatorio'); return; }
-    await autoFillEn(data, [
-      { es:'name', en:'name_en' }, { es:'pill', en:'pill_en' },
-      { es:'cat',  en:'cat_en'  }, { es:'cap',  en:'cap_en'  },
-      { es:'description', en:'description_en' },
-      { es:'f1', en:'f1_en' }, { es:'f2', en:'f2_en' }, { es:'f3', en:'f3_en' },
-    ]);
     let error;
     if (!id) {
       const maxOrd = vehiclesData.reduce((m, v) => Math.max(m, v.sort_order||0), -1);
@@ -1122,8 +987,6 @@
     document.getElementById('sm-id').value                 = isNew ? '' : s.id;
     document.getElementById('sm-title-input').value        = s.title || '';
     document.getElementById('sm-desc').value               = s.description || '';
-    document.getElementById('sm-title-en').value           = s.title_en || '';
-    document.getElementById('sm-desc-en').value            = s.description_en || '';
     document.getElementById('sm-dark').checked             = s.dark || false;
     document.getElementById('sm-svg').value                = s.icon_svg || '';
     // Galería de íconos: marca el actual si coincide; si no, abre el editor SVG.
@@ -1140,16 +1003,12 @@
     const data = {
       title:          document.getElementById('sm-title-input').value.trim(),
       description:    document.getElementById('sm-desc').value.trim(),
-      title_en:       document.getElementById('sm-title-en').value.trim(),
-      description_en: document.getElementById('sm-desc-en').value.trim(),
+      // Traducción automática en el sitio: limpiamos las EN guardadas.
+      title_en:'', description_en:'',
       dark:        document.getElementById('sm-dark').checked,
       icon_svg:    document.getElementById('sm-svg').value.trim(),
     };
     if (!data.title) { alert('El título es obligatorio'); return; }
-    await autoFillEn(data, [
-      { es:'title', en:'title_en' },
-      { es:'description', en:'description_en' },
-    ]);
     let error;
     if (!id) {
       const maxOrd = svcsData.reduce((m, s) => Math.max(m, s.sort_order||0), -1);
@@ -1221,8 +1080,6 @@
     document.getElementById('fm-id').value = isNew ? '' : f.id;
     document.getElementById('fm-q').value    = f.question    || '';
     document.getElementById('fm-a').value    = f.answer      || '';
-    document.getElementById('fm-q-en').value = f.question_en || '';
-    document.getElementById('fm-a-en').value = f.answer_en   || '';
     document.getElementById('fm-delete').style.display = isNew ? 'none' : 'inline-block';
     document.getElementById('faqModal').classList.add('open');
   }
@@ -1232,14 +1089,10 @@
     const data = {
       question:    document.getElementById('fm-q').value.trim(),
       answer:      document.getElementById('fm-a').value.trim(),
-      question_en: document.getElementById('fm-q-en').value.trim(),
-      answer_en:   document.getElementById('fm-a-en').value.trim(),
+      // Traducción automática en el sitio: limpiamos las EN guardadas.
+      question_en:'', answer_en:'',
     };
     if (!data.question || !data.answer) { alert('Completá pregunta y respuesta'); return; }
-    await autoFillEn(data, [
-      { es:'question', en:'question_en' },
-      { es:'answer',   en:'answer_en'   },
-    ]);
     let error;
     if (!id) {
       const maxOrd = faqsData.reduce((m, f) => Math.max(m, f.sort_order||0), -1);
@@ -1300,50 +1153,6 @@
     t.textContent = msg;
     t.classList.add('show');
     setTimeout(() => t.classList.remove('show'), 2800);
-  }
-
-  async function backfillTranslations() {
-    const tag = document.getElementById('backfillTag');
-    const setTag = (t) => { if (tag) tag.textContent = t; };
-    const tables = [
-      { name:'vehicles', pairs:[
-        ['name','name_en'],['pill','pill_en'],['cat','cat_en'],['cap','cap_en'],
-        ['description','description_en'],['f1','f1_en'],['f2','f2_en'],['f3','f3_en'],
-      ]},
-      { name:'servicios', pairs:[['title','title_en'],['description','description_en']]},
-      { name:'faqs',      pairs:[['question','question_en'],['answer','answer_en']]},
-    ];
-    let total = 0, done = 0, failed = 0;
-    setTag('Calculando…');
-    const work = [];
-    for (const t of tables) {
-      const { data } = await sb.from(t.name).select('*');
-      for (const row of (data||[])) {
-        const patch = {};
-        for (const [es,en] of t.pairs) {
-          if (row[es] && !row[en]) { patch[en] = row[es]; total++; }
-        }
-        if (Object.keys(patch).length) work.push({ table:t.name, id:row.id, patch });
-      }
-    }
-    if (!total) { setTag('Todo traducido ✓'); toast('No hay campos faltantes'); setTimeout(()=>setTag('ES → EN'),3000); return; }
-    const ok = await confirmDialog({ title:'Traducir contenido', msg:`Se traducirán ${total} campos vacíos al inglés. Puede tardar ~${Math.ceil(total*0.6)}s.`, okLabel:'Traducir' });
-    if (!ok) { setTag('ES → EN'); return; }
-    for (const w of work) {
-      const patch = {};
-      for (const k of Object.keys(w.patch)) {
-        const tr = await translateText(w.patch[k]);
-        if (tr) { patch[k] = tr; done++; } else { failed++; }
-        setTag(`${done+failed}/${total}`);
-      }
-      if (Object.keys(patch).length) {
-        await sb.from(w.table).update(patch).eq('id', w.id);
-      }
-    }
-    setTag('Listo ✓');
-    toast(`Traducidos ${done} campos${failed?` (${failed} fallaron)`:''}`);
-    await Promise.all([loadVehicles(), loadSvcs(), loadFaqs()]);
-    setTimeout(()=>setTag('ES → EN'), 4000);
   }
 
   async function logout() {
