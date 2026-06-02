@@ -937,6 +937,9 @@
      coincidan con la línea del suelo de los standard. */
   .stage-image[data-tier="premium"]{ align-items: end; }
   .stage-image[data-tier="premium"] img{ object-position: center bottom; }
+  /* Iveco: la PNG es casi cuadrada y queda muy baja respecto a los SUV.
+     La subimos y la agrandamos un poco para que llene mejor el espacio. */
+  .stage-image[data-tier="premium"] img[src*="iveco"]{ transform: translateY(-12%) scale(1.08); transform-origin: center bottom; }
   /* ground shadow under active vehicle */
   .stage-image::after{
     content:"";
