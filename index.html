@@ -1651,6 +1651,13 @@
               <path d="M30 0 V40 M0 20 H60" stroke="#C8102E" stroke-width="6"/>
             </svg>
           </button>
+          <button class="lang-btn" data-lang="pt" aria-label="Português" title="Português">
+            <svg viewBox="0 0 60 40" preserveAspectRatio="xMidYMid slice">
+              <rect width="60" height="40" fill="#009C3B"/>
+              <path d="M30 4 L56 20 L30 36 L4 20 Z" fill="#FFDF00"/>
+              <circle cx="30" cy="20" r="8" fill="#002776"/>
+            </svg>
+          </button>
         </div>
         <a class="btn btn-primary" href="#cotizar" style="margin-right:48px">
           <span class="icon-wa" aria-hidden="true"></span>
@@ -2019,32 +2026,32 @@
 <script src="admin-config.js"></script>
 <script>
   const DEFAULT_VEHICLES = [
-    { tier:'standard', name:'Auto',    name_en:'Car',     image:'uploads/kianegro.png',     imageAlt:'Kia Picanto',    pill:'Compacto', pill_en:'Compact',  cat:'Económico', cat_en:'Economy',  cap:'<strong>1 pasajero</strong> · ciudad',                       cap_en:'<strong>1 passenger</strong> · city',                       desc:'Ideal para traslados individuales rápidos dentro de la ciudad. Ágil, climatizado y siempre puntual.',                                               desc_en:'Perfect for quick solo trips around town. Nimble, air-conditioned and always on time.',                                              f1:'Aire acondicionado',     f1_en:'Air conditioning',    f2:'Tarifa económica',   f2_en:'Economy rate',      f3:'Tráficos urbanos',  f3_en:'City traffic' },
-    { tier:'standard', name:'SUV',     name_en:'SUV',     image:'uploads/tucson.png',   imageAlt:'Hyundai Tucson', pill:'SUV',      pill_en:'SUV',      cat:'Familia',   cat_en:'Family',   cap:'<strong>Hasta 3 pasajeros</strong> · equipaje amplio',        cap_en:'<strong>Up to 3 passengers</strong> · ample luggage',       desc:'Una SUV cómoda y ejecutiva, ideal para familias o viajes con equipaje. Asientos amplios y suspensión suave.',                                          desc_en:'A comfy, executive SUV — great for families or trips with luggage. Roomy seats and a smooth ride.',                                      f1:'Equipaje XL',            f1_en:'XL Luggage',           f2:'SUV ejecutiva',      f2_en:'Executive SUV',     f3:'Familias',          f3_en:'Families' },
-    { tier:'standard', name:'Pickup',  name_en:'Pickup',  image:'uploads/changan.png',  imageAlt:'Changan Hunter', pill:'Pick-up',  pill_en:'Pick-up',  cat:'Carga',     cat_en:'Cargo',    cap:'<strong>Hasta 4 pasajeros</strong> · carga especial',         cap_en:'<strong>Up to 4 passengers</strong> · special cargo',       desc:'Robusta y versátil. Pensada para equipaje pesado, cargas especiales o trayectos más exigentes fuera de la ciudad.',                                    desc_en:'Tough and versatile. Built for heavy luggage, special loads or rougher routes out of town.',                                         f1:'Carga adicional',        f1_en:'Additional cargo',     f2:'Largas distancias',  f2_en:'Long distances',    f3:'Tracción',          f3_en:'4WD' },
-    { tier:'standard', name:'Minibus', name_en:'Minibus', image:'uploads/h1.png',       imageAlt:'Hyundai H1',     pill:'Van',      pill_en:'Van',      cat:'Grupos',    cat_en:'Groups',   cap:'<strong>10 pasajeros</strong> · amplio espacio',     cap_en:'<strong>10 passengers</strong> · ample space',        desc:'La van preferida para comitivas chicas, aeropuerto y traslados corporativos. Espacio para todos sin sacrificar confort.',                              desc_en:'The go-to van for small groups, airport runs and corporate transfers. Room for everyone without skimping on comfort.',                                f1:'Aire acondicionado', f1_en:'Air conditioning',    f2:'Aeropuerto',         f2_en:'Airport',           f3:'10 pax',            f3_en:'10 pax' },
-    { tier:'standard', name:'Bus',     name_en:'Bus',     image:'uploads/bus.png',      imageAlt:'Bus',            pill:'Bus',      pill_en:'Bus',      cat:'Comitivas', cat_en:'Groups',   cap:'<strong>+30 pasajeros</strong> · butacas reclinables',        cap_en:'<strong>+30 passengers</strong> · reclining seats',         desc:'Pensado para grupos grandes y traslados masivos: delegaciones, congresos y viajes de larga distancia con confort total.',                             desc_en:'Built for large groups and big transfers — delegations, conferences and long-haul trips in full comfort.',                                  f1:'Larga distancia',        f1_en:'Long distance',        f2:'Delegaciones',       f2_en:'Delegations',       f3:'+30 pax',           f3_en:'+30 pax' },
+    { tier:'standard', name:'Auto',    name_en:'Car',     image:'uploads/kianegro.png',     imageAlt:'Kia Picanto',    pill:'Compacto', pill_en:'Compact',  cat:'Económico', cat_en:'Economy',  cap:'<strong>1 pasajero</strong> · ciudad',                       cap_en:'<strong>1 passenger</strong> · city',                       desc:'Ideal para traslados individuales rápidos dentro de la ciudad. Ágil, climatizado y siempre puntual.',                                               desc_en:'Perfect for quick solo trips around town. Nimble, air-conditioned and always on time.',                                              f1:'Aire acondicionado',     f1_en:'Air conditioning',    f2:'Tarifa económica',   f2_en:'Economy rate',      f3:'Tráficos urbanos',  f3_en:'City traffic', name_pt:'Carro', pill_pt:'Compacto', cat_pt:'Econômico', cap_pt:'<strong>1 passageiro</strong> · cidade', desc_pt:'Perfeito para trajetos individuais rápidos pela cidade. Ágil, com ar-condicionado e sempre no horário.', f1_pt:'Ar-condicionado', f2_pt:'Tarifa econômica', f3_pt:'Trânsito urbano' },
+    { tier:'standard', name:'SUV',     name_en:'SUV',     image:'uploads/tucson.png',   imageAlt:'Hyundai Tucson', pill:'SUV',      pill_en:'SUV',      cat:'Familia',   cat_en:'Family',   cap:'<strong>Hasta 3 pasajeros</strong> · equipaje amplio',        cap_en:'<strong>Up to 3 passengers</strong> · ample luggage',       desc:'Una SUV cómoda y ejecutiva, ideal para familias o viajes con equipaje. Asientos amplios y suspensión suave.',                                          desc_en:'A comfy, executive SUV — great for families or trips with luggage. Roomy seats and a smooth ride.',                                      f1:'Equipaje XL',            f1_en:'XL Luggage',           f2:'SUV ejecutiva',      f2_en:'Executive SUV',     f3:'Familias',          f3_en:'Families', name_pt:'SUV', pill_pt:'SUV', cat_pt:'Família', cap_pt:'<strong>Até 3 passageiros</strong> · bagagem ampla', desc_pt:'Uma SUV confortável e executiva — ótima para famílias ou viagens com bagagem. Bancos espaçosos e uma rodagem suave.', f1_pt:'Bagagem XL', f2_pt:'SUV executiva', f3_pt:'Famílias' },
+    { tier:'standard', name:'Pickup',  name_en:'Pickup',  image:'uploads/changan.png',  imageAlt:'Changan Hunter', pill:'Pick-up',  pill_en:'Pick-up',  cat:'Carga',     cat_en:'Cargo',    cap:'<strong>Hasta 4 pasajeros</strong> · carga especial',         cap_en:'<strong>Up to 4 passengers</strong> · special cargo',       desc:'Robusta y versátil. Pensada para equipaje pesado, cargas especiales o trayectos más exigentes fuera de la ciudad.',                                    desc_en:'Tough and versatile. Built for heavy luggage, special loads or rougher routes out of town.',                                         f1:'Carga adicional',        f1_en:'Additional cargo',     f2:'Largas distancias',  f2_en:'Long distances',    f3:'Tracción',          f3_en:'4WD', name_pt:'Picape', pill_pt:'Picape', cat_pt:'Carga', cap_pt:'<strong>Até 4 passageiros</strong> · carga especial', desc_pt:'Robusta e versátil. Feita para bagagem pesada, cargas especiais ou estradas mais exigentes fora da cidade.', f1_pt:'Carga adicional', f2_pt:'Longas distâncias', f3_pt:'4x4' },
+    { tier:'standard', name:'Minibus', name_en:'Minibus', image:'uploads/h1.png',       imageAlt:'Hyundai H1',     pill:'Van',      pill_en:'Van',      cat:'Grupos',    cat_en:'Groups',   cap:'<strong>10 pasajeros</strong> · amplio espacio',     cap_en:'<strong>10 passengers</strong> · ample space',        desc:'La van preferida para comitivas chicas, aeropuerto y traslados corporativos. Espacio para todos sin sacrificar confort.',                              desc_en:'The go-to van for small groups, airport runs and corporate transfers. Room for everyone without skimping on comfort.',                                f1:'Aire acondicionado', f1_en:'Air conditioning',    f2:'Aeropuerto',         f2_en:'Airport',           f3:'10 pax',            f3_en:'10 pax', name_pt:'Minibus', pill_pt:'Van', cat_pt:'Grupos', cap_pt:'<strong>10 passageiros</strong> · espaço amplo', desc_pt:'A van preferida para grupos pequenos, aeroporto e traslados corporativos. Espaço para todos sem abrir mão do conforto.', f1_pt:'Ar-condicionado', f2_pt:'Aeroporto', f3_pt:'10 pax' },
+    { tier:'standard', name:'Bus',     name_en:'Bus',     image:'uploads/bus.png',      imageAlt:'Bus',            pill:'Bus',      pill_en:'Bus',      cat:'Comitivas', cat_en:'Groups',   cap:'<strong>+30 pasajeros</strong> · butacas reclinables',        cap_en:'<strong>+30 passengers</strong> · reclining seats',         desc:'Pensado para grupos grandes y traslados masivos: delegaciones, congresos y viajes de larga distancia con confort total.',                             desc_en:'Built for large groups and big transfers — delegations, conferences and long-haul trips in full comfort.',                                  f1:'Larga distancia',        f1_en:'Long distance',        f2:'Delegaciones',       f2_en:'Delegations',       f3:'+30 pax',           f3_en:'+30 pax', name_pt:'Ônibus', pill_pt:'Ônibus', cat_pt:'Comitivas', cap_pt:'<strong>+30 passageiros</strong> · poltronas reclináveis', desc_pt:'Feito para grupos grandes e grandes traslados: delegações, congressos e viagens de longa distância com todo o conforto.', f1_pt:'Longa distância', f2_pt:'Delegações', f3_pt:'+30 pax' },
     // Gama Premium
-    { tier:'premium',  name:'Honda CR-V',          name_en:'Honda CR-V',           image:'uploads/honda.png',     imageAlt:'Honda CR-V',          pill:'SUV Premium', pill_en:'Premium SUV', cat:'Ejecutivo',     cat_en:'Executive', cap:'<strong>Hasta 5 pasajeros</strong> · equipaje amplio',           cap_en:'<strong>Up to 5 passengers</strong> · ample luggage',           desc:'SUV ejecutiva con acabados premium, climatización tri-zona y marcha silenciosa. Ideal para traslados ejecutivos, parejas y familias que buscan máximo confort.',                  desc_en:'Executive SUV with premium finishes, tri-zone climate control and a whisper-quiet ride. Made for executive transfers, couples and families after top-tier comfort.',                f1:'Tapizado de cuero',  f1_en:'Leather upholstery', f2:'Climatización premium', f2_en:'Premium climate',  f3:'Marcha silenciosa', f3_en:'Quiet ride' },
-    { tier:'premium',  name:'Mitsubishi Montero',  name_en:'Mitsubishi Montero',   image:'uploads/montero.png',   imageAlt:'Mitsubishi Montero',  pill:'SUV 4×4',     pill_en:'4×4 SUV',     cat:'Alta gama',     cat_en:'High-end',  cap:'<strong>Hasta 7 pasajeros</strong> · 3 filas de asientos',       cap_en:'<strong>Up to 7 passengers</strong> · 3 rows of seats',          desc:'SUV 4×4 de alta gama, robusta y elegante. Perfecta para comitivas, viajes largos y rutas exigentes sin renunciar al lujo. Espacio para equipaje completo.',                       desc_en:'A high-end 4×4 SUV — rugged yet elegant. Perfect for delegations, long trips and demanding routes without giving up the luxury. Room for all your luggage.',                                f1:'Tracción 4×4',       f1_en:'4×4 traction',       f2:'7 pasajeros',           f2_en:'7 passengers',     f3:'Equipaje XL',       f3_en:'XL luggage' },
+    { tier:'premium',  name:'Honda CR-V',          name_en:'Honda CR-V',           image:'uploads/honda.png',     imageAlt:'Honda CR-V',          pill:'SUV Premium', pill_en:'Premium SUV', cat:'Ejecutivo',     cat_en:'Executive', cap:'<strong>Hasta 5 pasajeros</strong> · equipaje amplio',           cap_en:'<strong>Up to 5 passengers</strong> · ample luggage',           desc:'SUV ejecutiva con acabados premium, climatización tri-zona y marcha silenciosa. Ideal para traslados ejecutivos, parejas y familias que buscan máximo confort.',                  desc_en:'Executive SUV with premium finishes, tri-zone climate control and a whisper-quiet ride. Made for executive transfers, couples and families after top-tier comfort.',                f1:'Tapizado de cuero',  f1_en:'Leather upholstery', f2:'Climatización premium', f2_en:'Premium climate',  f3:'Marcha silenciosa', f3_en:'Quiet ride', name_pt:'Honda CR-V', pill_pt:'SUV Premium', cat_pt:'Executivo', cap_pt:'<strong>Até 5 passageiros</strong> · bagagem ampla', desc_pt:'SUV executiva com acabamento premium, ar-condicionado tri-zona e rodagem silenciosa. Feita para traslados executivos, casais e famílias que buscam o máximo conforto.', f1_pt:'Estofamento de couro', f2_pt:'Climatização premium', f3_pt:'Rodagem silenciosa' },
+    { tier:'premium',  name:'Mitsubishi Montero',  name_en:'Mitsubishi Montero',   image:'uploads/montero.png',   imageAlt:'Mitsubishi Montero',  pill:'SUV 4×4',     pill_en:'4×4 SUV',     cat:'Alta gama',     cat_en:'High-end',  cap:'<strong>Hasta 7 pasajeros</strong> · 3 filas de asientos',       cap_en:'<strong>Up to 7 passengers</strong> · 3 rows of seats',          desc:'SUV 4×4 de alta gama, robusta y elegante. Perfecta para comitivas, viajes largos y rutas exigentes sin renunciar al lujo. Espacio para equipaje completo.',                       desc_en:'A high-end 4×4 SUV — rugged yet elegant. Perfect for delegations, long trips and demanding routes without giving up the luxury. Room for all your luggage.',                                f1:'Tracción 4×4',       f1_en:'4×4 traction',       f2:'7 pasajeros',           f2_en:'7 passengers',     f3:'Equipaje XL',       f3_en:'XL luggage', name_pt:'Mitsubishi Montero', pill_pt:'SUV 4×4', cat_pt:'Alto padrão', cap_pt:'<strong>Até 7 passageiros</strong> · 3 fileiras de bancos', desc_pt:'SUV 4×4 de alto padrão, robusta e elegante. Perfeita para comitivas, viagens longas e estradas exigentes sem abrir mão do luxo. Espaço para bagagem completa.', f1_pt:'Tração 4×4', f2_pt:'7 passageiros', f3_pt:'Bagagem XL' },
   ];
   const SVG_ARROW = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>`;
   const DEFAULT_SERVICES = [
-    { title:'Traslados al aeropuerto',            title_en:'Airport Transfers',              description:'Llegadas, salidas y conexiones con seguimiento de vuelo. Esperamos por vos cuando hay demoras.',                            description_en:'Arrivals, departures and connections with flight tracking. If your flight\'s late, we wait.',                         dark:false, icon_svg:'<path d="M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z"/>' },
-    { title:'Viajes nacionales e internacionales', title_en:'National & International Trips', description:'Cruces por Argentina, Brasil y Paraguay. Documentación al día, paradas planificadas y descanso de chofer.',              description_en:'Crossings through Argentina, Brazil and Paraguay. Paperwork in order, planned stops and proper driver rest.',                     dark:true,  icon_svg:'<circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15 15 0 0 1 0 20"/><path d="M12 2a15 15 0 0 0 0 20"/>' },
-    { title:'Traslados turísticos',               title_en:'Tourism Transfers',              description:'Hoteles, city tours, Cataratas, Yacyretá. Choferes que conocen los caminos y los tiempos.',                               description_en:'Hotels, city tours, Iguazú Falls, Yacyretá. Drivers who know the roads — and the timing.',                                         dark:false, icon_svg:'<path d="M3 9 12 3l9 6v12H3z"/><path d="M9 21V12h6v9"/>' },
-    { title:'Traslados corporativos',             title_en:'Corporate Transfers',            description:'Cuentas mensuales para empresas, facturación clara, choferes asignados y discreción ejecutiva.',                          description_en:'Monthly accounts for companies, clear invoicing, dedicated drivers and executive discretion.',                                     dark:false, icon_svg:'<path d="M16 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2"/><circle cx="9.5" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>' },
-    { title:'Servicios para eventos',             title_en:'Event Services',                 description:'Bodas, conciertos, congresos. Coordinamos flota, choferes uniformados y horarios al detalle.',                            description_en:'Weddings, concerts, conferences. We line up the fleet, uniformed drivers and schedules down to the detail.',                                 dark:true,  icon_svg:'<path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>' },
-    { title:'Traslado con mascotas',              title_en:'Pet-Friendly Transfers',         description:'Vehículos preparados para llevar a tu mascota cómoda y segura. Pet-friendly de verdad.',                                  description_en:'Vehicles set up to carry your pet safely and in comfort. Genuinely pet-friendly.',                                            dark:false, icon_svg:'<circle cx="11" cy="4" r="2"/><circle cx="18" cy="8" r="2"/><circle cx="20" cy="16" r="2"/><path d="M9 10a5 5 0 0 1 5 5v3.5a3.5 3.5 0 1 1-6.84 1.045Q6.52 17.48 4.46 16.84A3.5 3.5 0 1 1 5.5 10z"/>' },
+    { title:'Traslados al aeropuerto',            title_en:'Airport Transfers',              description:'Llegadas, salidas y conexiones con seguimiento de vuelo. Esperamos por vos cuando hay demoras.',                            description_en:'Arrivals, departures and connections with flight tracking. If your flight\'s late, we wait.',                         title_pt:'Traslados ao aeroporto', description_pt:'Chegadas, partidas e conexões com acompanhamento de voo. Se o seu voo atrasar, a gente espera.', dark:false, icon_svg:'<path d="M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z"/>' },
+    { title:'Viajes nacionales e internacionales', title_en:'National & International Trips', description:'Cruces por Argentina, Brasil y Paraguay. Documentación al día, paradas planificadas y descanso de chofer.',              description_en:'Crossings through Argentina, Brazil and Paraguay. Paperwork in order, planned stops and proper driver rest.',                     title_pt:'Viagens nacionais e internacionais', description_pt:'Travessias por Argentina, Brasil e Paraguai. Documentação em dia, paradas planejadas e descanso do motorista.', dark:true,  icon_svg:'<circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15 15 0 0 1 0 20"/><path d="M12 2a15 15 0 0 0 0 20"/>' },
+    { title:'Traslados turísticos',               title_en:'Tourism Transfers',              description:'Hoteles, city tours, Cataratas, Yacyretá. Choferes que conocen los caminos y los tiempos.',                               description_en:'Hotels, city tours, Iguazú Falls, Yacyretá. Drivers who know the roads — and the timing.',                                         title_pt:'Traslados turísticos', description_pt:'Hotéis, city tours, Cataratas, Yacyretá. Motoristas que conhecem as estradas — e os horários.', dark:false, icon_svg:'<path d="M3 9 12 3l9 6v12H3z"/><path d="M9 21V12h6v9"/>' },
+    { title:'Traslados corporativos',             title_en:'Corporate Transfers',            description:'Cuentas mensuales para empresas, facturación clara, choferes asignados y discreción ejecutiva.',                          description_en:'Monthly accounts for companies, clear invoicing, dedicated drivers and executive discretion.',                                     title_pt:'Traslados corporativos', description_pt:'Contas mensais para empresas, faturamento claro, motoristas dedicados e discrição executiva.', dark:false, icon_svg:'<path d="M16 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2"/><circle cx="9.5" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>' },
+    { title:'Servicios para eventos',             title_en:'Event Services',                 description:'Bodas, conciertos, congresos. Coordinamos flota, choferes uniformados y horarios al detalle.',                            description_en:'Weddings, concerts, conferences. We line up the fleet, uniformed drivers and schedules down to the detail.',                                 title_pt:'Serviços para eventos', description_pt:'Casamentos, shows, congressos. Organizamos a frota, motoristas uniformizados e horários nos mínimos detalhes.', dark:true,  icon_svg:'<path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>' },
+    { title:'Traslado con mascotas',              title_en:'Pet-Friendly Transfers',         description:'Vehículos preparados para llevar a tu mascota cómoda y segura. Pet-friendly de verdad.',                                  description_en:'Vehicles set up to carry your pet safely and in comfort. Genuinely pet-friendly.',                                            title_pt:'Traslado com pets', description_pt:'Veículos preparados para levar seu pet com segurança e conforto. Pet-friendly de verdade.', dark:false, icon_svg:'<circle cx="11" cy="4" r="2"/><circle cx="18" cy="8" r="2"/><circle cx="20" cy="16" r="2"/><path d="M9 10a5 5 0 0 1 5 5v3.5a3.5 3.5 0 1 1-6.84 1.045Q6.52 17.48 4.46 16.84A3.5 3.5 0 1 1 5.5 10z"/>' },
   ];
 
   const DEFAULT_FAQS = [
-    { q:'¿Operan dentro y fuera del país?',                        q_en:'Do you operate inside and outside the country?',               a:'Sí. Hacemos traslados nacionales en todo Paraguay e internacionales a Argentina y Brasil, con documentación al día y planificación de ruta.',                                                         a_en:'Yes. We run domestic transfers all over Paraguay and international trips to Argentina and Brazil, with paperwork in order and routes planned ahead.' },
-    { q:'¿Tienen vehículos para mascotas?',                        q_en:'Do you have pet-friendly vehicles?',                           a:'Sí, contamos con vehículos adaptados y choferes con experiencia para que tu mascota viaje cómoda y segura.',                                                                                          a_en:'Yes — we have suitable vehicles and experienced drivers so your pet travels safely and in comfort.' },
-    { q:'¿Cómo manejan demoras de vuelo?',                         q_en:'How do you handle flight delays?',                             a:'Hacemos seguimiento del vuelo en tiempo real. Si tu llegada se atrasa, ajustamos el horario sin costo adicional.',                                                                                       a_en:'We track your flight in real time. If you land late, we adjust the schedule at no extra cost.' },
-    { q:'¿Aceptan cuentas empresariales con facturación mensual?', q_en:'Do you accept corporate accounts with monthly billing?',       a:'Sí, abrimos cuentas para empresas con consolidado mensual, factura legal y choferes asignados. Te asesoramos en el armado del servicio.',                                                              a_en:'Yes. We set up company accounts with monthly billing, proper invoicing and dedicated drivers — and we\'ll help you get the service set up.' },
-    { q:'¿Cómo cotizan? ¿Hay recargos sorpresa?',                  q_en:'How do you quote? Are there surprise charges?',                a:'Cotizamos por escrito con tarifa cerrada. Sin recargos por equipaje ni esperas razonables. Lo que firmás es lo que pagás.',                                                                              a_en:'We quote in writing with a fixed rate. No charges for luggage or reasonable waiting. What you sign is what you pay.' },
-    { q:'¿Puedo cancelar o reprogramar?',                          q_en:'Can I cancel or reschedule?',                                  a:'Sí. Hasta 12 hs antes del servicio podés reprogramar sin costo. Para cancelaciones consultá con coordinación.',                                                                                          a_en:'Yes. You can reschedule free of charge up to 12 hours before the service. For cancellations, just check with our team.' },
+    { q:'¿Operan dentro y fuera del país?',                        q_en:'Do you operate inside and outside the country?',               a:'Sí. Hacemos traslados nacionales en todo Paraguay e internacionales a Argentina y Brasil, con documentación al día y planificación de ruta.',                                                         a_en:'Yes. We run domestic transfers all over Paraguay and international trips to Argentina and Brazil, with paperwork in order and routes planned ahead.', q_pt:'Vocês operam dentro e fora do país?', a_pt:'Sim. Fazemos traslados nacionais por todo o Paraguai e internacionais para Argentina e Brasil, com documentação em dia e rotas planejadas.' },
+    { q:'¿Tienen vehículos para mascotas?',                        q_en:'Do you have pet-friendly vehicles?',                           a:'Sí, contamos con vehículos adaptados y choferes con experiencia para que tu mascota viaje cómoda y segura.',                                                                                          a_en:'Yes — we have suitable vehicles and experienced drivers so your pet travels safely and in comfort.', q_pt:'Vocês têm veículos para pets?', a_pt:'Sim — temos veículos adequados e motoristas experientes para que seu pet viaje com segurança e conforto.' },
+    { q:'¿Cómo manejan demoras de vuelo?',                         q_en:'How do you handle flight delays?',                             a:'Hacemos seguimiento del vuelo en tiempo real. Si tu llegada se atrasa, ajustamos el horario sin costo adicional.',                                                                                       a_en:'We track your flight in real time. If you land late, we adjust the schedule at no extra cost.', q_pt:'Como vocês lidam com atrasos de voo?', a_pt:'Acompanhamos o voo em tempo real. Se você chegar atrasado, ajustamos o horário sem custo adicional.' },
+    { q:'¿Aceptan cuentas empresariales con facturación mensual?', q_en:'Do you accept corporate accounts with monthly billing?',       a:'Sí, abrimos cuentas para empresas con consolidado mensual, factura legal y choferes asignados. Te asesoramos en el armado del servicio.',                                                              a_en:'Yes. We set up company accounts with monthly billing, proper invoicing and dedicated drivers — and we\'ll help you get the service set up.', q_pt:'Vocês aceitam contas empresariais com faturamento mensal?', a_pt:'Sim. Abrimos contas para empresas com consolidado mensal, nota fiscal e motoristas dedicados — e ajudamos a montar o serviço.' },
+    { q:'¿Cómo cotizan? ¿Hay recargos sorpresa?',                  q_en:'How do you quote? Are there surprise charges?',                a:'Cotizamos por escrito con tarifa cerrada. Sin recargos por equipaje ni esperas razonables. Lo que firmás es lo que pagás.',                                                                              a_en:'We quote in writing with a fixed rate. No charges for luggage or reasonable waiting. What you sign is what you pay.', q_pt:'Como vocês cotam? Há cobranças surpresa?', a_pt:'Cotamos por escrito com tarifa fechada. Sem cobrança por bagagem ou esperas razoáveis. O que você assina é o que paga.' },
+    { q:'¿Puedo cancelar o reprogramar?',                          q_en:'Can I cancel or reschedule?',                                  a:'Sí. Hasta 12 hs antes del servicio podés reprogramar sin costo. Para cancelaciones consultá con coordinación.',                                                                                          a_en:'Yes. You can reschedule free of charge up to 12 hours before the service. For cancellations, just check with our team.', q_pt:'Posso cancelar ou remarcar?', a_pt:'Sim. Até 12 h antes do serviço você pode remarcar sem custo. Para cancelamentos, fale com a coordenação.' },
   ];
 
   // FAQ toggle (event delegation — funciona antes y después del render)
@@ -2145,92 +2152,101 @@
 
     // Auto-traducción ES → EN para contenido dinámico (vehículos, servicios, FAQ)
     // Cachea en localStorage. Se ejecuta una sola vez por idioma cargado.
-    const TR_CACHE_KEY = 'tt_tr_cache_v1';
+    const TR_CACHE_KEY = 'tt_tr_cache_v2';
     let trCache = {};
     try { trCache = JSON.parse(localStorage.getItem(TR_CACHE_KEY) || '{}'); } catch(e){}
     const saveCache = () => { try { localStorage.setItem(TR_CACHE_KEY, JSON.stringify(trCache)); } catch(e){} };
-    // Diccionario manual: traducciones de términos cortos/ambiguos que MyMemory
-    // no acierta sin contexto (ej. "Auto" → "Record" en vez de "Car").
+    // Diccionario manual por idioma: traducciones de términos cortos/ambiguos que
+    // MyMemory no acierta sin contexto (ej. "Auto" → "Record" en vez de "Car").
     const TR_OVERRIDES = {
-      'Auto':'Car', 'Pickup':'Pick-up', 'Minibus':'Minibus', 'Bus':'Bus', 'SUV':'SUV',
-      'Compacto':'Compact', 'Económico':'Economy', 'Familia':'Family',
-      'Carga':'Cargo', 'Grupos':'Groups', 'Comitivas':'Delegations',
-      'Van':'Van', 'Pick-up':'Pick-up',
+      en: {
+        'Auto':'Car', 'Pickup':'Pick-up', 'Minibus':'Minibus', 'Bus':'Bus', 'SUV':'SUV',
+        'Compacto':'Compact', 'Económico':'Economy', 'Familia':'Family',
+        'Carga':'Cargo', 'Grupos':'Groups', 'Comitivas':'Delegations',
+        'Van':'Van', 'Pick-up':'Pick-up',
+      },
+      pt: {
+        'Auto':'Carro', 'Pickup':'Picape', 'Minibus':'Micro-ônibus', 'Bus':'Ônibus', 'SUV':'SUV',
+        'Compacto':'Compacto', 'Económico':'Econômico', 'Familia':'Família',
+        'Carga':'Carga', 'Grupos':'Grupos', 'Comitivas':'Comitivas',
+        'Van':'Van', 'Pick-up':'Picape',
+      },
     };
+    // Par de idiomas para la API (origen siempre ES).
+    const TR_LANGPAIR = { en: 'es|en', pt: 'es|pt-BR' };
     // Si una frase ES termina en "?" pero no empieza con "¿", la prefijamos
-    // para que MyMemory la detecte como pregunta. Limpiamos el "¿" del EN.
+    // para que MyMemory la detecte como pregunta. Limpiamos el "¿" de la salida.
     function normalizeEs(text) {
       const t = (text || '').trim();
       if (!t) return t;
       if (/\?\s*$/.test(t) && !/^¿/.test(t)) return '¿' + t;
       return t;
     }
-    async function translateOne(text){
+    async function translateOne(text, lang){
       if (!text) return '';
-      if (TR_OVERRIDES[text]) return TR_OVERRIDES[text];
-      if (trCache[text]) return trCache[text];
+      const ov = TR_OVERRIDES[lang];
+      if (ov && ov[text]) return ov[text];
+      const ckey = lang + '::' + text;
+      if (trCache[ckey]) return trCache[ckey];
       try {
         const normalized = normalizeEs(text);
-        const r = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(normalized)}&langpair=es|en`);
+        const pair = TR_LANGPAIR[lang] || ('es|' + lang);
+        const r = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(normalized)}&langpair=${pair}`);
         const j = await r.json();
         let out = j && j.responseStatus === 200 && j.responseData && j.responseData.translatedText;
         if (out) {
           out = out.replace(/^¿\s*/, '').replace(/\s*¡\s*/g, ' ').trim();
-          trCache[text] = out;
+          trCache[ckey] = out;
           return out;
         }
       } catch(e){}
       return '';
     }
-    let _autoFillPromise = null;
-    async function autoFillEnglish(){
-      if (_autoFillPromise) return _autoFillPromise;
-      _autoFillPromise = (async () => {
+    const _autoFillPromises = {};
+    // Rellena los campos faltantes (_en / _pt) traduciendo desde el ES base.
+    async function autoFillLang(lang){
+      if (lang === 'es') return;
+      if (_autoFillPromises[lang]) return _autoFillPromises[lang];
+      _autoFillPromises[lang] = (async () => {
+      const suffix = '_' + lang;
       const pending = [];
-      const collect = (obj, pairs) => {
-        for (const [es, en] of pairs) {
-          if (obj[es] && !obj[en]) pending.push({ obj, en, src: obj[es] });
+      const collect = (obj, keys) => {
+        for (const base of keys) {
+          if (obj[base] && !obj[base + suffix]) pending.push({ obj, dst: base + suffix, src: obj[base] });
         }
       };
-      (window._rawVehicles || []).forEach(v => collect(v, [
-        ['name','name_en'],['pill','pill_en'],['cat','cat_en'],['cap','cap_en'],
-        ['desc','desc_en'],['f1','f1_en'],['f2','f2_en'],['f3','f3_en'],
-      ]));
-      (window._rawServices || []).forEach(s => collect(s, [
-        ['title','title_en'],['description','description_en'],
-      ]));
-      (window._rawFaqs || []).forEach(f => collect(f, [
-        ['q','q_en'],['a','a_en'],
-      ]));
-      if (!pending.length) { _autoFillPromise = null; return; }
+      (window._rawVehicles || []).forEach(v => collect(v, ['name','pill','cat','cap','desc','f1','f2','f3']));
+      (window._rawServices || []).forEach(s => collect(s, ['title','description']));
+      (window._rawFaqs || []).forEach(f => collect(f, ['q','a']));
+      if (!pending.length) { _autoFillPromises[lang] = null; return; }
       // Traducción en paralelo limitado (3 a la vez) para no saturar la API
       const concurrency = 3;
       let idx = 0;
       async function worker(){
         while (idx < pending.length) {
           const item = pending[idx++];
-          const tr = await translateOne(item.src);
-          if (tr) item.obj[item.en] = tr;
+          const tr = await translateOne(item.src, lang);
+          if (tr) item.obj[item.dst] = tr;
         }
       }
       await Promise.all(Array.from({length: concurrency}, worker));
       saveCache();
       // Re-render con las traducciones llenas
-      if (window._currentLang === 'en') window.updateContentLang('en');
+      if (window._currentLang === lang) window.updateContentLang(lang);
       })();
-      return _autoFillPromise;
+      return _autoFillPromises[lang];
     }
-    window._autoFillEnglish = autoFillEnglish;
+    window._autoFillLang = autoFillLang;
 
     // Función de traducción de contenido dinámico
     window.updateContentLang = function(lang) {
-      const isEn = lang === 'en';
+      const suffix = lang === 'es' ? '' : '_' + lang;
       const t = (obj, k) => {
         if (!obj) return '';
-        const v = isEn ? (obj[k+'_en'] || obj[k]) : obj[k];
+        const v = suffix ? (obj[k+suffix] || obj[k]) : obj[k];
         return v != null ? v : '';
       };
-      if (isEn) autoFillEnglish();
+      if (suffix) autoFillLang(lang);
 
       // Servicios
       (window._rawServices || []).forEach((s, i) => {
@@ -2249,7 +2265,7 @@
           const catSpans = slide.querySelectorAll('.info-cat span');
           if (catSpans[1]) catSpans[1].textContent = t(v,'cat');
           const nm   = slide.querySelector('.info-name'); if (nm)   nm.textContent   = t(v,'name');
-          const cap  = slide.querySelector('.info-cap');  if (cap)  cap.innerHTML    = formatCap(isEn ? (v.cap_en || v.cap) : v.cap);
+          const cap  = slide.querySelector('.info-cap');  if (cap)  cap.innerHTML    = formatCap(suffix ? (v['cap'+suffix] || v.cap) : v.cap);
           const desc = slide.querySelector('.info-desc'); if (desc) desc.textContent = t(v,'desc');
           const lis  = slide.querySelectorAll('.info-features li');
           if (lis[0]) lis[0].textContent = t(v,'f1');
@@ -2748,6 +2764,77 @@
         'foot.credit':'Developed by <a href="https://neura.com.py" target="_blank" rel="noopener">Neura</a>',
         'wa.fleetConsult':"Hi! I'd like to check availability for {vehicle}.",
         'wa.fleetGeneral':"Hi! I'd like to check fleet availability and rates."
+      },
+      pt: {
+        'nav.experience':'Experiência','nav.fleet':'Frota','nav.quote':'Cotação','nav.services':'Serviços','nav.faq':'FAQ','nav.cta':'Cotação',
+        'tier.standard':'Padrão','tier.premium':'Premium',
+        'hero.eyebrow':'Traslados privados · Assunção · Paraguai',
+        'hero.title':'Traslados privados e executivos, <em>confortáveis e pontuais.</em>',
+        'hero.sub':'Viaje dentro e fora do país com segurança, conforto e atendimento personalizado. Uma frota impecável e uma equipe que chega antes de você.',
+        'hero.b1':'Aeroporto','hero.b2':'Eventos','hero.b3':'Viagens nacionais e internacionais','hero.b4':'Pets','hero.b5':'Empresas',
+        'hero.ctaWa':'Cotar pelo WhatsApp','hero.ctaServices':'Ver serviços →',
+        'hero.meta':'<strong>+1.200 traslados</strong> realizados este ano · resposta em 5 min',
+        'stat1':'Anos acompanhando viagens e eventos',
+        'stat2':'Clientes que voltam a contratar',
+        'stat3':'Veículos na frota — do privado ao ônibus',
+        'exp.eyebrow':'— Experiência comprovada',
+        'exp.title':'De delegações e casamentos a viagens com sua <em>família e pets</em>.',
+        'exp.sub':'Acompanhamos comitivas, organizadores e famílias nos dias mais corridos — onde os detalhes importam tanto quanto o destino.',
+        'chip.bid':'BID','chip.asu':'ASU','chip.olimp':'Olimpíadas Especiais','chip.conciertos':'Shows','chip.bodas':'Casamentos','chip.empresas':'Eventos corporativos','chip.mascotas':'Viagens com pets','chip.turismo':'Turismo',
+        'mq.1':'Pontualidade','mq.2':'Discrição executiva','mq.3':'Conforto','mq.4':'Segurança','mq.5':'Atendimento humano',
+        'flota.eyebrow':'— Frota em destaque',
+        'flota.title':'Uma frota impecável, <em>para cada tamanho de viagem</em>.',
+        'flota.sub':'Do sedã executivo ao ônibus completo. Todos os veículos com manutenção rigorosa, ar-condicionado e motoristas profissionais.',
+        'flota.btn':'Consultar disponibilidade →',
+        'veh.cta':'Consultar disponibilidade →',
+        'veh.0.pill':'Compacto','veh.0.cat':'Econômico','veh.0.cap':'<strong>1 passageiro</strong> · cidade','veh.0.desc':'Perfeito para trajetos individuais rápidos pela cidade. Ágil, com ar-condicionado e sempre no horário.','veh.0.f1':'Ar-condicionado','veh.0.f2':'Tarifa econômica','veh.0.f3':'Trânsito urbano',
+        'veh.1.pill':'SUV','veh.1.cat':'Família','veh.1.cap':'<strong>Até 3 passageiros</strong> · bagagem ampla','veh.1.desc':'Uma SUV confortável e executiva — ótima para famílias ou viagens com bagagem. Bancos espaçosos e uma rodagem suave.','veh.1.f1':'Bagagem XL','veh.1.f2':'SUV executiva','veh.1.f3':'Famílias',
+        'veh.2.pill':'Pick-up','veh.2.cat':'Carga','veh.2.cap':'<strong>Até 4 passageiros</strong> · carga especial','veh.2.desc':'Robusta e versátil. Feita para bagagem pesada, cargas especiais ou estradas mais exigentes fora da cidade.','veh.2.f1':'Carga adicional','veh.2.f2':'Longas distâncias','veh.2.f3':'4x4',
+        'veh.3.pill':'Van','veh.3.cat':'Grupos','veh.3.cap':'<strong>10 passageiros</strong> · espaço amplo','veh.3.desc':'A van preferida para grupos pequenos, aeroporto e traslados corporativos. Espaço para todos sem abrir mão do conforto.','veh.3.f1':'Ar-condicionado','veh.3.f2':'Aeroporto','veh.3.f3':'10 pax',
+        'veh.4.pill':'Minibus','veh.4.cat':'Eventos','veh.4.cap':'<strong>19 passageiros</strong> · porta-malas amplo','veh.4.desc':'Ótimo para grupos médios, excursões, eventos corporativos e viagens ao interior com bagagem completa.','veh.4.f1':'Eventos','veh.4.f2':'Excursões','veh.4.f3':'19 pax',
+        'veh.5.pill':'Bus','veh.5.cat':'Comitivas','veh.5.cap':'<strong>+30 passageiros</strong> · poltronas reclináveis','veh.5.desc':'Feito para grupos grandes e grandes traslados — delegações, congressos e viagens de longa distância com todo o conforto.','veh.5.f1':'Longa distância','veh.5.f2':'Delegações','veh.5.f3':'+30 pax',
+        'quote.eyebrow':'— Cotação rápida',
+        'quote.title':'Conte sobre sua viagem e <em>respondemos em minutos</em>.',
+        'quote.desc':'Com +12 anos coordenando traslados privados, envie os dados essenciais e um consultor confirma a disponibilidade e a tarifa final.',
+        'quote.b1':'Resposta em menos de 5 minutos em horário comercial.','quote.b2':'Sem cobranças surpresa — tarifa fechada, por escrito.','quote.b3':'Nota fiscal e contas para empresas.','quote.b4':'Reserve sem compromisso.',
+        'quote.fTitle':'Peça sua cotação','quote.fSub':'Respondemos pelo WhatsApp em minutos.',
+        'quote.lName':'Nome','quote.phName':'Seu nome completo','quote.lDate':'Data da viagem','quote.lService':'Serviço',
+        'quote.s1':'Aeroporto','quote.s2':'Corporativo','quote.s3':'Eventos / Casamentos','quote.s4':'Nacional / Internacional','quote.s5':'Turístico','quote.s6':'Com pets',
+        'quote.lOrigin':'Origem','quote.phOrigin':'Assunção, hotel, endereço…','quote.lDest':'Destino','quote.phDest':'Aeroporto, cidade, etc.','quote.lWa':'WhatsApp','quote.submit':'Cotar pelo WhatsApp',
+        'svc.eyebrow':'— Principais serviços',
+        'svc.title':'Cada traslado, <em>feito sob medida</em> para a viagem.',
+        'svc.sub':'De uma chegada pontual ao aeroporto à logística completa para eventos e comitivas. Cuidamos dos detalhes: horários, bagagem, contato e discrição.',
+        'svc.btn':'Falar com um consultor →',
+        'svc1.t':'Traslados ao aeroporto','svc1.d':'Chegadas, partidas e conexões com acompanhamento de voo. Se o seu voo atrasar, a gente espera.','svc1.cta':'Reservar',
+        'svc2.t':'Viagens nacionais e internacionais','svc2.d':'Travessias por Argentina, Brasil e Paraguai. Documentação em dia, paradas planejadas e descanso do motorista.','svc2.cta':'Itinerários',
+        'svc3.t':'Traslados turísticos','svc3.d':'Hotéis, city tours, Cataratas, Yacyretá. Motoristas que conhecem as estradas — e os horários.','svc3.cta':'Montar rota',
+        'svc4.t':'Traslados corporativos','svc4.d':'Contas mensais para empresas, faturamento claro, motoristas dedicados e discrição executiva.','svc4.cta':'Conta empresa',
+        'svc5.t':'Serviços para eventos','svc5.d':'Casamentos, shows, congressos. Organizamos a frota, motoristas uniformizados e horários nos mínimos detalhes.','svc5.cta':'Solicitar logística',
+        'svc6.t':'Traslado com pets','svc6.d':'Veículos preparados para levar seu pet com segurança e conforto. Pet-friendly de verdade.','svc6.cta':'Coordenar',
+        'trust.eyebrow':'— Segurança e confiança',
+        'trust.title':'A tranquilidade <em>aparece</em> antes mesmo de entrar no carro.',
+        'trust.sub':'Processos claros, motoristas profissionais, veículos em dia. O trabalho de bastidor que deixa a viagem simples.',
+        'trust1.t':'Motoristas profissionais','trust1.d':'Contratos em regra, treinamento de direção defensiva e checagem de antecedentes. Profissionais que respeitam o seu tempo.',
+        'trust2.t':'Tarifas claras','trust2.d':'Uma cotação fechada, por escrito. O que você combina é o que paga — sem cobranças surpresa, sem letra miúda.',
+        'trust3.t':'Acompanhamento ao vivo','trust3.d':'Compartilhamos a localização do veículo com você ou com sua empresa até o traslado terminar.',
+        'trust4.t':'Suporte 24/7','trust4.d':'WhatsApp direto com a coordenação, não um bot. Mudanças de última hora, sem estresse.',
+        'faq.eyebrow':'— Perguntas frequentes',
+        'faq.title':'O que <em>todo mundo pergunta</em> antes de reservar.',
+        'faq.sub':'Não achou sua resposta? Escreva no WhatsApp — a coordenação responde em minutos.',
+        'faq1.q':'Vocês operam dentro e fora do país?','faq1.a':'Sim. Fazemos traslados nacionais por todo o Paraguai e internacionais para Argentina e Brasil, com documentação em dia e rotas planejadas.',
+        'faq2.q':'Vocês têm veículos para pets?','faq2.a':'Sim — temos veículos adequados e motoristas experientes para que seu pet viaje com segurança e conforto.',
+        'faq3.q':'Como vocês lidam com atrasos de voo?','faq3.a':'Acompanhamos o voo em tempo real. Se você chegar atrasado, ajustamos o horário sem custo adicional.',
+        'faq4.q':'Vocês aceitam contas empresariais com faturamento mensal?','faq4.a':'Sim. Abrimos contas para empresas com consolidado mensal, nota fiscal e motoristas dedicados — e ajudamos a montar o serviço.',
+        'faq5.q':'Como vocês cotam? Há cobranças surpresa?','faq5.a':'Cotamos por escrito com tarifa fechada. Sem cobrança por bagagem ou esperas razoáveis. O que você assina é o que paga.',
+        'faq6.q':'Posso cancelar ou remarcar?','faq6.a':'Sim. Até 12 h antes do serviço você pode remarcar sem custo. Para cancelamentos, fale com a coordenação.',
+        'foot.tag':'Traslados privados e executivos no Paraguai. Confortáveis, pontuais e feitos sob medida para cada viagem.',
+        'foot.h1':'Serviços','foot.svc1':'Aeroporto','foot.svc2':'Corporativos','foot.svc3':'Eventos e casamentos','foot.svc4':'Turismo','foot.svc5':'Com pets',
+        'foot.h2':'Frota','foot.flota5':'Minibus & Ônibus',
+        'foot.h3':'Contato','foot.loc':'Assunção · Paraguai','foot.hours':'24/7 · todos os dias',
+        'foot.copy':'© 2026 Transfers Tatá. Todos os direitos reservados.','foot.privacy':'Privacidade','foot.terms':'Termos','foot.legal':'Aviso legal',
+        'foot.credit':'Desenvolvido por <a href="https://neura.com.py" target="_blank" rel="noopener">Neura</a>',
+        'wa.fleetConsult':'Olá! Gostaria de consultar a disponibilidade para {vehicle}.',
+        'wa.fleetGeneral':'Olá! Gostaria de consultar a disponibilidade e as tarifas da frota.'
       }
     };
 
