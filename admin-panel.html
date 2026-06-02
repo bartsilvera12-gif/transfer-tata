@@ -898,41 +898,51 @@
     toast('Vehículo eliminado');
   }
 
-  // Semilla: inserta los dos vehículos premium por defecto (Honda CR-V y Montero)
+  // Semilla: inserta los vehículos premium por defecto (Honda CR-V, Montero, Iveco).
+  // Las traducciones EN/PT se generan automáticamente en el sitio (columnas *_en vacías).
   window.seedPremiumDefaults = async function() {
-    const ok = await confirmDialog({ title:'Cargar premium por defecto', msg:'¿Insertar Honda CR-V y Mitsubishi Montero en la base como vehículos premium? Después podés editarlos o eliminarlos como cualquier otro.', okLabel:'Insertar' });
+    const ok = await confirmDialog({ title:'Cargar premium por defecto', msg:'¿Insertar Honda CR-V, Mitsubishi Montero e Iveco en la base como vehículos premium? Después podés editarlos o eliminarlos como cualquier otro.', okLabel:'Insertar' });
     if (!ok) return;
     const maxOrd = vehiclesData.reduce((m, v) => Math.max(m, v.sort_order||0), -1);
     const defaults = [
       {
         tier:'premium',
-        name:'Honda CR-V', name_en:'Honda CR-V',
-        pill:'SUV Premium', pill_en:'Premium SUV',
-        cat:'Ejecutivo', cat_en:'Executive',
-        cap:'**Hasta 5 pasajeros** · equipaje amplio',
-        cap_en:'**Up to 5 passengers** · ample luggage',
-        description:'SUV ejecutiva con acabados premium, climatización tri-zona y marcha silenciosa. Ideal para traslados ejecutivos, parejas y familias que buscan máximo confort.',
-        description_en:'Executive SUV with premium finishes, tri-zone climate control and quiet ride. Ideal for executive transfers, couples and families looking for top comfort.',
-        f1:'Tapizado de cuero',     f1_en:'Leather upholstery',
-        f2:'Climatización premium', f2_en:'Premium climate',
-        f3:'Marcha silenciosa',     f3_en:'Quiet ride',
+        name:'Honda CR-V', name_en:'',
+        pill:'SUV Premium', pill_en:'',
+        cat:'Ejecutivo', cat_en:'',
+        cap:'**Hasta 5 pasajeros** · equipaje amplio', cap_en:'',
+        description:'SUV ejecutiva con acabados premium, climatización tri-zona y marcha silenciosa. Ideal para traslados ejecutivos, parejas y familias que buscan máximo confort.', description_en:'',
+        f1:'Tapizado de cuero',     f1_en:'',
+        f2:'Climatización premium', f2_en:'',
+        f3:'Marcha silenciosa',     f3_en:'',
         image:'uploads/honda.png',  image_alt:'Honda CR-V',
         sort_order: maxOrd + 1,
       },
       {
         tier:'premium',
-        name:'Mitsubishi Montero', name_en:'Mitsubishi Montero',
-        pill:'SUV 4×4', pill_en:'4×4 SUV',
-        cat:'Alta gama', cat_en:'High-end',
-        cap:'**Hasta 7 pasajeros** · 3 filas de asientos',
-        cap_en:'**Up to 7 passengers** · 3 rows of seats',
-        description:'SUV 4×4 de alta gama, robusta y elegante. Perfecta para comitivas, viajes largos y rutas exigentes sin renunciar al lujo. Espacio para equipaje completo.',
-        description_en:'High-end 4×4 SUV, robust and elegant. Perfect for delegations, long trips and demanding routes without giving up luxury. Room for full luggage.',
-        f1:'Tracción 4×4',  f1_en:'4×4 traction',
-        f2:'7 pasajeros',   f2_en:'7 passengers',
-        f3:'Equipaje XL',   f3_en:'XL luggage',
-        image:'uploads/montero.png', image_alt:'Mitsubishi Montero',
+        name:'Mitsubishi Montero', name_en:'',
+        pill:'SUV 4×4', pill_en:'',
+        cat:'Alta gama', cat_en:'',
+        cap:'**Hasta 7 pasajeros** · 3 filas de asientos', cap_en:'',
+        description:'SUV 4×4 de alta gama, robusta y elegante. Perfecta para comitivas, viajes largos y rutas exigentes sin renunciar al lujo. Espacio para equipaje completo.', description_en:'',
+        f1:'Tracción 4×4',  f1_en:'',
+        f2:'7 pasajeros',   f2_en:'',
+        f3:'Equipaje XL',   f3_en:'',
+        image:'uploads/montero2.png', image_alt:'Mitsubishi Montero',
         sort_order: maxOrd + 2,
+      },
+      {
+        tier:'premium',
+        name:'Iveco', name_en:'',
+        pill:'Van Premium', pill_en:'',
+        cat:'Grupos VIP', cat_en:'',
+        cap:'**Amplio y equipado** · viajes largos', cap_en:'',
+        description:'Van premium para traslados ejecutivos y grupos VIP. Butacas reclinables, climatización y bodega amplia para viajes largos con la máxima comodidad.', description_en:'',
+        f1:'Butacas reclinables', f1_en:'',
+        f2:'Climatización',       f2_en:'',
+        f3:'Bodega amplia',       f3_en:'',
+        image:'uploads/iveco.png', image_alt:'Iveco Daily',
+        sort_order: maxOrd + 3,
       },
     ];
     const { error } = await sb.from('vehicles').insert(defaults);
