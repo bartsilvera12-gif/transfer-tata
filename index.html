@@ -2156,7 +2156,7 @@
 
     // Auto-traducción ES → EN para contenido dinámico (vehículos, servicios, FAQ)
     // Cachea en localStorage. Se ejecuta una sola vez por idioma cargado.
-    const TR_CACHE_KEY = 'tt_tr_cache_v2';
+    const TR_CACHE_KEY = 'tt_tr_cache_v3';
     let trCache = {};
     try { trCache = JSON.parse(localStorage.getItem(TR_CACHE_KEY) || '{}'); } catch(e){}
     const saveCache = () => { try { localStorage.setItem(TR_CACHE_KEY, JSON.stringify(trCache)); } catch(e){} };
@@ -2177,7 +2177,7 @@
       },
     };
     // Par de idiomas para la API (origen siempre ES).
-    const TR_LANGPAIR = { en: 'es|en', pt: 'es|pt-BR' };
+    const TR_LANGPAIR = { en: 'es|en-GB', pt: 'es|pt-BR' };
     // Si una frase ES termina en "?" pero no empieza con "¿", la prefijamos
     // para que MyMemory la detecte como pregunta. Limpiamos el "¿" de la salida.
     function normalizeEs(text) {
