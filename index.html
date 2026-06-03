@@ -1783,7 +1783,7 @@
           </div>
 
           <div class="cta-row">
-            <a class="btn btn-primary" href="https://wa.me/595981000000" target="_blank" rel="noopener">
+            <a class="btn btn-primary" href="https://wa.me/595987388642" target="_blank" rel="noopener">
               <span class="icon-wa" aria-hidden="true"></span>
               <span data-i18n="hero.ctaWa">Cotizar por WhatsApp</span>
             </a>
@@ -1923,7 +1923,7 @@
           </ul>
         </div>
 
-        <form class="quote-form reveal" onsubmit="event.preventDefault(); this.querySelector('button').textContent='Enviando…'; setTimeout(()=>this.querySelector('button').textContent='✓ Recibido — te contactamos',900)">
+        <form class="quote-form reveal" onsubmit="event.preventDefault(); var f=this, btn=f.querySelector('button span[data-i18n=&quot;quote.submit&quot;]')||f.querySelector('button'); var name=(document.getElementById('qn')||{}).value||''; var date=(document.getElementById('qf')||{}).value||''; var svc=(document.getElementById('qs')||{}).value||''; var origin=(document.getElementById('qo')||{}).value||''; var dest=(document.getElementById('qd')||{}).value||''; var wa=(document.getElementById('qw')||{}).value||''; var msg='Hola Tatá! Quisiera cotizar un traslado.\n'+(name?('• Nombre: '+name+'\n'):'')+(date?('• Fecha: '+date+'\n'):'')+(svc?('• Servicio: '+svc+'\n'):'')+(origin?('• Origen: '+origin+'\n'):'')+(dest?('• Destino: '+dest+'\n'):'')+(wa?('• Mi WhatsApp: '+wa+'\n'):''); window.open('https://wa.me/595987388642?text='+encodeURIComponent(msg),'_blank','noopener'); btn.textContent='✓ Abriendo WhatsApp…';">
           <h3 data-i18n="quote.fTitle">Pedí tu cotización</h3>
           <p data-i18n="quote.fSub">Te respondemos por WhatsApp en minutos.</p>
 
@@ -2084,8 +2084,8 @@
         <div>
           <h5 data-i18n="foot.h3">Contacto</h5>
           <ul>
-            <li><a href="https://wa.me/595981000000">WhatsApp +595 981 000 000</a></li>
-            <li><a href="mailto:hola@transferstata.com">hola@transferstata.com</a></li>
+            <li><a href="https://wa.me/595987388642">WhatsApp +595 987 388 642</a></li>
+            <li><a href="mailto:tatatraslados@tatatraslados.com">tatatraslados@tatatraslados.com</a></li>
             <li data-i18n="foot.loc">Asunción · Paraguay</li>
             <li data-i18n="foot.hours">24/7 · todos los días</li>
           </ul>
@@ -2125,7 +2125,7 @@
     })();
   </script>
 
-  <a class="wa-fab" href="https://wa.me/595981000000" target="_blank" rel="noopener" aria-label="WhatsApp">
+  <a class="wa-fab" href="https://wa.me/595987388642" target="_blank" rel="noopener" aria-label="WhatsApp">
     <span class="icon-wa" aria-hidden="true"></span>
   </a>
 
@@ -2946,7 +2946,7 @@
       }
     };
 
-    const WA_PHONE = '595981000000'; // ← cambiar por el número real de Tatá
+    const WA_PHONE = '595987388642'; // ← número real de Tatá
 
     function applyI18n(lang){
       const dict = I18N[lang] || I18N.es;
