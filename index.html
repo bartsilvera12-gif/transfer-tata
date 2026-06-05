@@ -102,8 +102,15 @@
     color: var(--gold);
     font-weight: 700;
   }
+  @media (max-width: 920px){
+    .brand{ margin-left: 0 }
+  }
   @media (max-width: 520px){
-    .brand-full{ height: 52px }
+    .brand-full{ height: 50px }
+    .header .cta-row{ gap: 8px }
+  }
+  @media (max-width: 360px){
+    .brand-full{ height: 44px }
   }
   .nav{ display:flex; gap: 32px; align-items:center }
   .nav a{
@@ -112,7 +119,7 @@
     transition: color .25s ease;
   }
   .nav a:hover{ color: var(--chocolate) }
-  .header .cta-row{ display:flex; gap:10px; align-items:center }
+  .header .cta-row{ display:flex; gap:10px; align-items:center; flex-wrap:nowrap }
 
   /* ---------- hamburger / mobile nav drawer ---------- */
   .hamburger{
@@ -2057,7 +2064,7 @@
       <div class="footer-grid">
         <div>
           <a href="#" class="brand" aria-label="Transfers Tatá">
-            <img class="brand-full footer-brand-full" src="uploads/logocompleto2.jpg" alt="Transfers Tatá" />
+            <img class="brand-full footer-brand-full" src="uploads/logonegativo.png" alt="Transfers Tatá" />
           </a>
           <p class="brand-tag" data-i18n="foot.tag">Traslados privados y ejecutivos en Paraguay. Cómodos, puntuales y a la medida de cada viaje.</p>
         </div>
