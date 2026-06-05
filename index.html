@@ -2106,13 +2106,18 @@
   <script>
     (function(){
       var KEY = 'tt_dark_preview';
+      var DARK_LOGO = 'uploads/logonegativo.png';
       var btn = document.getElementById('darkPreviewToggle');
       var icon = document.getElementById('darkPreviewIcon');
       var label = document.getElementById('darkPreviewLabel');
+      // Logos que deben usar la versión negativa en modo oscuro (header + footer)
+      var logos = [].slice.call(document.querySelectorAll('.brand-full'));
+      logos.forEach(function(im){ im.dataset.lightSrc = im.getAttribute('src'); });
       function apply(on){
         document.body.classList.toggle('dark-preview', on);
         icon.textContent = on ? '☀️' : '🌙';
         label.textContent = on ? 'Modo claro' : 'Modo oscuro';
+        logos.forEach(function(im){ im.src = on ? DARK_LOGO : im.dataset.lightSrc; });
       }
       var on = false;
       try { on = localStorage.getItem(KEY) === '1'; } catch(e){}
