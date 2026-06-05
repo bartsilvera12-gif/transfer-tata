@@ -1,0 +1,62 @@
+# ============================================================
+#  Transfers Tatá — Configuración Apache (Hostinger)
+# ============================================================
+
+# Página de inicio por defecto
+DirectoryIndex index.html
+
+# Codificación UTF-8
+AddDefaultCharset UTF-8
+
+# ----- Forzar HTTPS (www y no-www) -----
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteCond %{HTTPS} !=on
+  RewriteCond %{HTTP:X-Forwarded-Proto} !https
+  RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+</IfModule>
+
+# ----- Compresión GZIP -----
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/plain text/css text/xml
+  AddOutputFilterByType DEFLATE application/javascript application/x-javascript application/json
+  AddOutputFilterByType DEFLATE image/svg+xml
+</IfModule>
+
+# ----- Caché del navegador -----
+<IfModule mod_expires.c>
+  ExpiresActive On
+  # Imágenes y fuentes: 1 año
+  ExpiresByType image/png         "access plus 1 year"
+  ExpiresByType image/jpeg        "access plus 1 year"
+  ExpiresByType image/gif         "access plus 1 year"
+  ExpiresByType image/webp        "access plus 1 year"
+  ExpiresByType image/svg+xml     "access plus 1 year"
+  ExpiresByType image/x-icon      "access plus 1 year"
+  ExpiresByType font/woff2        "access plus 1 year"
+  # CSS / JS: 1 semana
+  ExpiresByType text/css          "access plus 1 week"
+  ExpiresByType application/javascript "access plus 1 week"
+  # HTML: sin caché (para que los cambios se vean al instante)
+  ExpiresByType text/html         "access plus 0 seconds"
+</IfModule>
+
+<IfModule mod_headers.c>
+  # HTML siempre fresco
+  <FilesMatch "\.html$">
+    Header set Cache-Control "no-cache, must-revalidate"
+  </FilesMatch>
+  # Cabeceras de seguridad básicas
+  Header set X-Content-Type-Options "nosniff"
+  Header set X-Frame-Options "SAMEORIGIN"
+  Header set Referrer-Policy "strict-origin-when-cross-origin"
+  Header unset X-Powered-By
+</IfModule>
+
+# ----- Bloquear archivos sensibles / de desarrollo -----
+<FilesMatch "\.(md|gitignore|zip|sh|log)$">
+  Require all denied
+</FilesMatch>
+
+# Páginas de error (opcional, usa el index si no hay 404 propio)
+ErrorDocument 404 /index.html
