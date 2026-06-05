@@ -1154,12 +1154,20 @@
     .stage-image{ inset: 14% 8% 18% }
     .stage-watermark{ display:none }
     .info{
-      padding: 28px 24px;
+      padding: 30px 24px 34px;
       border-left: none;
       border-top: 1px solid rgba(184,135,47,.18);
-      min-height: 360px;
+      min-height: 0;
+      display: grid;            /* apila los slides en la misma celda */
     }
-    .info-slide{ inset: 28px 24px }
+    /* Slides en flujo (no absolutos): la tarjeta crece con el contenido más alto
+       y se mantiene el cross-fade superponiéndolos en la misma celda del grid. */
+    .info-slide{
+      position: relative;
+      inset: auto;
+      grid-area: 1 / 1;
+      justify-content: flex-start;
+    }
     .showcase-nav{ flex-direction: column-reverse; align-items: stretch; gap: 14px }
     .showcase-arrows{ justify-content: center }
     .showcase-tabs{ justify-content: center }
